@@ -1,0 +1,45 @@
+.InscripcionEstudiantePage .containerInscripcionEstudiantePageCenter {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+}
+.InscripcionEstudiantePage .containerInscripcionEstudiantePage {
+  background: white;
+  padding: 40px;
+  width: 50%;
+  box-shadow: 0 0.125rem 0.45rem rgba(0, 0, 0, 0.075);
+  border-radius: 20px;
+  /* display: flex;
+    justify-content: center;
+    align-items: center; */
+}
+
+.InscripcionEstudiantePage .background {
+  /* Imagen de fondo desenfocada */
+  position: absolute;
+  z-index: 1;
+  background: url('../img/fondo.jpg') no-repeat center center fixed;
+  background-size: cover;
+  filter: blur(5px);
+  width: 100%;
+  height: 100%;
+}
+.InscripcionEstudiantePage .ResumenStepIns .FormResumenStepIns {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+
+
+@media (max-width: 768px) {
+  .InscripcionEstudiantePage .containerInscripcionEstudiantePage {
+    width: 100%;
+  }
+  .InscripcionEstudiantePage .ResumenStepIns .FormResumenStepIns {
+    grid-template-columns: 1fr;
+  }
+}

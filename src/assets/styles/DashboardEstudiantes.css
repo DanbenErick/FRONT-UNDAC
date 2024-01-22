@@ -1,0 +1,332 @@
+* {
+  box-sizing: border-box;
+}
+
+.gridInscripcionEstudianteDashboard button {
+  /* background: #131313; */
+  font-weight: bold;
+}
+
+.containerGridDashboardEstudiantesPage .mainContainerEstudiantes {
+  width: 100%;
+  padding: 40px;
+}
+
+.containerGridDashboardEstudiantesPage {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 250px calc(100% - 250px);
+}
+
+.containerGridDashboardEstudiantesPage .asideContainerEstudiantes aside {
+  padding: 20px 0;
+}
+
+.containerGridDashboardEstudiantesPage .asideContainerEstudiantes {
+  color: white;
+  width: 100%;
+  height: 100%;
+}
+
+.avatarEstudiante {
+  padding: 0 20px;
+  display: flex;
+  /* width: ; */
+  /* justify-content: space-around; */
+  align-items: center;
+  
+}
+
+
+
+.avatarEstudiante .nombreEstudianteAside {
+  text-align: center;
+  font-size: 14px;
+}
+
+.containerGridDashboardEstudiantesPage .asideEstudiantesDash {
+  width: 100%;
+  background: #101828;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+}
+
+.containerGridDashboardEstudiantesPage .asideEstudiantesDash ul {
+  list-style: none;
+  margin: 0;
+  padding: 0 10px;
+  /* padding: 5px; */
+}
+
+.containerGridDashboardEstudiantesPage .asideEstudiantesDash .active {
+  border-radius: 10px;
+  width: 100%;
+  background: #485468;
+}
+
+.containerGridDashboardEstudiantesPage .asideEstudiantesDash li {
+  /* padding: 10px; */
+  /* margin-bottom: 5px; */
+  font-size: 12px;
+}
+
+.containerGridDashboardEstudiantesPage .asideEstudiantesDash a {
+  display: inline-block;
+  width: 100%;
+  text-decoration: none;
+  padding: 10px;
+  /* border-radius: 10px; */
+  /* margin-bottom: 5px; */
+  font-size: 12px;
+  color: white;
+  text-decoration: none;
+}
+
+.asideEstudiantesDash .icon {
+  display: inline-block;
+  padding-right: 10px;
+}
+
+.gridInscripcionEstudianteDashboard {
+  
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 50px;
+  height: auto;
+}
+
+/* Card */
+.cardDashEstudiante p {
+  padding: 0;
+  margin: 0;
+}
+
+.cardDashEstudiante {
+  background: white;
+  padding: 0;
+  margin: 0;
+  /* width: 100%; */
+  border-radius: 10px;
+  border: solid #d1d6db 2px;
+}
+
+.cardDashEstudiante .cardDashEstudianteHeader {
+  color: #131313;
+  font-weight: bold;
+  padding: 16px 24px;
+  margin: 0;
+  /* border-bottom: solid #d1d6db 2px; */
+  font-weight: bold;
+  text-transform: uppercase;
+  
+}
+
+.cardDashEstudiante .cardDashEstudianteBody {
+  padding: 16px 24px;
+  margin: 0;
+}
+
+.gridFormDatosComplementarios {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.gridFormFormularioInscripcion {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.gridFormFormularioInscripcion .FormItem:nth-child(2),
+.gridFormFormularioInscripcion .FormItem:nth-child(1) {
+  grid-column-start: 1;
+  grid-column-end: 3;
+}
+
+.gridFormFormularioApoderado {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.gridFormFormularioApoderado .FormItem:nth-child(1) {
+  grid-column-start: 1;
+  grid-column-end: 3;
+}
+
+.gridHomePageDashboardEstudiante {
+  display: grid;
+  grid-template-columns: 350px calc(100% - 350px);
+  gap: 10px;
+  font-size: 14px;
+  
+}
+.gridHomePageDashboardEstudiante h4 {
+  padding: 10px;
+  margin: 0;
+  /* background: #131313; */
+  /* color: white; */
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  
+}
+.gridHomePageDashboardEstudiante .containerEnlaces,
+.gridHomePageDashboardEstudiante .containerMain {
+  
+  height: min-content;
+  border: solid #d1d6db 2px;
+  
+}
+.gridHomePageDashboardEstudiante .containerEnlaces {
+  border-radius: 10px;
+  background: white;
+}
+.gridHomePageDashboardEstudiante .containerEnlaces ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.gridHomePageDashboardEstudiante .containerEnlaces ul li {
+  padding: 10px;
+}
+.gridHomePageDashboardEstudiante .containerEnlaces ul li a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #131313;
+  text-decoration: none;
+}
+.gridHomePageDashboardEstudiante .containerEnlaces ul li:hover {
+  border-left: solid 2px #1677ff;
+}
+.gridHomePageDashboardEstudiante .containerEnlaces ul li:hover a {
+  color: #1677ff;
+}
+.gridHomePageDashboardEstudiante .containerMain {
+  border-radius: 10px;
+}
+.gridHomePageDashboardEstudiante .containerMain img {
+  width: 100%;
+  max-width: 100%;
+  border-radius: 10px;
+}
+
+/*# sourceMappingURL=DashboardEstudiantes.css.map *
+
+/* 
+
+---- Aside Dash Estudiante
+
+*/
+
+/* i {
+  color: #0e83bc;
+  display: inline-block;
+
+  background: rgba(18, 177, 255, .8);
+  width: 30px;
+  height: 30px;
+  border-radius: 100px;
+  text-align: center;
+} */
+.avatarEstudiante
+.imgAvatarEstudiante {
+  border-radius: 5px;
+  width:50px !important;
+}
+.containerImgAvatar {
+  width: 50px;
+  margin-right: 10px;
+}
+
+.gridFormTestPsicologico {
+  grid-template-columns: 1fr;
+}
+.gridFormTestPsicologico .itemTestPsicologico {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+
+/* Pagos Page */
+
+.gridFormFormularioPagosEstudiante {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+
+
+
+/* Media query para el aside */
+
+
+/* Estilos para pantallas más pequeñas */
+.iconMenuAsideDashEstudiante {
+  position: fixed;
+  top: 1;
+  right: 0;
+  margin: 20px;
+  z-index: 9999;
+  display: none;
+}
+
+@media only screen and (max-width: 600px) {
+  .iconMenuAsideDashEstudiante {
+    display: block;
+    
+  }
+  .containerGridDashboardEstudiantesPage {
+    grid-template-columns: 1fr;
+  }
+  .containerGridDashboardEstudiantesPage .asideEstudiantesDash {
+    width: 100%;
+    background: #101828;
+    min-height: 100vh;
+    position: fixed;
+    top: 0;
+    left: -100%;
+    transition: left 0.3s ease-in-out;
+    z-index:9998;
+  }
+  
+  .containerGridDashboardEstudiantesPage .asideEstudiantesDash.show {
+    left: 0;
+  }
+  .gridHomePageDashboardEstudiante {
+    grid-template-columns: 1fr;
+  }
+
+
+  /* PAGOS */
+
+  .cardDashEstudiante {
+    width: 95vw !important;
+  }
+  .mainContainerEstudiantes {
+    padding: 40px 5px !important;
+  }
+
+  .gridFormFormularioPagosEstudiante {
+    grid-template-columns: 1fr;
+  }
+
+  /* INSCRIPCION */
+
+  .gridFormFormularioInscripcion {
+    grid-template-columns: 1fr !important;
+  }
+
+  .gridFormFormularioInscripcion .FormItem:nth-child(2),
+  .gridFormFormularioInscripcion .FormItem:nth-child(1) {
+    grid-column-start: 1;
+    grid-column-end: 2;
+  }
+  .gridFormDatosComplementarios {
+    grid-template-columns: 1fr !important;
+  }
+}

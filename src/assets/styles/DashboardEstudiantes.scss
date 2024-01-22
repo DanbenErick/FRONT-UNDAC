@@ -1,0 +1,216 @@
+$color-primary: #1677ff;
+$color-sec: #131313;
+
+* {
+  box-sizing: border-box;
+}
+
+.gridInscripcionEstudianteDashboard button {
+  background: $color-sec;
+  font-weight: bold;
+}
+
+.containerGridDashboardEstudiantesPage .mainContainerEstudiantes {
+  width: 100%;
+  padding: 40px;
+}
+
+.containerGridDashboardEstudiantesPage {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 150px calc(100% - 150px);
+}
+
+.containerGridDashboardEstudiantesPage .asideContainerEstudiantes aside {
+  padding: 20px 0;
+}
+
+.containerGridDashboardEstudiantesPage .asideContainerEstudiantes {
+  color: white;
+  width: 100%;
+  height: 100%;
+}
+
+.avatarEstudiante {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.avatarEstudiante img {
+  width: 60%;
+}
+
+.avatarEstudiante .nombreEstudianteAside {
+  text-align: center;
+  font-size: 14px;
+}
+
+.containerGridDashboardEstudiantesPage .asideEstudiantesDash {
+  background: #000d40;
+  height: 100vh;
+}
+
+.containerGridDashboardEstudiantesPage .asideEstudiantesDash ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  /* padding: 5px; */
+}
+
+.containerGridDashboardEstudiantesPage .asideEstudiantesDash .active {
+  width: 100%;
+  background: #1677ff;
+}
+
+.containerGridDashboardEstudiantesPage .asideEstudiantesDash li {
+  /* padding: 10px; */
+  margin-bottom: 5px;
+  font-size: 12px;
+}
+
+.containerGridDashboardEstudiantesPage .asideEstudiantesDash a {
+  display: inline-block;
+  width: 100%;
+  text-decoration: none;
+  padding: 10px;
+  /* border-radius: 10px; */
+  margin-bottom: 5px;
+  font-size: 12px;
+  color: white;
+  text-decoration: none;
+}
+
+.asideEstudiantesDash .icon {
+  display: inline-block;
+  padding-right: 10px;
+}
+
+.gridInscripcionEstudianteDashboard {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 50px;
+  height: auto;
+}
+
+/* Card */
+.cardDashEstudiante p {
+  padding: 0;
+  margin: 0;
+}
+
+.cardDashEstudiante {
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
+    rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  max-height: min-content;
+  height: min-content;
+  border: solid 1px $color-sec;
+  border-radius: 10px;
+}
+
+.cardDashEstudiante .cardDashEstudianteHeader {
+  background: $color-sec;
+  padding: 16px 24px;
+  margin: 0;
+  color: white;
+  font-weight: bold;
+}
+
+.cardDashEstudiante .cardDashEstudianteBody {
+  padding: 16px 24px;
+  margin: 0;
+}
+
+.gridFormDatosComplementarios {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.gridFormFormularioInscripcion {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.gridFormFormularioInscripcion .FormItem:nth-child(2),
+.gridFormFormularioInscripcion .FormItem:nth-child(1) {
+  grid-column-start: 1;
+  grid-column-end: 3;
+}
+
+.gridFormFormularioApoderado {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.gridFormFormularioApoderado .FormItem:nth-child(1) {
+  grid-column-start: 1;
+  grid-column-end: 3;
+}
+
+.gridHomePageDashboardEstudiante {
+  display: grid;
+  grid-template-columns: 20% 80%;
+  gap: 10px;
+  h4 {
+    padding: 10px;
+    margin: 0;
+    background: $color-sec;
+    color: white;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+  .containerEnlaces,
+  .containerMain {
+    height: min-content;
+    box-shadow:
+      rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
+      rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+    border: solid 1px rgba(0, 0, 0, 0.05);
+  }
+  .containerEnlaces {
+    border-radius: 10px;
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      li {
+        padding: 10px;
+
+        a {
+          // background: #131313;
+          // color: white;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          color: $color-sec;
+          text-decoration: none;
+        }
+        &:hover {
+          border-left: solid 2px #1677ff;
+          a {
+            color: $color-primary;
+          }
+        }
+      }
+    }
+  }
+  .containerMain {
+    border-radius: 10px;
+    // .containerMainImage {
+    img {
+      width: 100%;
+      max-width: 100%;
+      border-radius: 10px;
+    }
+    // }
+  }
+}

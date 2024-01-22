@@ -1,0 +1,71 @@
+
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;700&display=swap');
+
+* {
+  font-family: Noto Sans;
+}
+.App {
+  min-height: 100vh;
+}
+
+.ant-card {
+  margin-top: 20px;
+}
+.titlePageDashboard {
+  font-weight: bold;
+}
+.contentDashboard {
+  padding: 24px;
+  margin: 0;
+  min-height: 'calc(100vh - 150px)';
+}
+
+.fullSizeInput {
+  width: 100%;
+}
+.ant-float-btn-body {
+  background: #001529 !important;
+  color: white;
+}
+.content {
+  background: black;
+  padding: 40px;
+}
+.bradcrumpPadding {
+  margin-bottom: 20px;
+}
+.aside {
+  width: 180px;
+  min-height: 100vh;
+  position: fixed;
+  top: 0;
+}
+
+.containerGridDashboardPage {
+  display: grid;
+  grid-template-columns: 180px calc(100% - 180px);
+}
+
+.content {
+  grid-column: 2 / span 1;
+}
+.btnMenuToggle {
+  position: fixed;
+  right: 0;
+  top: 0;
+}
+.filaBotones button {
+  margin-right: 10px;
+}
+input {
+  max-width: 100% !important;
+}
+@media (max-width: 768px) {
+  .containerGridDashboardPage {
+    display: grid;
+    grid-template-columns: 80px calc(100% - 80px);
+  }
+  .aside {
+    width: 80px;
+  }
+}
