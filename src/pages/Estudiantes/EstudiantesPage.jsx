@@ -17,7 +17,7 @@ import { Popconfirm } from 'antd';
 import { Drawer } from 'antd';
 import { message } from 'antd';
 import moment from 'moment';
-import { buscarAulaPorTurnoForm, obtenerCarrerasCodigoForm, obtenerCarrerasForm, obtenerDepartamentosForm, obtenerDiscapacidadesForm, obtenerDistritosForm, obtenerProcesoActivoForm, obtenerProcesosForm, obtenerProvinciasForm, obtenerRazasEtnicasForm, obtenerTodosLosProcesosActivosForm } from '../../api/apiInpputs';
+import { buscarAulaPorTurnoForm, obtenerCarrerasCodigoForm, obtenerCarrerasForm, obtenerDepartamentosForm, obtenerDiscapacidadesForm, obtenerDistritosForm, obtenerModalidadesForm, obtenerProcesoActivoForm, obtenerProcesosForm, obtenerProvinciasForm, obtenerRazasEtnicasForm, obtenerTodosLosProcesosActivosForm } from '../../api/apiInpputs';
 import { formatDateUtil, formatOnlyYear } from '../../util/Util';
 
 
@@ -40,12 +40,20 @@ const EstudiantesPage = () => {
   const [selectDepartamento, setSelectDepartamento] = useState([])
   const [selectProvincia, setSelectProvincia] = useState([])
   const [selectDistrito, setSelectDistrito] = useState([])
+  const [selectModalidades, setSelectModalidades] = useState([])
   
   const [modalFotosyArchivo, setModalFotosyArchivo] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  
+
   const [stateDiscapacidad, setStateDiscapacidad] = useState(false);
   const [stateAulas, setStateAulas] = useState(false)
+
+  const [statusCepre,setStatusCepre] = useState(false)
+  const [statusPrimeraSeleccion,setStatusPrimeraSeleccion] = useState(false)
+  const [statusOrdinario,setStatusOrdinario] = useState(false)
+  const [statusModalidades,setStatusModalidades] = useState(false)
 
   const [formRegistrarEInscribir] = Form.useForm()
 
@@ -64,6 +72,30 @@ const EstudiantesPage = () => {
     setStateDNI(DNI)
     setModalFotosyArchivo(true)
   }
+
+  // const changeProcesos = async(value) => {
+  //   selectProcesosActivos.forEach(proceso => {
+      
+  //     if (proceso.value === value) {
+  //       setStatusCepre(false)
+  //       setStatusPrimeraSeleccion(false)
+  //       setStatusOrdinario(false)
+  //       setStatusModalidades(false)
+  //       if(proceso.TIPO_PROCESO === 'C') {
+  //         setStatusCepre(true)
+  //       }
+  //       if(proceso.TIPO_PROCESO === 'O'){
+  //         setStatusOrdinario(true)
+  //       } 
+  //       if(proceso.TIPO_PROCESO === 'P'){
+  //         setStatusPrimeraSeleccion(true)
+  //       } 
+  //       if(proceso.TIPO_PROCESO === 'M'){
+  //         setStatusModalidades(true)
+  //       } 
+  //     }
+  //   })
+  // }
 
   const columnsTable = [
     {
@@ -113,7 +145,7 @@ const EstudiantesPage = () => {
             </Popconfirm>
             <Popconfirm
               title="Estudiante"
-              description="Quieres editar foto y archivo del estudiante?"
+              description="Quieres editar foto?"
               onConfirm={() => {
                 handleShowFoto({ ID: column.ID, DNI: column.DNI });
               }}
@@ -147,15 +179,11 @@ const EstudiantesPage = () => {
     const respSelectEtnias = await obtenerRazasEtnicasForm()
     const respSelectDepartamentos = await obtenerDepartamentosForm()
     
-    
-    
     setSelectCarreras(respSelectCarreras.data)
-    
     setSelectProcesos(respSelectProcesos.data)
     setSelectDiscapacidades(respSelectDiscapacidades.data)
     setSelectEtnias(respSelectEtnias.data)
     setSelectDepartamento(respSelectDepartamentos.data)
-
   }
   
   const showPanelEditEstudiante = async (params) => {
@@ -184,11 +212,30 @@ const EstudiantesPage = () => {
   const handleCancel = () => { setIsModalOpen(false)}
   
   const handleProcesos = (value) => {
-    selectProcesos.forEach(proceso => {
-      if(proceso.value === value) {
-        proceso.TIPO_PROCESO === 'C' ? setStateAulas(true): setStateAulas(false)
+
+    selectProcesos.forEach(async(proceso) => {
+      
+      if (proceso.value === value) {
+        setStatusCepre(false)
+        setStatusPrimeraSeleccion(false)
+        setStatusOrdinario(false)
+        setStatusModalidades(false)
+        if(proceso.TIPO_PROCESO === 'C') {
+          setStateAulas(true)
+        }
+        if(proceso.TIPO_PROCESO === 'O'){
+          setStatusOrdinario(true)
+        } 
+        if(proceso.TIPO_PROCESO === 'P'){
+          setStatusPrimeraSeleccion(true)
+        } 
+        if(proceso.TIPO_PROCESO === 'M'){
+          setStatusModalidades(true)
+          const resp_modalidades = await obtenerModalidadesForm()
+          setSelectModalidades(resp_modalidades.data);
+        } 
       }
-    });
+    })
   }
 
 
@@ -358,7 +405,6 @@ const EstudiantesPage = () => {
         }
       >
         <Form layout='vertical' className='formProcesosDashAdmin' form={formRegistrarEInscribir} onFinish={registrarEInscribirEstudiante}>
-          {/*                              */}
           <Form.Item label="Proceso" name="PROCESO" rules={[{ required: true }]}>
             <Select
               options={selectProcesos}
@@ -368,6 +414,39 @@ const EstudiantesPage = () => {
           <Form.Item label="DNI" name="DNI" rules={[{ required: true }]}>
             <Input maxLength={8} />
           </Form.Item>
+          {
+            statusModalidades
+            ?
+              <Form.Item label="Modalidad" name="ID_TIPO_MODALIDAD">
+                <Select
+                  options={selectModalidades}
+                />
+              </Form.Item>
+            :
+            ''
+          }
+          {
+            statusCepre
+            ?
+            <>
+              <Form.Item label="Turno" rules={[{ required: true }]} name="TURNO">
+                <Select
+                  options={[
+                    {label: 'Mañana', value: 'M'},
+                    {label: 'Tarde', value: 'T'},
+                  ]}
+                  onChange={changeTurno}
+                />
+              </Form.Item>
+              <Form.Item label="Aula" rules={[{ required: true }]} name="ID_AULA">
+                <Select
+                  options={selectAulas}
+                />
+              </Form.Item>
+              </>
+            :
+            ''
+          }
           <Form.Item label="Apellido paterno" name="AP_PATERNO" rules={[{ required: true }]}>
             <Input maxLength={20} />
           </Form.Item>
@@ -505,7 +584,6 @@ const EstudiantesPage = () => {
           <Form.Item label="Año secundario termino?" name="YEAR_CONCLU" rules={[{ required: true }]}>
             <DatePicker style={{ width: '100%' }} picker="year" />
           </Form.Item>
-          <Form.Item ></Form.Item>
           {/* <Button type="primary" htmlType='submit'>Comprobar</Button> */}
         </Form>
       </Drawer>
