@@ -37,5 +37,32 @@ const obtenerInscritosPorSedeService = async (params) => {
     console.error(`Error:`, error);
   }
 }
+const obtenerInscritosPorCarreraService = async (params) => {
+  try {
+    const ruta = getRuta('obtener-inscritos-por-carrera')
+    const resp = await axios.post(ruta, params);
+    return resp;
+  }catch (error) {
+    console.error(`Error:`, error);
+  }
+}
+const obtenerInscritosPorAreaService = async (params) => {
+  try {
+    const ruta = getRuta('obtener-inscritos-por-area')
+    const resp = await axios.post(ruta, params);
+    return resp;
+  }catch (error) {
+    console.error(`Error:`, error);
+  }
+}
+const obtenerInscritosPorModalidadService = async (params) => {
+  try {
+    const ruta = getRuta('obtener-inscritos-por-modalidad')
+    const resp = await axios.post(ruta, params);
+    return resp;
+  }catch (error) {
+    console.error(`Error:`, error);
+  }
+}
 
-export { obtenerProcesosFull, crearProceso, cerrarProceso, obtenerInscritosPorSedeService };
+export { obtenerProcesosFull, crearProceso, cerrarProceso, obtenerInscritosPorSedeService, obtenerInscritosPorCarreraService, obtenerInscritosPorModalidadService, obtenerInscritosPorAreaService};

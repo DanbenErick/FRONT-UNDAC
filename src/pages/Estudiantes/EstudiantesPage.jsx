@@ -133,6 +133,7 @@ const EstudiantesPage = () => {
           <>
             <Popconfirm
               title="Estudiante"
+              placement="left"
               description="Quieres editar este carrera?"
               onConfirm={() => {
                 showPanelEditEstudiante({ ID: column.ID });
@@ -144,6 +145,7 @@ const EstudiantesPage = () => {
               <Button type="link" info icon={<EditFilled />}></Button>
             </Popconfirm>
             <Popconfirm
+              placement="left"
               title="Estudiante"
               description="Quieres editar foto?"
               onConfirm={() => {

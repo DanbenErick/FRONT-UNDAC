@@ -8,7 +8,7 @@ import {
 } from '../../api/apiProcesos';
 import '../../assets/styles/DashboardAdmin.css';
 import moment from 'moment';
-import { getInscritosPorProcesoService, getProcesosService } from '../../services/ProcesosService';
+import { getInscritosPorProcesoAreasService, getInscritosPorProcesoCarrerasService, getInscritosPorProcesoModalidadesService, getInscritosPorProcesoSedeService, getInscritosPorProcesoService, getProcesosService } from '../../services/ProcesosService';
 import { message } from 'antd/es';
 import { CloseCircleOutlined, EyeOutlined } from '@ant-design/icons';
 
@@ -18,6 +18,7 @@ export default function ProcesosPage() {
   const [dataTable, setDataTable] = useState([]);
   const [statusModal, setStatusModal] = useState(false);
   const [dataInscritos, setDataInscritos] = useState([]);
+  const [columnsInscritosTable, setColumnsInscritosTable] = useState([])
   const initialValues = {
     NOMBRE: '',
     FECHA_REGISTRO: '',
@@ -37,18 +38,73 @@ export default function ProcesosPage() {
     };
     start();
   }, []);
-
-  const obtenerInscritosPorProceso = async (params) => {
+  
+  const obtenerInscritosPorProcesoSede = async (params) => {
     setStatusModal(true)
-    const resp = await getInscritosPorProcesoService(params)
-    console.log(resp)
+    const resp = await getInscritosPorProcesoSedeService(params)
+    setColumnsInscritosTable(columnsInscritos)
     setDataInscritos(resp.data)
   }
+  const obtenerInscritosPorProcesoArea = async (params) => {
+    setStatusModal(true)
+    const resp = await getInscritosPorProcesoAreasService(params)
+    setColumnsInscritosTable(columnsInscritosArea)
+    setDataInscritos(resp.data)
+  }
+  const obtenerInscritosPorProcesoCarrera = async (params) => {
+    setStatusModal(true)
+    const resp = await getInscritosPorProcesoCarrerasService(params)
+    setColumnsInscritosTable(columnsInscritosCarrera)
+    setDataInscritos(resp.data)
+  }
+  const obtenerInscritosPorProcesoModalidad = async (params) => {
+    setStatusModal(true)
+    const resp = await getInscritosPorProcesoModalidadesService(params)
+    setColumnsInscritosTable(columnsInscritosModalidad)
+    setDataInscritos(resp.data)
+  }
+  
   const columnsInscritos = [
     {
       title: 'Sede',
       dataIndex: 'SEDE',
       key: 'SEDE',
+    },
+    {
+      title: 'Total de inscritos',
+      dataIndex: 'CANTIDAD',
+      key: 'CANTIDAD',
+    },
+  ]
+  const columnsInscritosArea = [
+    {
+      title: 'AREA',
+      dataIndex: 'AREA',
+      key: 'AREA',
+    },
+    {
+      title: 'Total de inscritos',
+      dataIndex: 'CANTIDAD',
+      key: 'CANTIDAD',
+    },
+  ]
+  const columnsInscritosModalidad = [
+    {
+      title: 'MODALIDAD',
+      dataIndex: 'NOMBRE_MODALIDAD',
+      key: 'NOMBRE_MODALIDAD',
+    },
+    {
+      title: 'Total de inscritos',
+      dataIndex: 'CANTIDAD',
+      key: 'CANTIDAD',
+    },
+  ]
+  const columnsInscritosCarrera = [
+    {
+      title: 'NOMBRE CARRERA',
+      dataIndex: 'NOMBRE_CARRERA',
+      key: 'NOMBRE_CARRERA',
     },
     {
       title: 'Total de inscritos',
@@ -111,7 +167,16 @@ export default function ProcesosPage() {
               <Button type="link" danger icon={<CloseCircleOutlined />}></Button>
             </Popconfirm>
             <Tooltip title="Ver inscritos por sede">
-              <Button onClick={() => obtenerInscritosPorProceso({ID_PROCESO: column.ID})} type="link" sucess icon={<EyeOutlined />}></Button>
+              <Button onClick={() => obtenerInscritosPorProcesoSede({ID_PROCESO: column.ID})} type="link" sucess icon={<EyeOutlined />}></Button>
+            </Tooltip>
+            <Tooltip title="Ver inscritos por modalidad">
+              <Button onClick={() => obtenerInscritosPorProcesoModalidad({ID_PROCESO: column.ID})} type="link" sucess icon={<EyeOutlined />}></Button>
+            </Tooltip>
+            <Tooltip title="Ver inscritos por carrera">
+              <Button onClick={() => obtenerInscritosPorProcesoCarrera({ID_PROCESO: column.ID})} type="link" sucess icon={<EyeOutlined />}></Button>
+            </Tooltip>
+            <Tooltip title="Ver inscritos por area">
+              <Button onClick={() => obtenerInscritosPorProcesoArea({ID_PROCESO: column.ID})} type="link" sucess icon={<EyeOutlined />}></Button>
             </Tooltip>
             </>
           );
@@ -244,8 +309,8 @@ export default function ProcesosPage() {
           <Table dataSource={dataTable} columns={columns} size="small" />
         </Card>
       </div>
-      <Modal title="Informacion adicional" open={statusModal} onOk={() => setStatusModal(false)} onCancel={() => setStatusModal(false)}>
-        <Table dataSource={dataInscritos} columns={columnsInscritos} size='large' />
+      <Modal title="Informacion adicional Sede" open={statusModal} onOk={() => setStatusModal(false)} onCancel={() => setStatusModal(false)}>
+        <Table dataSource={dataInscritos} columns={columnsInscritosTable} size='large' />
       </Modal>
     </div>
   );
