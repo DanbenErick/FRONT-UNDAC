@@ -600,7 +600,7 @@ const EstudiantesPage = () => {
         <div style={{ width: '100%', objectFit: 'cover', marginBottom: '10px' }}>
           <Image
             key={keyFoto}
-            src={`http://localhost:3500/${stateDNI}/${stateDNI}.jpeg`}
+            src={`${process.env.REACT_APP_API_URL}/${stateDNI}/${stateDNI}.jpeg`}
           />
         </div>
         <Form layout='vertical'>
