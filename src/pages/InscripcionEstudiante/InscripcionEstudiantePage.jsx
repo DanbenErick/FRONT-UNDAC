@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Steps } from 'antd';
+import { Button, Steps } from 'antd';
 import DatosPersonalIncripcion from './InscripcionEstudiantePages/DatosPersonalesIns';
 import DatosContactoIns from './InscripcionEstudiantePages/DatosContactoIns';
 import ResumenIns from './InscripcionEstudiantePages/ResumenIns';
 import ValidacionIns from './InscripcionEstudiantePages/ValidacionIns';
 import ConfirmacionIns from './InscripcionEstudiantePages/ConfirmacionIns';
 import '../../assets/styles/InscripcionEstudiantePage.css';
+import { Link } from 'react-router-dom';
+import { StepForwardOutlined } from '@ant-design/icons';
 // import { EstudianteContext } from '../../providers/EstudianteProvider';
 const InscripcionEstudiantePage = () => {
   const [current, setCurrent] = useState(0);
@@ -44,6 +46,9 @@ const InscripcionEstudiantePage = () => {
   }));
   return (
     <div className="InscripcionEstudiantePage">
+      <Link to="/login-estudiante">
+        <Button className="buttoYaTengoCuenta" type="primary" icon={<StepForwardOutlined />}>Ya tengo cuenta</Button>
+      </Link>
       <div className="background"></div>
       <div className="containerInscripcionEstudiantePageCenter">
         <div className="containerInscripcionEstudiantePage">

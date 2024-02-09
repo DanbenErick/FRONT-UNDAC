@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
 import "remixicon/fonts/remixicon.css";
-import { verificarDatosComplementariosEstudiante, verificarEstudianteInscritoService, verificarTestpsicologicoEstudianteService } from "../../../api/inscripcionDashEstudianteService";
+import { verificarDatosComplementariosEstudiante, verificarEstudianteInscritoService, verificarPagoEstudianteService, verificarTestpsicologicoEstudianteService } from "../../../api/inscripcionDashEstudianteService";
 const HomeDashEstudinte = () => {
   const [statusDatosApoderado, setStatusDatosApoderado] = useState(false)
   const [statusInscripcion, setStatusInscripcion] = useState(false)
   const [statusTestpsicologico, setStatusTestpsicologico] = useState(false)
+  const [statusPago, setStatusPago] = useState(false)
   const verificarStates = async () => {
-    const resp_inscrito = await verificarEstudianteInscritoService({DNI: localStorage.getItem('dni')})
+    const resp_inscrito = await verificarEstudianteInscritoService({DNI: localStorage.getItem('dni'), TIPO_PROCESO: 'M'})
     const resp_datos_co = await verificarDatosComplementariosEstudiante({DNI: localStorage.getItem('dni')})
     const resp_test_pic = await verificarTestpsicologicoEstudianteService({DNI: localStorage.getItem('dni')})
+    const resp_pago = await verificarPagoEstudianteService({DNI: localStorage.getItem('dni')})
     if(resp_inscrito.data.ok) setStatusInscripcion(true)
     if(resp_datos_co.data.ok) setStatusDatosApoderado(true)
     if(resp_test_pic.data.ok) setStatusTestpsicologico(true)
+    if(resp_pago.data.ok) setStatusPago(true)
   }
   useEffect(() => {
     verificarStates()
@@ -88,8 +91,8 @@ const HomeDashEstudinte = () => {
             <li style={{borderLeft: statusInscripcion ? 'solid 2px green': 'solid 2px red'}}>
               <i class={statusInscripcion ? "ri-check-line": 'ri-close-line'} style={{ fontWeight: 'bold', color: statusInscripcion ? 'green': 'red' }}></i>Foto
             </li>
-            <li style={{borderLeft: false ? 'solid 2px green': 'solid 2px red'}}>
-              <i class={false ? "ri-check-line": 'ri-close-line'} style={{ fontWeight: 'bold', color: false ? 'green': 'red' }}></i>Voucher de pago
+            <li style={{borderLeft: statusPago ? 'solid 2px green': 'solid 2px red'}}>
+              <i class={statusPago ? "ri-check-line": 'ri-close-line'} style={{ fontWeight: 'bold', color: statusPago ? 'green': 'red' }}></i>Voucher de pago
             </li>
             <li style={{borderLeft: statusInscripcion ? 'solid 2px green': 'solid 2px red'}}>
               <i class={statusInscripcion ? "ri-check-line": 'ri-close-line'} style={{ fontWeight: 'bold', color: statusInscripcion ? 'green': 'red' }}></i>Documentacion (DNI, CERT. EST.)
