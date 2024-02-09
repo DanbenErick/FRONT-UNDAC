@@ -1,6 +1,7 @@
-import { Button, DatePicker, Form, Input, Table } from 'antd'
+import { Button, DatePicker, Form, Input, Select, Table, message } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { comprobarVoucherPorFechaService, obtenerMisPagosService } from '../../../api/pagosDashEstudiService'
+import { comprobarVoucherPorFechaService, obtenerMisPagosService, registrarPagoService } from '../../../api/pagosDashEstudiService'
+import { obtenerModalidadesForm, obtenerProcesoActivoForm, obtenerTodosLosProcesosActivosForm } from '../../../api/apiInpputs';
 
 const formatDateUtil = (date) => {
   date = new Date(date)
@@ -20,15 +21,39 @@ const columnsTable = [
 const PagosEstudiantePage = () => {
   const [dataTable, setDataTable] = useState()
   const [formPago] = Form.useForm()
+  const [selectProcesos, setSelectProcesos] = useState([]);
   const comprobarPago = async(params) => {
     const fecha = formatDateUtil(new Date(params.FECHA_PAGO))
-    const resp = await comprobarVoucherPorFechaService(fecha)
+    const data_send = {
+      ID_PROCESO: params.ID_PROCESO,
+      DNI: localStorage.getItem('dni'),
+      CODIGO: params.COD_PAGO,
+      FECHA_PAGO: fecha,
+      AGE: params.AGE,
+      CAJ: params.CAJ,
+      MONTO: params.MONTO
+    }
+    console.log(data_send)
+    // const resp = await comprobarVoucherPorFechaService(fecha)
+    const resp = await registrarPagoService(data_send)
+    if(resp.data.ok) {
+      message.success(resp.data.message)
+      refreshTable({ DNI: localStorage.getItem('dni') })
+    }else {
+      message.error(resp.data.message)
+    }
+  }
+  const getInputs = async() => {
+    const resp_proceso_activo = await obtenerTodosLosProcesosActivosForm();
+    setSelectProcesos(resp_proceso_activo.data);
   }
   const refreshTable = async(params) => {
     const resp = await obtenerMisPagosService(params)
     setDataTable(resp.data)
   }
+  const filterOption = (input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
   useEffect(() => {
+    getInputs()
     refreshTable({ DNI: localStorage.getItem('dni') })
   }, [])
   return (
@@ -42,6 +67,19 @@ const PagosEstudiantePage = () => {
         </div>
         <div className="cardDashEstudianteBody">
           <div className="gridFormFormularioPagosEstudiante">
+            <Form.Item
+              className="FormItem"
+              label="Proceso"
+              name="ID_PROCESO"
+              rules={[{ required: true }]}
+            >
+              <Select
+                showSearch
+                placeholder="Selecciona un proceso"
+                options={selectProcesos}
+                filterOption={filterOption}
+              />
+            </Form.Item>
             <Form.Item
               className="FormItem"
               label="Codigo de pago "
@@ -58,10 +96,34 @@ const PagosEstudiantePage = () => {
             >
               <DatePicker style={{ width: '100%' }} />
             </Form.Item>
-            <Form.Item>
-              <Button htmlType='submit'>Comprobar</Button>
+            <Form.Item
+              className="FormItem"
+              label="Caj"
+              name="CAJ"
+              rules={[{ required: true }]}
+            >
+              <Input maxLength={4} />
+            </Form.Item>
+            <Form.Item
+              className="FormItem"
+              label="Age"
+              name="AGE"
+              rules={[{ required: true }]}
+            >
+              <Input maxLength={4} />
+            </Form.Item>
+            <Form.Item
+              className="FormItem"
+              label="Monto"
+              name="MONTO"
+              rules={[{ required: true }]}
+            >
+              <Input maxLength={6} />
             </Form.Item>
           </div>
+            <Form.Item>
+              <Button htmlType='submit'>Registrar Pago</Button>
+            </Form.Item>
         </div>
         
       </div>

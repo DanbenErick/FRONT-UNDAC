@@ -9,7 +9,15 @@ const comprobarVoucherPorFechaService = async(params) => {
     console.error('Ocurrio un error', error)
   }
 }
-
+const registrarPagoService = async(params) => {
+  try {
+    const ruta = getRuta('registrar-pago')
+    const resp = await axios.post(ruta, params)
+    return resp
+  }catch(error) {
+    console.error('Ocurrio un error', error)
+  }
+}
 const obtenerMisPagosService = async(params) => {
   try {
     const ruta = getRuta('obtener-mis-pagos')
@@ -20,4 +28,4 @@ const obtenerMisPagosService = async(params) => {
   }
 }
 
-export { comprobarVoucherPorFechaService, obtenerMisPagosService }
+export { comprobarVoucherPorFechaService, obtenerMisPagosService, registrarPagoService }
