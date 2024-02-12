@@ -25,6 +25,7 @@ const ConfirmacionIns = (props) => {
     localStorage.setItem('token', resp.data.token)
     localStorage.setItem('nombre', resp.data.name)
     localStorage.setItem('dni', resp.data.user)
+    localStorage.setItem('uuid', resp.data.uuid)
     localStorage.setItem('expiresAt', resp.data.expiresAt);
     localStorage.setItem('rol', resp.data.rol)
     navigate('/dashboard-estudiantes/home');
