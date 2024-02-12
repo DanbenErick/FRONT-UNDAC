@@ -4,7 +4,7 @@ import { Page, Text, View, Document, StyleSheet, PDFViewer, Image, Font } from '
 import { obtenerDatosEstudianteCarnetService } from '../api/inscripcionDashEstudianteService';
 
 
-const contenido = 'https://gemini.google.com/'+ localStorage.getItem('uuid');
+const contenido = 'https://front-undac.vercel.app/'+ localStorage.getItem('uuid');
 Font.register({ family: 'Roboto Condensed', src: 'https://fonts.gstatic.com/s/robotocondensed/v27/ieVo2ZhZI2eCN5jzbjEETS9weq8-_d6T_POl0fRJeyVVpcBO5Xw.woff2' });
 // Estilos para el PDF
 const styles = StyleSheet.create({
