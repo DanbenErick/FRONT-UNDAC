@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
           <Page size="A4" style={styles.page}>
             <View style={styles.section}>
             <Image src="encabezado-estudiante-carnet.jpg" style={styles.imagenFondo} />
-            <Image src={`http://localhost:3500/${dataStudent.DNI}/${dataStudent.DNI}.jpeg`}  style={styles.fotoPerfil} />
+            <Image src={`${process.env.REACT_APP_API_URL}/${dataStudent.DNI}/${dataStudent.DNI}.jpeg`}  style={styles.fotoPerfil} />
             
               <View style={styles.containerText}>
                 <Text style={styles.text}>APELLIDO PATERNO: {dataStudent.AP_PATERNO}</Text>
