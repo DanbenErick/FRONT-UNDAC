@@ -1,24 +1,36 @@
 import React, { useEffect, useState } from "react";
 import "remixicon/fonts/remixicon.css";
 import { verificarDatosComplementariosEstudiante, verificarEstudianteInscritoService, verificarPagoEstudianteService, verificarTestpsicologicoEstudianteService } from "../../../api/inscripcionDashEstudianteService";
+import { Button } from "antd";
+import { Link } from "react-router-dom";
 const HomeDashEstudinte = () => {
   const [statusDatosApoderado, setStatusDatosApoderado] = useState(false)
   const [statusInscripcion, setStatusInscripcion] = useState(false)
   const [statusTestpsicologico, setStatusTestpsicologico] = useState(false)
   const [statusPago, setStatusPago] = useState(false)
+  const [statusCarnet, setStatusCarnet] = useState(false)
+  let carnetContador = 0
   const verificarStates = async () => {
     const resp_inscrito = await verificarEstudianteInscritoService({DNI: localStorage.getItem('dni'), TIPO_PROCESO: 'M'})
     const resp_datos_co = await verificarDatosComplementariosEstudiante({DNI: localStorage.getItem('dni')})
     const resp_test_pic = await verificarTestpsicologicoEstudianteService({DNI: localStorage.getItem('dni')})
     const resp_pago = await verificarPagoEstudianteService({DNI: localStorage.getItem('dni')})
-    if(resp_inscrito.data.ok) setStatusInscripcion(true)
-    if(resp_datos_co.data.ok) setStatusDatosApoderado(true)
-    if(resp_test_pic.data.ok) setStatusTestpsicologico(true)
-    if(resp_pago.data.ok) setStatusPago(true)
+    if(resp_inscrito.data.ok) {setStatusInscripcion(true); carnetContador += 1}
+    if(resp_datos_co.data.ok) {setStatusDatosApoderado(true); carnetContador += 1}
+    if(resp_test_pic.data.ok) {setStatusTestpsicologico(true); carnetContador += 1}
+    if(resp_pago.data.ok) {setStatusPago(true); carnetContador += 1}
+    
   }
+  let i = 0
   useEffect(() => {
+    console.log("Ejecutandose ", i++)
     verificarStates()
-  },[])
+    if(statusDatosApoderado && statusInscripcion && statusTestpsicologico && statusPago ){
+      console.log('ingreso')
+      setStatusCarnet(true)
+    }
+    console.log(statusCarnet)
+  },[statusDatosApoderado, statusInscripcion, statusTestpsicologico, statusPago, statusCarnet])
   return (
     <>
       <h1>Bienvenido { localStorage.getItem('nombre') }</h1>
@@ -71,8 +83,8 @@ const HomeDashEstudinte = () => {
         <div className="containerMain">
           {/* <div className="containerMainImage"> */}
           <img
-            src="https://undac.edu.pe/wp-content/uploads/2023/12/410930831_886290123497590_5080581941822328473_n-2048x759.jpg"
-            alt=""
+            src="https://undac.edu.pe/wp-content/uploads/2024/02/facebook_Mesa-de-trabajo-1-2048x758.png"
+            alt="Banner"
           />
           {/* </div> */}
         </div>
@@ -80,27 +92,36 @@ const HomeDashEstudinte = () => {
           <h4>Requisitos</h4>
           <ul>
             <li style={{borderLeft: 'solid 2px green'}}>
-              <i class="ri-check-line" style={{ fontWeight: 'bold', color: 'green' }}></i>Registro
+              <i className="ri-check-line" style={{ fontWeight: 'bold', color: 'green' }}></i>Registro
             </li>
             <li style={{borderLeft: statusDatosApoderado ? 'solid 2px green': 'solid 2px red'}}>
-              <i class={statusDatosApoderado ? "ri-check-line": 'ri-close-line'} style={{ fontWeight: 'bold', color: statusDatosApoderado ? 'green': 'red' }}></i>Datos del Apoderado
+              <i className={statusDatosApoderado ? "ri-check-line": 'ri-close-line'} style={{ fontWeight: 'bold', color: statusDatosApoderado ? 'green': 'red' }}></i>Datos del Apoderado
             </li>
             <li style={{borderLeft: statusInscripcion ? 'solid 2px green': 'solid 2px red'}}>
-              <i class={statusInscripcion ? "ri-check-line": 'ri-close-line'} style={{ fontWeight: 'bold', color: statusInscripcion ? 'green': 'red' }}></i>Inscripcion
+              <i className={statusInscripcion ? "ri-check-line": 'ri-close-line'} style={{ fontWeight: 'bold', color: statusInscripcion ? 'green': 'red' }}></i>Inscripcion
             </li>
             <li style={{borderLeft: statusInscripcion ? 'solid 2px green': 'solid 2px red'}}>
-              <i class={statusInscripcion ? "ri-check-line": 'ri-close-line'} style={{ fontWeight: 'bold', color: statusInscripcion ? 'green': 'red' }}></i>Foto
+              <i className={statusInscripcion ? "ri-check-line": 'ri-close-line'} style={{ fontWeight: 'bold', color: statusInscripcion ? 'green': 'red' }}></i>Foto
             </li>
             <li style={{borderLeft: statusPago ? 'solid 2px green': 'solid 2px red'}}>
-              <i class={statusPago ? "ri-check-line": 'ri-close-line'} style={{ fontWeight: 'bold', color: statusPago ? 'green': 'red' }}></i>Voucher de pago
+              <i className={statusPago ? "ri-check-line": 'ri-close-line'} style={{ fontWeight: 'bold', color: statusPago ? 'green': 'red' }}></i>Voucher de pago
             </li>
             <li style={{borderLeft: statusInscripcion ? 'solid 2px green': 'solid 2px red'}}>
-              <i class={statusInscripcion ? "ri-check-line": 'ri-close-line'} style={{ fontWeight: 'bold', color: statusInscripcion ? 'green': 'red' }}></i>Documentacion (DNI, CERT. EST.)
+              <i className={statusInscripcion ? "ri-check-line": 'ri-close-line'} style={{ fontWeight: 'bold', color: statusInscripcion ? 'green': 'red' }}></i>Documentacion (DNI, CERT. EST.)
             </li>
             <li style={{borderLeft: statusTestpsicologico ? 'solid 2px green': 'solid 2px red'}}>
-              <i class={statusTestpsicologico ? "ri-check-line": 'ri-close-line'} style={{ fontWeight: 'bold', color: statusTestpsicologico ? 'green': 'red' }}></i>Test psicologico
+              <i className={statusTestpsicologico ? "ri-check-line": 'ri-close-line'} style={{ fontWeight: 'bold', color: statusTestpsicologico ? 'green': 'red' }}></i>Test psicologico
             </li>
           </ul>
+          {
+            statusCarnet
+            ?
+            <a href="/generar-pdf" target="_blank">
+              <Button block type="primary">Ver mi carnet</Button>
+            </a>
+            :
+            ''
+          }
         </div>
       </div>
     </>

@@ -3,7 +3,7 @@ import { Select } from 'antd';
 import { Form, Input } from 'antd';
 import React, { useContext } from 'react';
 import { EstudianteContext } from '../../../providers/EstudianteProvider';
-import { consultarEstudianteExisteService } from '../../../api/inscripcionEstudianteService';
+import { consultarDatosEstudiantePorDNI, consultarEstudianteExisteService } from '../../../api/inscripcionEstudianteService';
 import { message } from 'antd';
 import { SmileOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
@@ -42,6 +42,16 @@ const DatosPersonalIncripcion = (props) => {
     setEstudiante(params);
     props.setCurrent(props.current + 1);
   };
+  const buscarDNI = async() => {
+    if(formDatosPersonales.getFieldValue('DNI').length === 8) {
+      const resp = await consultarDatosEstudiantePorDNI({dni: formDatosPersonales.getFieldValue('DNI')})
+      if(resp.data.success) {
+        formDatosPersonales.setFieldValue('AP_PATERNO', resp.data.data.apellido_paterno)
+        formDatosPersonales.setFieldValue('AP_MATERNO', resp.data.data.apellido_materno)
+        formDatosPersonales.setFieldValue('NOMBRES', resp.data.data.nombres)
+      }
+    }
+  }
   return (
     <>
     {contextHolder}
@@ -58,6 +68,7 @@ const DatosPersonalIncripcion = (props) => {
             maxLength="8"
             placeholder="Ingresa tu numero de DNI"
             style={{ width: '100%' }}
+            onChange={buscarDNI}
           />
         </Form.Item>
         <Form.Item

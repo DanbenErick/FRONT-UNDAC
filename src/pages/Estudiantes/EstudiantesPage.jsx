@@ -268,6 +268,7 @@ const EstudiantesPage = () => {
     setDataTable(resp.data);
   };
   const cambiarFoto = async() => {
+    let dni = stateDNI
     const formData = new FormData();
     const selectedFile = fileFoto.current.files[0];
     const typeFile = selectedFile.type;
@@ -599,6 +600,7 @@ const EstudiantesPage = () => {
         open={modalFotosyArchivo}
       >
         <h1>Fotos {stateDNI} </h1>
+        <p>Nombre estudiante</p>
         <div style={{ width: '100%', objectFit: 'cover', marginBottom: '10px' }}>
           <Image
             key={keyFoto}

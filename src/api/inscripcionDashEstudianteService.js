@@ -54,6 +54,16 @@ const verificarEstudianteInscritoService = async(params) => {
   }
 }
 
+const obtenerDatosEstudianteCarnetService = async(params) => {
+  try {
+    const ruta = getRuta('obtener-datos-estudiante-carnet')
+    const resp = await axios.post(ruta, params)
+    return resp
+  }catch(error) {
+    console.error('Ocurrio un error', error)
+  }
+}
+
 const verificarPagoEstudianteService = async(params) => {
   try {
     const ruta = getRuta('verificar-pago-requisitos')
@@ -112,5 +122,6 @@ export {
   verificarTestpsicologicoEstudianteService,
   verificarInscripcionEstudianteService,
   verificarDatosComplementariosEstudiante,
-  verificarPagoEstudianteService
+  verificarPagoEstudianteService,
+  obtenerDatosEstudianteCarnetService
 };

@@ -18,6 +18,7 @@ const LoginEstudiantePage = () => {
       localStorage.setItem('nombre', resp.data.name)
       localStorage.setItem('dni', resp.data.dni)
       localStorage.setItem('expiresAt', resp.data.expiresAt);
+      localStorage.setItem('uuid', resp.data.uuid)
       localStorage.setItem('rol', 'ESTUDIANTE')
       message.success(resp.data.message)
       navigate('/dashboard-estudiantes/home')

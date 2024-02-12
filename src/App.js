@@ -33,6 +33,7 @@ import InscripcionOdinarioPage from './pages/DashboardEstudiantes/PagesDashboard
 import ResultadoPage from './pages/Resultados/ResultadosPage';
 import CarreraResultadoPage from './pages/Resultados/CarrerasResultadoPage';
 import TablaResultadosPage from './pages/Resultados/TablaResultadosPage';
+import HojaEstudianteIngresoPage from './pages/HojaEstudianteIngresoPage';
 
 const App = () => {
   return (
@@ -110,6 +111,7 @@ const App = () => {
               <Route path="/resultados" element={<ResultadoPage />} />
               <Route path='/resultados-lis-carreras/:nombre/:id' element={<CarreraResultadoPage />} />
               <Route path='/tabla-resultado/:id/:nombre' element={<TablaResultadosPage />} />
+              <Route path='/generar-pdf/:uuid?' Component={HojaEstudianteIngresoPage} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Router>

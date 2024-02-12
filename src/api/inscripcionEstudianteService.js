@@ -11,6 +11,18 @@ const consultarEstudianteExisteService = async (params) => {
     console.error('Ocurrio un error', error);
   }
 };
+const consultarDatosEstudiantePorDNI = async(params) => {
+  try {
+    const resp = await axios.post(`https://apiperu.dev/api/dni`, params, {
+      headers: {
+        'Authorization': `Bearer ${process.env.REACT_APP_API_KEY_DNI}`
+      }
+    })
+    return resp
+  }catch(error) {
+    console.error('Ocurrio un error', error)
+  }
+}
 const registrarEstudianteService = async (params) => {
   try {
     const resp = await axios.post(getRuta('registrar-estudiante'), params);
@@ -20,4 +32,4 @@ const registrarEstudianteService = async (params) => {
   }
 };
 
-export { consultarEstudianteExisteService, registrarEstudianteService };
+export { consultarEstudianteExisteService, registrarEstudianteService,consultarDatosEstudiantePorDNI };
