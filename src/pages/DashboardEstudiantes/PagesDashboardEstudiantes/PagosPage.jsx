@@ -3,22 +3,13 @@ import React, { useEffect, useState } from 'react'
 import { comprobarVoucherPorFechaService, obtenerMisPagosService, registrarPagoService } from '../../../api/pagosDashEstudiService'
 import { obtenerModalidadesForm, obtenerProcesoActivoForm, obtenerTodosLosProcesosActivosForm } from '../../../api/apiInpputs';
 
-const formatDateUtil = (dateStr) => {
-  // Convertir la cadena de fecha en un formato que Date pueda interpretar
-  const [datePart, timePart] = dateStr.split(' ');
-  const [yyyy, mm, dd] = datePart.split('-');
-  const [hh, min, ss] = (timePart || '00:00:00').split(':');
-
-  // Crear una nueva instancia de Date con los componentes de fecha y hora
-  const date = new Date(Date.UTC(yyyy, mm - 1, dd, hh, min, ss));
-
-  // Obtener los componentes de fecha y hora en la zona horaria UTC
-  const yyyyUTC = date.getUTCFullYear();
-  const mmUTC = String(date.getUTCMonth() + 1).padStart(2, '0');
-  const ddUTC = String(date.getUTCDate()).padStart(2, '0');
-
-  return `${yyyyUTC}-${mmUTC}-${ddUTC}`;
-};
+const formatDateUtil = (date) => {
+  date = new Date(date)
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+}
 const columnsTable = [
   { title: 'Proceso', dataIndex: 'NOMBRE_PROCESO', key: 'NOMBRE_PROCESO' },
   { title: 'Codigo', dataIndex: 'CODIGO', key: 'CODIGO' },
