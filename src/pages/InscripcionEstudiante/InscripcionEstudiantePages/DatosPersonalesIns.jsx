@@ -45,10 +45,10 @@ const DatosPersonalIncripcion = (props) => {
   const buscarDNI = async() => {
     if(formDatosPersonales.getFieldValue('DNI').length === 8) {
       const resp = await consultarDatosEstudiantePorDNI({dni: formDatosPersonales.getFieldValue('DNI')})
-      if(resp.data.success) {
-        formDatosPersonales.setFieldValue('AP_PATERNO', resp.data.data.apellido_paterno)
-        formDatosPersonales.setFieldValue('AP_MATERNO', resp.data.data.apellido_materno)
-        formDatosPersonales.setFieldValue('NOMBRES', resp.data.data.nombres)
+      if(resp.data.estado) {
+        formDatosPersonales.setFieldValue('AP_PATERNO', resp.data.resultado.apellido_paterno)
+        formDatosPersonales.setFieldValue('AP_MATERNO', resp.data.resultado.apellido_materno)
+        formDatosPersonales.setFieldValue('NOMBRES', resp.data.resultado.nombres)
       }
     }
   }

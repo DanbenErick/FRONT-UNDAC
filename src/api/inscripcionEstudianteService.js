@@ -13,11 +13,7 @@ const consultarEstudianteExisteService = async (params) => {
 };
 const consultarDatosEstudiantePorDNI = async(params) => {
   try {
-    const resp = await axios.post(`https://apiperu.dev/api/dni`, params, {
-      headers: {
-        'Authorization': `Bearer ${process.env.REACT_APP_API_KEY_DNI}`
-      }
-    })
+    const resp = await axios.get(`https://api.perudevs.com/api/v1/dni/simple?document=${params.dni}&key=${process.env.REACT_APP_API_KEY_DNI}`)
     return resp
   }catch(error) {
     console.error('Ocurrio un error', error)

@@ -4,7 +4,7 @@ import { Breadcrumb, Button, DatePicker, Image, Modal, Select, Space, Table } fr
 import { Card } from 'antd';
 import { Form } from 'antd';
 import { Input } from 'antd';
-import { EditFilled, SaveFilled, SearchOutlined, UploadOutlined } from '@ant-design/icons';
+import { CreditCardOutlined, EditFilled, SaveFilled, SearchOutlined, UploadOutlined } from '@ant-design/icons';
 import {
   buscarEstudianteService,
   editarArchivoEstudianteService,
@@ -157,6 +157,9 @@ const EstudiantesPage = () => {
             >
               <Button type="link" info icon={<UploadOutlined />}></Button>
             </Popconfirm>
+            <a href="/generar-pdf" target="_blank" onClick={() => localStorage.setItem('uuid', column.UUID)}>
+              <Button type="link" info icon={<CreditCardOutlined />}></Button>
+            </a>
           </>
         );
       },

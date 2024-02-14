@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Breadcrumb, Button, Modal, Select, Table, Tooltip } from 'antd';
+import { Breadcrumb, Button, Modal, Select, Table, Tabs, Tooltip } from 'antd';
 import { Tag, Popconfirm, Card, Form, Input, Radio, DatePicker } from 'antd';
 import SpinnerCompoent from '../../components/Spinner';
 import {
@@ -12,6 +12,8 @@ import { getInscritosPorProcesoAreasService, getInscritosPorProcesoCarrerasServi
 import { message } from 'antd/es';
 import { CloseCircleOutlined, EyeOutlined } from '@ant-design/icons';
 
+
+let ID_MODALIDAD_LOCAL = 0
 export default function ProcesosPage() {
   const [messageApi, contextHolder] = message.useMessage();
   const [loading, setLoading] = useState(true);
@@ -166,18 +168,10 @@ export default function ProcesosPage() {
             >
               <Button type="link" danger icon={<CloseCircleOutlined />}></Button>
             </Popconfirm>
-            <Tooltip title="Ver inscritos por sede">
-              <Button onClick={() => obtenerInscritosPorProcesoSede({ID_PROCESO: column.ID})} type="link" sucess icon={<EyeOutlined />}></Button>
+            <Tooltip title="Reporte">
+              <Button onClick={() => {obtenerInscritosPorProcesoSede({ID_PROCESO: column.ID});  ID_MODALIDAD_LOCAL = column.ID}} type="link" sucess icon={<EyeOutlined />}></Button>
             </Tooltip>
-            <Tooltip title="Ver inscritos por modalidad">
-              <Button onClick={() => obtenerInscritosPorProcesoModalidad({ID_PROCESO: column.ID})} type="link" sucess icon={<EyeOutlined />}></Button>
-            </Tooltip>
-            <Tooltip title="Ver inscritos por carrera">
-              <Button onClick={() => obtenerInscritosPorProcesoCarrera({ID_PROCESO: column.ID})} type="link" sucess icon={<EyeOutlined />}></Button>
-            </Tooltip>
-            <Tooltip title="Ver inscritos por area">
-              <Button onClick={() => obtenerInscritosPorProcesoArea({ID_PROCESO: column.ID})} type="link" sucess icon={<EyeOutlined />}></Button>
-            </Tooltip>
+            
             </>
           );
         }
@@ -185,6 +179,16 @@ export default function ProcesosPage() {
       },
     },
   ];
+  
+  const onChangeTabs = async(params) => {
+    setLoading(true)
+    if(params == 'sedes') await obtenerInscritosPorProcesoSede({ID_PROCESO: ID_MODALIDAD_LOCAL})
+    if(params == 'modalidades') await obtenerInscritosPorProcesoModalidad({ID_PROCESO: ID_MODALIDAD_LOCAL})
+    if(params == 'carreras') await obtenerInscritosPorProcesoCarrera({ID_PROCESO: ID_MODALIDAD_LOCAL})
+    if(params == 'areas') await obtenerInscritosPorProcesoArea({ID_PROCESO: ID_MODALIDAD_LOCAL})
+    
+    setLoading(false)
+  }
   const handleCerrarProceso = async (params) => {
     setLoading(true);
     const resp = await cerrarProceso(params);
@@ -222,10 +226,34 @@ export default function ProcesosPage() {
       content: message,
     });
   };
+  const itemsTabs = [
+    {
+      key: 'sedes',
+      label: 'Sedes',
+      children: <Table dataSource={dataInscritos} columns={columnsInscritosTable} size='large' />,
+    },
+    {
+      key: 'modalidades',
+      label: 'Modalidad',
+      children: <Table dataSource={dataInscritos} columns={columnsInscritosTable} size='large' />,
+    },
+    {
+      key: 'carreras',
+      label: 'Carrera',
+      children: <Table dataSource={dataInscritos} columns={columnsInscritosTable} size='large' />,
+    },
+    {
+      key: 'areas',
+      label: 'Areas',
+      children: <Table dataSource={dataInscritos} columns={columnsInscritosTable} size='large' />,
+    },
+  ];
   return (
     <div>
       {contextHolder}
       {loading ? <SpinnerCompoent /> : ''}
+      {/* TODO: Asi funciona el spinnigs */}
+      {/* <Spin spinning={loading} /> */}
       <div className="contentDashboard">
         <h1 className="titlePageDashboard">Procesos</h1>
         <Breadcrumb className="bradcrumpPadding">
@@ -309,8 +337,17 @@ export default function ProcesosPage() {
           <Table dataSource={dataTable} columns={columns} size="small" />
         </Card>
       </div>
-      <Modal title="Informacion adicional Sede" open={statusModal} onOk={() => setStatusModal(false)} onCancel={() => setStatusModal(false)}>
-        <Table dataSource={dataInscritos} columns={columnsInscritosTable} size='large' />
+      <Modal title="Informcion del Proceso" open={statusModal} onOk={() => setStatusModal(false)} onCancel={() => setStatusModal(false)}>
+        <Tabs
+          defaultActiveKey="1"
+          items={itemsTabs}
+          onChange={onChangeTabs}
+          indicator={{
+            size: (origin) => origin - 20,
+            align: 'center',
+          }}
+        />
+        {/* <Table dataSource={dataInscritos} columns={columnsInscritosTable} size='large' /> */}
       </Modal>
     </div>
   );
