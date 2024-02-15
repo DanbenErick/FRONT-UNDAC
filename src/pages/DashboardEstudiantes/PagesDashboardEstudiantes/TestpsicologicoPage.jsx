@@ -25,6 +25,46 @@ const TestpsicologicoPage = () => {
   useEffect(() => {
     verificarTestpsicologico()
   })
+  const generarTest = () => {
+    const getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min)) + min;
+    let respuestas = []
+    console.log(respuestas)
+    for(let i = 0; i < 30; i++) { respuestas.push(getRandomNumber(3,6).toString()) }
+    // console.log(respuestas[0], "  =  ", respuestas[1])
+    formTestpsicologico.setFieldValue('TEST_1_PREG_1', respuestas[0])
+    formTestpsicologico.setFieldValue('TEST_1_PREG_2', respuestas[1])
+    formTestpsicologico.setFieldValue('TEST_1_PREG_3', respuestas[2])
+    formTestpsicologico.setFieldValue('TEST_1_PREG_4', respuestas[3])
+    formTestpsicologico.setFieldValue('TEST_1_PREG_5', respuestas[4])
+    formTestpsicologico.setFieldValue('TEST_1_PREG_6', respuestas[5])
+    formTestpsicologico.setFieldValue('TEST_1_PREG_7', respuestas[6])
+    formTestpsicologico.setFieldValue('TEST_1_PREG_8', respuestas[7])
+    formTestpsicologico.setFieldValue('TEST_1_PREG_9', respuestas[8])
+    formTestpsicologico.setFieldValue('TEST_1_PREG_10', respuestas[9])
+    formTestpsicologico.setFieldValue('TEST_1_PREG_11', respuestas[10])
+    formTestpsicologico.setFieldValue('TEST_1_PREG_12', respuestas[11])
+    formTestpsicologico.setFieldValue('TEST_1_PREG_13', respuestas[12])
+    formTestpsicologico.setFieldValue('TEST_1_PREG_14', respuestas[13])
+    formTestpsicologico.setFieldValue('TEST_1_PREG_15', respuestas[14])
+
+    formTestpsicologico.setFieldValue('TEST_2_PREG_1', respuestas[15])
+    formTestpsicologico.setFieldValue('TEST_2_PREG_2', respuestas[16])
+    formTestpsicologico.setFieldValue('TEST_2_PREG_3', respuestas[17])
+    formTestpsicologico.setFieldValue('TEST_2_PREG_4', respuestas[18])
+    formTestpsicologico.setFieldValue('TEST_2_PREG_5', respuestas[19])
+    formTestpsicologico.setFieldValue('TEST_2_PREG_6', respuestas[20])
+    formTestpsicologico.setFieldValue('TEST_2_PREG_7', respuestas[21])
+    formTestpsicologico.setFieldValue('TEST_2_PREG_8', respuestas[22])
+    formTestpsicologico.setFieldValue('TEST_2_PREG_9', respuestas[23])
+    formTestpsicologico.setFieldValue('TEST_2_PREG_10', respuestas[24])
+    formTestpsicologico.setFieldValue('TEST_2_PREG_11', respuestas[25])
+    formTestpsicologico.setFieldValue('TEST_2_PREG_12', respuestas[26])
+    formTestpsicologico.setFieldValue('TEST_2_PREG_13', respuestas[27])
+    formTestpsicologico.setFieldValue('TEST_2_PREG_14', respuestas[28])
+    formTestpsicologico.setFieldValue('TEST_2_PREG_15', respuestas[29])
+
+
+  }
   return (
     
       registradoTest
@@ -36,8 +76,8 @@ const TestpsicologicoPage = () => {
           showIcon
         />)
         : (
-
           <Form form={formTestpsicologico} onFinish={guardarTestpsicologico}>
+          <Button onClick={generarTest}>Generar test</Button>
           <div className="cardDashEstudiante">
                   <div className="cardDashEstudianteHeader">
                     <p><i className="ri-group-2-fill"></i> Test Psicologico</p>
