@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import SpinnerComponent from '../../components/Spinner';
-import { Breadcrumb, Button, DatePicker, Image, Modal, Select, Space, Table } from 'antd';
+import { AutoComplete, Breadcrumb, Button, DatePicker, Divider, Image, Modal, Select, Space, Table, Tooltip } from 'antd';
 import { Card } from 'antd';
 import { Form } from 'antd';
 import { Input } from 'antd';
@@ -9,16 +9,20 @@ import {
   buscarEstudianteService,
   editarArchivoEstudianteService,
   editarFotoEstudianteService,
+  modificarDatosComplementariosEstudianteService,
   modificarEstudianteService,
+  obtenerDatosComplementariosEstudianteService,
   obtenerEstudiantesService,
   registrarEInscribirEstudianteService,
+  resetearPasswordService,
 } from '../../api/estudiantesAdmService';
 import { Popconfirm } from 'antd';
 import { Drawer } from 'antd';
 import { message } from 'antd';
 import moment from 'moment';
-import { buscarAulaPorTurnoForm, obtenerCarrerasCodigoForm, obtenerCarrerasForm, obtenerDepartamentosForm, obtenerDiscapacidadesForm, obtenerDistritosForm, obtenerModalidadesForm, obtenerProcesoActivoForm, obtenerProcesosForm, obtenerProvinciasForm, obtenerRazasEtnicasForm, obtenerTodosLosProcesosActivosForm } from '../../api/apiInpputs';
+import { buscarAulaPorTurnoForm, obtenerCarrerasCodigoForm, obtenerCarrerasForm, obtenerDepartamentosForm, obtenerDiscapacidadesForm, obtenerDistritoUbigeoAutocompleteForm, obtenerDistritosForm, obtenerModalidadesForm, obtenerProcesoActivoForm, obtenerProcesosForm, obtenerProvinciasForm, obtenerRazasEtnicasForm, obtenerTodosLosProcesosActivosForm } from '../../api/apiInpputs';
 import { formatDateUtil, formatOnlyYear } from '../../util/Util';
+import { Option } from 'antd/es/mentions';
 
 
 
@@ -27,10 +31,12 @@ const EstudiantesPage = () => {
   const [loading, setLoading] = useState();
   const [stateDNI, setStateDNI] = useState()
   const [formEstudiantes] = Form.useForm();
+  const [formModificarPassword] = Form.useForm()
+  const [formModificarDatosComplementarios] = Form.useForm()
   const [dataTable, setDataTable] = useState();
   const [formModificarEstudiante] = Form.useForm();
   const [panelEditarEstudiante, setPanelEditarEstudiante] = useState(false);
-  
+  const [stateDNIResetPassword, setStateDNIResetPassword] = useState('')
   // Selects
   const [selectCarreras, setSelectCarreras] = useState([]);
   const [selectAulas, setSelectAulas] = useState([]);
@@ -45,7 +51,10 @@ const EstudiantesPage = () => {
   const [modalFotosyArchivo, setModalFotosyArchivo] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  
+  const [optionsDistritos, setOptionsDistritos] = useState([])
+
+  const [stateDraweResetearPassword, setStateDraweResetearPassword] = useState(false)
+  const [stateDrawerResetearDatosComplementarios, setStateDrawerResetearDatosComplementarios] = useState(false)
 
   const [stateDiscapacidad, setStateDiscapacidad] = useState(false);
   const [stateAulas, setStateAulas] = useState(false)
@@ -66,6 +75,34 @@ const EstudiantesPage = () => {
   // const handleFileArchivo = (event) => {
   //   setFileArchivo(event.target.files[0]);
   // }
+  const showDrawerResetearContraseña = (params) => {
+    setStateDNIResetPassword(params.DNI)
+    setStateDraweResetearPassword(true)
+  }
+  const showDrawerDatosComplementarios = async(params) => {
+    setLoading(true)
+    setStateDNIResetPassword(params.DNI)
+    const resp = await obtenerDatosComplementariosEstudianteService(params)
+    resp.data[0].FECHA_NACIMIENTO = formatDateUtil(resp.data[0].FECHA_NACIMIENTO)
+    formModificarDatosComplementarios.setFieldsValue(resp.data[0])
+    console.log(resp.data[0])
+    // formModificarDatosComplementarios
+    setStateDrawerResetearDatosComplementarios(true)
+    setLoading(false)
+  }
+
+  
+
+  const closeDrawerResetearContraseña = () => setStateDraweResetearPassword(false)
+  const closeDrawerDatosComplementarios = () => setStateDrawerResetearDatosComplementarios(false)
+
+  
+  const onSearchUbicacion = async(value) => {
+    const resp = await obtenerDistritoUbigeoAutocompleteForm({DISTRITO: value})
+    setOptionsDistritos(resp.data)
+    console.log(resp)
+  }
+
 
   const handleCancelFoto = () => setModalFotosyArchivo(false)
   const handleShowFoto = ({ID, DNI}) => {
@@ -134,9 +171,9 @@ const EstudiantesPage = () => {
             <Popconfirm
               title="Estudiante"
               placement="left"
-              description="Quieres editar este carrera?"
+              description="Quieres editar este estudiante?"
               onConfirm={() => {
-                showPanelEditEstudiante({ ID: column.ID });
+                showPanelEditEstudiante({ ID: column.ID, DNI: column.DNI });
               }}
               onCancel={() => ''}
               okText="Si"
@@ -289,6 +326,18 @@ const EstudiantesPage = () => {
     }
     console.log(resp)
   }
+  const modificarPasswordEvent = async(params) => {
+    //TODO: Continuar el cambio de contraseña
+    console.log(params)
+    const resp = await resetearPasswordService({...params, DNI: stateDNIResetPassword})
+    if(resp.data.ok) {
+      message.success(resp.data.message)
+      closeDrawerResetearContraseña()
+    }else {
+      message.error(resp.data.message)
+    }
+    
+  }
   const cambiarDocumento = async () => {
     const formdata = new FormData()
     formdata.append('archivo', fileArchivo.current.files[0])
@@ -304,6 +353,13 @@ const EstudiantesPage = () => {
       // await refreshTable()
       // return
     }
+  }
+  const modificarDatosComplemtariosEvent = async(params) => {
+    params.DNI = stateDNIResetPassword
+    console.log(params)
+    
+    const resp = await modificarDatosComplementariosEstudianteService(params)
+    console.log(resp)
   }
   const changeTurno = async(params) => {
     const resp = await buscarAulaPorTurnoForm({TURNO: params})
@@ -364,6 +420,104 @@ const EstudiantesPage = () => {
           onClose={hiddenPanelEditEstudiante}
           open={panelEditarEstudiante}
         >
+          <Tooltip placement="left" title={'Resetear contraseña'}>
+            <Button type="primary" onClick={() => showDrawerResetearContraseña({DNI: formModificarEstudiante.getFieldValue('DNI')})} style={{ marginRight: '5px' }}> <i class="ri-lock-unlock-fill"></i></Button>
+          </Tooltip>
+          <Tooltip placement="left" title={'Datos complementarios'}>
+            <Button type="primary" onClick={() => showDrawerDatosComplementarios({DNI: formModificarEstudiante.getFieldValue('DNI')})}><i class="ri-team-fill"></i></Button>
+          </Tooltip>
+          <Divider />
+          
+          
+          <Drawer
+            title="Resetear Contraseña"
+            width={320}
+            closable={false}
+            onClose={closeDrawerResetearContraseña}
+            open={stateDraweResetearPassword}
+          >
+            <Form layout="vertical"
+            form={formModificarPassword}
+            onFinish={modificarPasswordEvent}>
+              <Form.Item label="Nueva contraseña" name="PASSWORD">
+                <Input.Password />
+              </Form.Item>
+              <Button htmlType="submit" type="primary" block>Guardar contraseña</Button>
+            </Form>
+          </Drawer>
+
+          <Drawer
+            title="Editar Datos Complementarios"
+            width={320}
+            closable={false}
+            onClose={closeDrawerDatosComplementarios}
+            open={stateDrawerResetearDatosComplementarios}
+          >
+            <Form 
+              layout="vertical"
+              form={formModificarDatosComplementarios}
+              onFinish={modificarDatosComplemtariosEvent}
+            >
+              <Form.Item label="SEXO" name="SEXO">
+                <Select>
+                  <Option value="M">Masculino</Option>
+                  <Option value="F">Femenino</Option>
+                </Select>
+              </Form.Item>
+              {/* <Form.Item label="FECHA DE NACIMIENTO" name="FECHA_NACIMIENTO">
+                <DatePicker />
+              </Form.Item> */}
+              <Form.Item label="LUGAR DE RESIDENCIA" name="LUGAR_RESIDENCIA">
+              <AutoComplete
+                options={optionsDistritos}
+                optionLabelProp="label"
+                filterOption={(inputValue, option) => option.label.toLowerCase().includes(inputValue.toLowerCase())}
+                sortOption={(option1, option2) => option1.label.localeCompare(option2.label)}
+                onSearch={onSearchUbicacion}
+                onSelect={(value) => {
+                  console.log(value);
+                }}
+                placeholder="Escribe para buscar..."
+              />
+                
+              </Form.Item>
+              <Form.Item label="DIRECCION" name="DIRECCION">
+                <Input />
+              </Form.Item>
+              <Form.Item label="DISCAPACIDAD" name="DISCAPACIDAD">
+                <Select>
+                  <Option value="0">No</Option>
+                  <Option value="1">Si</Option>
+                </Select>
+              </Form.Item>
+              <Form.Item label="CELULAR" name="TELEFONO">
+                <Input maxLength={9} />
+              </Form.Item>
+              <Form.Item label="NOMBRE COLEGIO" name="NOMBRE_COLEGIO">
+                <Input />
+              </Form.Item>
+              <Form.Item label="TIPO COLEGIO" name="TIPO_COLEGIO">
+                <Select>
+                  <Option value="E">ESTATAL</Option>
+                  <Option value="P">PRIVADO</Option>
+                </Select>
+              </Form.Item>
+              <Form.Item label="NOMBRES APODERADO" name="NOMBRE_COMPLETO_APO">
+                <Input />
+              </Form.Item>
+              <Form.Item label="CELULAR APODERADO" name="CELULAR_APO">
+                <Input maxLength={9}/>
+              </Form.Item>
+              <Form.Item label="DNI APODERADO" name="DNI_APO">
+                <Input maxLength={8}/>
+              </Form.Item>
+              <Button htmlType="submit" type="primary" block>Guardar Cambios</Button>
+            </Form>
+          </Drawer>
+
+
+
+
           <Form
             layout="vertical"
             form={formModificarEstudiante}
@@ -634,6 +788,7 @@ const EstudiantesPage = () => {
         </Form.Item>
           <Button type="primary" onClick={cambiarDocumento}>Subir documento</Button>
         </Form>
+        
       </Drawer>
 </>
   );

@@ -338,6 +338,9 @@ export default function ProcesosPage() {
         </Card>
       </div>
       <Modal title="Informcion del Proceso" open={statusModal} onOk={() => setStatusModal(false)} onCancel={() => setStatusModal(false)}>
+        <Tooltip placement="left" title='Exportar excel'>
+          <Button type="success" style={{ background: '#006400', color: 'white' }}><i class="ri-file-excel-2-fill"></i></Button>
+        </Tooltip>
         <Tabs
           defaultActiveKey="1"
           items={itemsTabs}

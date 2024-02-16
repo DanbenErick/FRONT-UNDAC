@@ -111,6 +111,15 @@ const obtenerProcesosAbiertosAside = async () => {
     console.error('Ocurrio un error', error);
   }
 }
+const obtenerDistritoUbigeoAutocompleteForm = async(params) => {
+  try {
+    const ruta = getRuta('obtener-ubicacion-autocomplete')
+    const resp = await axios.post(ruta, params)
+    return resp
+  }catch(error) {
+    console.error('Ocurrio un error', error)
+  }
+}
 const obtenerProvinciasForm = async (params) => {
   try {
     const ruta = getRuta('obtener-provincias')
@@ -164,5 +173,6 @@ export {
   obtenerDistritosForm,
   buscarAulaPorTurnoForm,
   obtenerProcesosAbiertosAside,
-  obtenerTodosLosProcesosActivosForm
+  obtenerTodosLosProcesosActivosForm,
+  obtenerDistritoUbigeoAutocompleteForm
 };

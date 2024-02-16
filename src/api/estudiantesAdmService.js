@@ -23,6 +23,14 @@ const buscarEstudianteService = async (params) => {
   }
 };
 
+const obtenerDatosComplementariosEstudianteService = async(params) => {
+  try {
+    const resp = await axios.post(getRuta('obtener-datos-complementarios-estudiante'), params)
+    return resp
+  }catch(error) {
+    console.error('Ocurrio un error', error)
+  }
+}
 const registrarEInscribirEstudianteService = async(parmams) => {
   try {
     const resp = await axios.post(getRuta('registrar-inscribir-estudiante'), parmams);
@@ -31,7 +39,15 @@ const registrarEInscribirEstudianteService = async(parmams) => {
     console.error('Ocurrio un error', error);
   }
 }
-
+const modificarDatosComplementariosEstudianteService = async(params) => {
+  try {
+    const ruta = getRuta('modificar-datos-complementarios-estudiante')
+    const resp = await axios.post(ruta, params)
+    return resp
+  }catch(error) {
+    console.error('Ocurrio un error', error)
+  }
+}
 const modificarEstudianteService = async (params) => {
   try {
     const resp = await axios.put(getRuta('modificar-estudiante'), params);
@@ -40,6 +56,16 @@ const modificarEstudianteService = async (params) => {
     console.error('Ocurrio un error', error);
   }
 };
+
+const resetearPasswordService = async(params) => {
+  try {
+    const ruta = getRuta('resetear-password')
+    const resp = await axios.post(ruta, params)
+    return resp
+  }catch(error) {
+    console.error('Ocurrio un error', error)
+  }
+}
 
 const editarFotoEstudianteService = async(params) => {
   try {
@@ -67,5 +93,8 @@ export {
   modificarEstudianteService,
   registrarEInscribirEstudianteService,
   editarFotoEstudianteService,
-  editarArchivoEstudianteService
+  editarArchivoEstudianteService,
+  obtenerDatosComplementariosEstudianteService,
+  resetearPasswordService,
+  modificarDatosComplementariosEstudianteService
 };
