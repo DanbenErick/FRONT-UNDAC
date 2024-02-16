@@ -28,6 +28,15 @@ const cerrarProceso = async (params) => {
     console.error('ERROR: ', error);
   }
 };
+const obtenerInscritosNombresService = async(params) => {
+  try {
+    const ruta = getRuta('obtener-inscritos-datos-estudiante')
+    const resp = axios.post(ruta,params)
+    return resp
+  }catch(error) {
+    console.error('Ocurrio un error', error)
+  }
+}
 const obtenerInscritosPorSedeService = async (params) => {
   try {
     const ruta = getRuta('obtener-inscritos-por-sede')
@@ -65,4 +74,4 @@ const obtenerInscritosPorModalidadService = async (params) => {
   }
 }
 
-export { obtenerProcesosFull, crearProceso, cerrarProceso, obtenerInscritosPorSedeService, obtenerInscritosPorCarreraService, obtenerInscritosPorModalidadService, obtenerInscritosPorAreaService};
+export { obtenerProcesosFull, crearProceso, cerrarProceso, obtenerInscritosPorSedeService, obtenerInscritosPorCarreraService, obtenerInscritosPorModalidadService, obtenerInscritosPorAreaService, obtenerInscritosNombresService};

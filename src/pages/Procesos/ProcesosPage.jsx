@@ -8,11 +8,31 @@ import {
 } from '../../api/apiProcesos';
 import '../../assets/styles/DashboardAdmin.css';
 import moment from 'moment';
-import { getInscritosPorProcesoAreasService, getInscritosPorProcesoCarrerasService, getInscritosPorProcesoModalidadesService, getInscritosPorProcesoSedeService, getInscritosPorProcesoService, getProcesosService } from '../../services/ProcesosService';
+import { getInscritosPorProcesoAreasService, getInscritosPorProcesoCarrerasService, getInscritosPorProcesoModalidadesService, getInscritosPorProcesoSedeService, getInscritosPorProcesoService, getProcesosService, obtenerEstudiantesParaCSVService } from '../../services/ProcesosService';
 import { message } from 'antd/es';
 import { CloseCircleOutlined, EyeOutlined } from '@ant-design/icons';
 
+const convertirACsv = (data) => {
+  let csvContent = "data:text/csv;charset=utf-8,";
+  csvContent += "DNI;APELLIDOS Y NOMBRES,\n";
 
+  // Recorrer los datos de los estudiantes
+  for (const estudiante of data) {
+    csvContent += `${estudiante.DNI};${estudiante.NOMBRE_COMPLETO}\n`;
+  }
+
+  // Crear un enlace para descargar el archivo CSV
+  const downloadLink = document.createElement("a");
+  downloadLink.href = csvContent;
+  downloadLink.download = "estudiantes.csv";
+  downloadLink.textContent = "Descargar CSV";
+  downloadLink.target = "_blank";
+
+  // Descargar el archivo automáticamente
+  downloadLink.click();
+
+  document.body.appendChild(downloadLink);
+}
 let ID_MODALIDAD_LOCAL = 0
 export default function ProcesosPage() {
   const [messageApi, contextHolder] = message.useMessage();
@@ -40,7 +60,16 @@ export default function ProcesosPage() {
     };
     start();
   }, []);
-  
+  const generarCSVEstudiantes = async(params) => {
+    const resp = await obtenerEstudiantesParaCSVService()
+    console.log(resp)
+    // const resp = [{
+    //   dni: 1,
+    //   nombreCompleto: 'daniel'
+    // }]
+    convertirACsv(resp.data)
+    
+  }
   const obtenerInscritosPorProcesoSede = async (params) => {
     setStatusModal(true)
     const resp = await getInscritosPorProcesoSedeService(params)
@@ -170,6 +199,9 @@ export default function ProcesosPage() {
             </Popconfirm>
             <Tooltip title="Reporte">
               <Button onClick={() => {obtenerInscritosPorProcesoSede({ID_PROCESO: column.ID});  ID_MODALIDAD_LOCAL = column.ID}} type="link" sucess icon={<EyeOutlined />}></Button>
+            </Tooltip>
+            <Tooltip title="Generar CSV de estudiantes">
+              <Button onClick={() => {generarCSVEstudiantes({ID_PROCESO: column.ID});  ID_MODALIDAD_LOCAL = column.ID}} type="link" sucess icon={<EyeOutlined />}></Button>
             </Tooltip>
             
             </>
