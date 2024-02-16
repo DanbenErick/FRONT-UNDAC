@@ -10,7 +10,7 @@ import '../../assets/styles/DashboardAdmin.css';
 import moment from 'moment';
 import { getInscritosPorProcesoAreasService, getInscritosPorProcesoCarrerasService, getInscritosPorProcesoModalidadesService, getInscritosPorProcesoSedeService, getInscritosPorProcesoService, getProcesosService, obtenerEstudiantesParaCSVService } from '../../services/ProcesosService';
 import { message } from 'antd/es';
-import { CloseCircleOutlined, EyeOutlined } from '@ant-design/icons';
+import { CloseCircleOutlined, EyeOutlined, FormOutlined, SnippetsOutlined } from '@ant-design/icons';
 
 const convertirACsv = (data) => {
   let csvContent = "data:text/csv;charset=utf-8,";
@@ -198,10 +198,10 @@ export default function ProcesosPage() {
               <Button type="link" danger icon={<CloseCircleOutlined />}></Button>
             </Popconfirm>
             <Tooltip title="Reporte">
-              <Button onClick={() => {obtenerInscritosPorProcesoSede({ID_PROCESO: column.ID});  ID_MODALIDAD_LOCAL = column.ID}} type="link" sucess icon={<EyeOutlined />}></Button>
+              <Button onClick={() => {obtenerInscritosPorProcesoSede({ID_PROCESO: column.ID});  ID_MODALIDAD_LOCAL = column.ID}} type="link" success icon={<FormOutlined />}></Button>
             </Tooltip>
             <Tooltip title="Generar CSV de estudiantes">
-              <Button onClick={() => {generarCSVEstudiantes({ID_PROCESO: column.ID});  ID_MODALIDAD_LOCAL = column.ID}} type="link" sucess icon={<EyeOutlined />}></Button>
+              <Button onClick={() => {generarCSVEstudiantes({ID_PROCESO: column.ID});  ID_MODALIDAD_LOCAL = column.ID}} type="link" icon={<SnippetsOutlined />} success ></Button>
             </Tooltip>
             
             </>

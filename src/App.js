@@ -71,7 +71,8 @@ const App = () => {
                 path="/inscripcion"
                 element={
                   <EstudianteProvider>
-                    <InscripcionEstudiantePage />
+                    <h1>Inscripciones cerradas</h1>
+                    {/* <InscripcionEstudiantePage /> */}
                   </EstudianteProvider>
                 }
               />
