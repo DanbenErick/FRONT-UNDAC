@@ -63,10 +63,6 @@ export default function ProcesosPage() {
   const generarCSVEstudiantes = async(params) => {
     const resp = await obtenerEstudiantesParaCSVService()
     console.log(resp)
-    // const resp = [{
-    //   dni: 1,
-    //   nombreCompleto: 'daniel'
-    // }]
     convertirACsv(resp.data)
     
   }
@@ -201,6 +197,9 @@ export default function ProcesosPage() {
               <Button onClick={() => {obtenerInscritosPorProcesoSede({ID_PROCESO: column.ID});  ID_MODALIDAD_LOCAL = column.ID}} type="link" success icon={<FormOutlined />}></Button>
             </Tooltip>
             <Tooltip title="Generar CSV de estudiantes">
+              <Button onClick={() => {generarCSVEstudiantes({ID_PROCESO: column.ID});  ID_MODALIDAD_LOCAL = column.ID}} type="link" icon={<SnippetsOutlined />} success ></Button>
+            </Tooltip>
+            <Tooltip title="Generar padron">
               <Button onClick={() => {generarCSVEstudiantes({ID_PROCESO: column.ID});  ID_MODALIDAD_LOCAL = column.ID}} type="link" icon={<SnippetsOutlined />} success ></Button>
             </Tooltip>
             

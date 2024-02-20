@@ -34,6 +34,8 @@ import ResultadoPage from './pages/Resultados/ResultadosPage';
 import CarreraResultadoPage from './pages/Resultados/CarrerasResultadoPage';
 import TablaResultadosPage from './pages/Resultados/TablaResultadosPage';
 import HojaEstudianteIngresoPage from './pages/HojaEstudianteIngresoPage';
+import PadronEstudianteAulaPDF from './pages/PadronEstudianteAula';
+import Resultados2Page, { ResultadoDEPORTISTASCALIFICADOSPage, ResultadoPERSONASCONDISCAPACIDADPage, ResultadoPUEBLOSORIGINARIOSPage, ResultadoPrimerSegundoPuestoPage, ResultadoTITULOSYGRADUADOSPage, ResultadoTRASLADOSEXTERNOSPage, ResultadoTRASLADOSINTERNOSPage, ResultadoVICTIMASDETERRORISMOYFAMILIARESPage } from './pages/Resultados2Page';
 
 const App = () => {
   return (
@@ -71,8 +73,8 @@ const App = () => {
                 path="/inscripcion"
                 element={
                   <EstudianteProvider>
-                    <h1>Inscripciones cerradas</h1>
-                    {/* <InscripcionEstudiantePage /> */}
+                    {/* <h1>Inscripciones cerradas</h1> */}
+                    <InscripcionEstudiantePage />
                   </EstudianteProvider>
                 }
               />
@@ -113,6 +115,17 @@ const App = () => {
               <Route path='/resultados-lis-carreras/:nombre/:id' element={<CarreraResultadoPage />} />
               <Route path='/tabla-resultado/:id/:nombre' element={<TablaResultadosPage />} />
               <Route path='/generar-pdf/:uuid?' Component={HojaEstudianteIngresoPage} />
+              <Route path='/generar-padron-daras' Component={PadronEstudianteAulaPDF} />
+              <Route path='/resultados2' Component={Resultados2Page} />
+
+              <Route path='/res-PRIMER' Component={ResultadoPrimerSegundoPuestoPage} />
+              <Route path='/res-TITULOS' Component={ResultadoTITULOSYGRADUADOSPage} />
+              <Route path='/res-TRASLADOSEXTERNOS' Component={ResultadoTRASLADOSEXTERNOSPage} />
+              <Route path='/res-TRASLADOSINTERNOS' Component={ResultadoTRASLADOSINTERNOSPage} />
+              <Route path='/res-VICTIMAS' Component={ResultadoVICTIMASDETERRORISMOYFAMILIARESPage} />
+              <Route path='/res-PERSONAS' Component={ResultadoPERSONASCONDISCAPACIDADPage} />
+              <Route path='/res-DEPORTISTAS' Component={ResultadoDEPORTISTASCALIFICADOSPage} />
+              <Route path='/res-PUEBLOS' Component={ResultadoPUEBLOSORIGINARIOSPage} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Router>

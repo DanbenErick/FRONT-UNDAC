@@ -12,6 +12,15 @@ const buscarAulaPorTurnoForm = async (params) => {
     console.error('Ocurrio un error', error)
   }
 } 
+const obtenerDatosResultadosEstudinateTable = async(params) => {
+  try {
+    const ruta = getRuta('/obtener-resultados-modalidades/'+ params)
+    const resp = await axios.get(ruta)
+    return resp
+  }catch(error) {
+    console.error('Ocurrio un error', error)
+  }
+}
 const obtenerProcesosForm = async () => {
   try {
     const ruta = getRuta('obtener-procesos')
@@ -174,5 +183,6 @@ export {
   buscarAulaPorTurnoForm,
   obtenerProcesosAbiertosAside,
   obtenerTodosLosProcesosActivosForm,
-  obtenerDistritoUbigeoAutocompleteForm
+  obtenerDistritoUbigeoAutocompleteForm,
+  obtenerDatosResultadosEstudinateTable
 };

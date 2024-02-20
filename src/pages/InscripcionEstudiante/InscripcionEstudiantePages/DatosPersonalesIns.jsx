@@ -33,6 +33,10 @@ const DatosPersonalIncripcion = (props) => {
       message.info('Ingresa un DNI valido')
       return 
     }
+    if(params.DNI.length < 8) {
+      message.info('El DNI tiene que tener 8 caracteres')
+      return 
+    }
     const resp = await consultarEstudianteExisteService({ DNI: params.DNI });
     if (resp.data.length > 0) {
       openNotification()
@@ -55,43 +59,24 @@ const DatosPersonalIncripcion = (props) => {
   return (
     <>
     {contextHolder}
-      <Form
-        layout="vertical"
-        form={formDatosPersonales}
-        onFinish={guardarDatosPersonales}
-      >
+      <Form layout="vertical" form={formDatosPersonales} onFinish={guardarDatosPersonales}>
         <Form.Item label="Tipo" name="TIPO_DOC" rules={[{ required: true }]}>
           <Select options={[{ value: 'DNI', label: 'DNI' }]} />
         </Form.Item>
         <Form.Item label="DNI" name="DNI" rules={[{ required: true }]}>
-          <Input
-            maxLength="8"
-            placeholder="Ingresa tu numero de DNI"
-            style={{ width: '100%' }}
-            onChange={buscarDNI}
-          />
+          <Input maxLength="8"  placeholder="Ingresa tu numero de DNI" style={{ width: '100%' }} onChange={buscarDNI} />
         </Form.Item>
-        <Form.Item
-          label="Apellidos Paterno"
-          name="AP_PATERNO"
-          rules={[{ required: true }]}
-        >
+        <Form.Item label="Apellidos Paterno" name="AP_PATERNO" rules={[{ required: true }]}>
           <Input placeholder="Tu apellido paterno" />
         </Form.Item>
-        <Form.Item
-          label="Apellidos Materno"
-          name="AP_MATERNO"
-          rules={[{ required: true }]}
-        >
+        <Form.Item label="Apellidos Materno" name="AP_MATERNO" rules={[{ required: true }]}>
           <Input placeholder="Tu apellido materno" />
         </Form.Item>
         <Form.Item label="Nombres" name="NOMBRES" rules={[{ required: true }]}>
           <Input placeholder="Tu nombre" />
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Siguiente
-          </Button>
+          <Button type="primary" htmlType="submit">Siguiente</Button>
         </Form.Item>
       </Form>
     </>
