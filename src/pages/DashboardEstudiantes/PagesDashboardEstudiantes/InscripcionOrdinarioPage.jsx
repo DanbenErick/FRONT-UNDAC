@@ -1,32 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { SaveFilled, UploadOutlined } from '@ant-design/icons';
-import {
-  Button,
-  Form,
-  Input,
-  Select,
-  DatePicker,
-  Radio,
-  message,
-  Alert,
-} from 'antd';
-import {
-  subirFotoEstudianteService,
-  subirDocumentacionEstudianteService,
-  inscribirEstudianteService,
-  verificarInscripcionEstudianteService,
-  verificarDatosComplementariosEstudiante,
-} from '../../../api/inscripcionDashEstudianteService';
-import {
-  buscarAulaPorTurnoForm,
-  obtenerCarrerasCodigoForm,
-  obtenerDepartamentosForm,
-  obtenerDiscapacidadesForm,
-  obtenerDistritosForm,
-  obtenerProcesoActivoForm,
-  obtenerProvinciasForm,
-  obtenerRazasEtnicasForm,
-} from '../../../api/apiInpputs';
+import { Button, Form, Input, Select, DatePicker, Radio, message, Alert, AutoComplete, Switch } from 'antd';
+import { subirFotoEstudianteService, subirDocumentacionEstudianteService, inscribirEstudianteService, verificarInscripcionEstudianteService, verificarDatosComplementariosEstudiante } from '../../../api/inscripcionDashEstudianteService';
+import { buscarAulaPorTurnoForm, obtenerCarrerasCodigoForm, obtenerDepartamentosForm, obtenerDiscapacidadesForm, obtenerDistritosForm, obtenerProcesoActivoForm, obtenerProvinciasForm, obtenerRazasEtnicasForm, obtenerSedesForm } from '../../../api/apiInpputs';
 import moment from 'moment';
 import 'remixicon/fonts/remixicon.css';
 import SpinnerComponent from '../../../components/Spinner';
@@ -42,7 +18,13 @@ const InscripcionOdinarioPage = () => {
   const [verificarRegistroEstudiante, setVerificarRegistroEstudiante] = useState(0);
   const [stateInscripcionEstudiante, setStateInscripcionEstudiante] = useState(false);
   const [stateDatComplEstudiante, setStateDatComplEstudiante] = useState(false);
+  const [selectSedesExamen, setSelectSedesExamen] = useState([])
+
   const [estudianteInscrito, setEstudianteInscrito] = useState(false);
+
+  const [statusCardDatosApoderado, setStatusCardDatosApoderado] = useState(false)
+
+  const [statusInputDiscapacidad, setStatusInputDiscapacidad] = useState(false)
 
   const [optionsDepartamento, setOptionsDepartamento] = useState();
   const [optionsProvincia, setOptionsProvincia] = useState();
@@ -64,7 +46,8 @@ const InscripcionOdinarioPage = () => {
     }
     return false
   };
-
+  // const filterOption = (input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
+  
   const filterOption = (input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
 
   const subirFoto = async (params) => {
@@ -107,14 +90,16 @@ const InscripcionOdinarioPage = () => {
   const getInputs = async () => {
     setLoading(true);
     const resp_proceso_activo = await obtenerProcesoActivoForm({TIPO_PROCESO: 'O'});
+    const resp_sedes_examen = await obtenerSedesForm();
     const resp_carreras = await obtenerCarrerasCodigoForm();
     const resp_discapacidades = await obtenerDiscapacidadesForm();
     const resp_razas_etnicas = await obtenerRazasEtnicasForm();
     const resp_departamentos = await obtenerDepartamentosForm();
-
+    
     // const resp_ubicaciones = await obtenerUbicacionesForm();
-
+    
     // setOptionsUbicacion(resp_ubicaciones.data);
+    setSelectSedesExamen(resp_sedes_examen.data)
     setOptionsDepartamento(resp_departamentos.data);
     setSelectProcesos(resp_proceso_activo.data);
     setSelectCarreras(resp_carreras.data);
@@ -134,11 +119,10 @@ const InscripcionOdinarioPage = () => {
 
     const resp_inscripcion_estudiante = await inscribirEstudianteService(params);
     const resp_subir_foto = await subirFoto(params.DNI);
-    const resp_subir_documento = await subirDocumentosEstudiante(params.DNI);
+    // const resp_subir_documento = await subirDocumentosEstudiante(params.DNI);
     if (
       resp_inscripcion_estudiante.data.ok &&
-      resp_subir_foto &&
-      resp_subir_documento
+      resp_subir_foto
     ) {
       message.success('Registrado correctamente');
       setVerificarRegistroEstudiante(true )
@@ -162,6 +146,10 @@ const InscripcionOdinarioPage = () => {
     }
     exe()
   }, []);
+  const changeEventDiscapacidad = (event) => {
+    event === 1 ? setStatusInputDiscapacidad(true) : setStatusInputDiscapacidad(false) 
+    
+  }
   const handleFileDocChange = (e) => {
     const file = e.target.files[0];
     if (file && file.type === 'application/pdf') {
@@ -188,6 +176,9 @@ const InscripcionOdinarioPage = () => {
       fileInputImgRef.current.value = '';
     }
   };
+  const onChangeSwitchMayorEdad = async(params) => {
+    params ? setStatusCardDatosApoderado(true): setStatusCardDatosApoderado(false)
+  }
   const buscarAulaPorTurno = async(e) => {
     const resp = await buscarAulaPorTurnoForm({TURNO: e})
     setSelectAulas(resp.data)
@@ -195,13 +186,15 @@ const InscripcionOdinarioPage = () => {
   return verificarRegistroEstudiante ? (
     <Alert
       message="Registro exitoso"
-      description="Usted ya realizo su test psicologico"
+      description="Usted ya esta inscrito para el examen ordinario"
       type="success"
       showIcon
     />
   ) : (
     <>
       {loading ? <SpinnerComponent /> : ''}
+      <Switch checkedChildren="+18" unCheckedChildren="-18" onChange={onChangeSwitchMayorEdad} />
+      <b>  Mayor de edad</b>
       <h1>
         <i className="ri-draft-fill"></i>Datos Complementarios
       </h1>
@@ -215,41 +208,44 @@ const InscripcionOdinarioPage = () => {
           stateDatComplEstudiante === true 
             ? ''
             : (
-              <div className="cardDashEstudiante">
-                <div className="cardDashEstudianteHeader">
-                  <p>
-                    <i className="ri-group-2-fill"></i> Apoderado
-                  </p>
-                </div>
-                <div className="cardDashEstudianteBody">
-                  <div className="gridFormFormularioApoderado">
-                    <Form.Item
-                      className="FormItem"
-                      label="Apellido y nombres"
-                      name="NOMBRE_COMPLETO_APO"
-                      rules={[{ required: true }]}
-                    >
-                      <Input maxLength={30} />
-                    </Form.Item>
-                    <Form.Item
-                      className="FormItem"
-                      label="Numero de celular "
-                      name="CELULAR_APO"
-                      rules={[{ required: true }]}
-                    >
-                      <Input maxLength={9} />
-                    </Form.Item>
-                    <Form.Item
-                      className="FormItem"
-                      label="Numero de DNI"
-                      name="DNI_APO"
-                      rules={[{ required: true }]}
-                    >
-                      <Input maxLength={8} />
-                    </Form.Item>
+                !statusCardDatosApoderado ? (
+                <div className="cardDashEstudiante">
+                  <div className="cardDashEstudianteHeader">
+                    <p>
+                      <i className="ri-group-2-fill"></i> Apoderado
+                    </p>
                   </div>
-                </div>
-              </div>
+                  <div className="cardDashEstudianteBody">
+                    <div className="gridFormFormularioApoderado">
+                      <Form.Item
+                        className="FormItem"
+                        label="Apellido y nombres"
+                        name="NOMBRE_COMPLETO_APO"
+                        rules={[{ required: true }]}
+                      >
+                        <Input maxLength={30} />
+                      </Form.Item>
+                      <Form.Item
+                        className="FormItem"
+                        label="Numero de celular "
+                        name="CELULAR_APO"
+                        rules={[{ required: true }]}
+                      >
+                        <Input maxLength={9} />
+                      </Form.Item>
+                      <Form.Item
+                        className="FormItem"
+                        label="Numero de DNI"
+                        name="DNI_APO"
+                        rules={[{ required: true }]}
+                      >
+                        <Input maxLength={8} />
+                      </Form.Item>
+                    </div>
+                  </div>
+                </div>)
+              :
+                <></>
             )
           }
           <div className="cardDashEstudiante">
@@ -320,20 +316,7 @@ const InscripcionOdinarioPage = () => {
                   rules={[{ required: true }]}
                 >
                   <Select
-                    options={[
-                      {
-                        value: 'Pasco',
-                        label: 'Pasco',
-                      },
-                      {
-                        value: 'Tarma',
-                        label: 'Tarma',
-                      },
-                      {
-                        value: 'Oxampampa',
-                        label: 'Oxampampa',
-                      },
-                    ]}
+                    options={selectSedesExamen}
                     filterOption={filterOption}
                   />
                 </Form.Item>
@@ -347,7 +330,7 @@ const InscripcionOdinarioPage = () => {
                     onChange={handleFileImgChange}
                   />
                 </Form.Item>
-                <Form.Item
+                {/* <Form.Item
                   className="FormItem"
                   label="Archivos DNI y Cert. estudios"
                   name="RUTA_DOCUMENTO"
@@ -359,7 +342,7 @@ const InscripcionOdinarioPage = () => {
                     ref={fileInputDocRef}
                     onChange={handleFileDocChange}
                   />
-                </Form.Item>
+                </Form.Item> */}
               </div>
             </div>
           </div>
@@ -410,9 +393,10 @@ const InscripcionOdinarioPage = () => {
                         rules={[{ required: true }]}
                       >
                         <Select
+                          showSearch
+                          filterOption={filterOption}
                           options={optionsDepartamento}
                           onChange={buscarProvincia}
-                          filterOption={filterOption}
                         />
                       </Form.Item>
                       <Form.Item
@@ -422,6 +406,7 @@ const InscripcionOdinarioPage = () => {
                         rules={[{ required: true }]}
                       >
                         <Select
+                          showSearch
                           onChange={buscarDistrito}
                           options={optionsProvincia}
                           filterOption={filterOption}
@@ -433,7 +418,7 @@ const InscripcionOdinarioPage = () => {
                         name="DISTRITO"
                         rules={[{ required: true }]}
                       >
-                        <Select options={optionsDistrito} filterOption={filterOption} />
+                        <Select showSearch options={optionsDistrito} filterOption={filterOption} />
                       </Form.Item>
                       <Form.Item
                         className="FormItem"
@@ -452,6 +437,7 @@ const InscripcionOdinarioPage = () => {
                         <Select
                           showSearch
                           placeholder="Si o No"
+                          onChange={changeEventDiscapacidad}
                           options={[
                             {
                               label: 'Si',
@@ -465,19 +451,25 @@ const InscripcionOdinarioPage = () => {
                           filterOption={filterOption}
                         />
                       </Form.Item>
-                      <Form.Item
-                        className="FormItem"
-                        label="Tipo de Discapacidad"
-                        name="DISCAPACIDAD"
-                        rules={[{ required: true }]}
-                      >
-                        <Select
-                          showSearch
-                          placeholder="Selecciona un proceso"
-                          options={selectDiscapacidades}
-                          filterOption={filterOption}
-                        />
-                      </Form.Item>
+                      {
+                      statusInputDiscapacidad
+                        ?
+                        <Form.Item
+                          className="FormItem"
+                          label="Tipo de Discapacidad"
+                          name="DISCAPACIDAD"
+                          rules={[{ required: true }]}
+                        >
+                          <Select
+                            showSearch
+                            placeholder="Selecciona un proceso"
+                            options={selectDiscapacidades}
+                            filterOption={filterOption}
+                          />
+                        </Form.Item>
+                        :
+                        ''
+                      }
                       <Form.Item
                         className="FormItem"
                         label="Identidad Etnica"
@@ -491,14 +483,14 @@ const InscripcionOdinarioPage = () => {
                           filterOption={filterOption}
                         />
                       </Form.Item>
-                      <Form.Item
+                      {/* <Form.Item
                         className="FormItem"
                         label="Telefono Fijo"
                         name="TELEFONO"
                         rules={[{ required: true }]}
                       >
                         <Input />
-                      </Form.Item>
+                      </Form.Item> */}
                     </div>
                   </div>
                 </div>
@@ -506,7 +498,7 @@ const InscripcionOdinarioPage = () => {
           }
         </div>
       </Form>
-      <Button type="primary" block icon={<SaveFilled />} style={{ marginTop: '10px' }} onClick={formDatosComplementariosEstudiante.submit}>Guardar</Button>
+      <Button type="primary" block icon={<SaveFilled />} style={{ marginTop: '10px' }} onClick={formDatosComplementariosEstudiante.submit}>Inscribir estudiante</Button>
     </>
   );
 };

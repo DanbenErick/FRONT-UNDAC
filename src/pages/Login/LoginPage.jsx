@@ -26,7 +26,8 @@ const LoginPage = () => {
             <div className="containerImg">
               <img
                 className="img"
-                src="https://undac.edu.pe/wp-content/uploads/elementor/thumbs/cropped-undac-otxjxjp3hh6yj3evud6f4g667rmvghjh2tp91gonu8.png"
+                style={{ width: '150px', height: '120px' }}
+                src={process.env.PUBLIC_URL + '/logo.jpg'}
                 alt=""
               />
             </div>
@@ -59,7 +60,8 @@ const LoginPage = () => {
               </Button>
 
               <p>
-                ¿No tienes cuenta? <Link to="/register">Registrarse</Link>
+                ¿No tienes cuenta? <Link to="/register">Registrarse</Link><br></br>
+                <Link to="/login-estudiante" style={{ textAlign: 'center', fontWeight: 'bold' }}>Soy estudiante</Link>
               </p>
             </Form.Item>
           </Form>

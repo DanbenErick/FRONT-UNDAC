@@ -1,5 +1,5 @@
 
-import { obtenerInscritosNombresService, obtenerInscritosPorAreaService, obtenerInscritosPorCarreraService, obtenerInscritosPorModalidadService, obtenerInscritosPorSedeService, obtenerProcesosFull } from '../api/apiProcesos';
+import { obtenerInscritosNombresService, obtenerInscritosPorAreaService, obtenerInscritosPorCarreraService, obtenerInscritosPorModalidadService, obtenerInscritosPorSedeService, obtenerProcesosFull, obtenerReportePDFPadron } from '../api/apiProcesos';
 
 const getProcesosService = async () => {
   try {
@@ -9,6 +9,15 @@ const getProcesosService = async () => {
     console.error(`Error:`, error);
   }
 };
+
+const obtenerReportePDFPadronService = async(params) => {
+  try {
+    const resp = await obtenerReportePDFPadron(params);
+    return resp
+  }catch(error) {
+    console.error('Error: ', error)
+  }
+}
 
 const obtenerEstudiantesParaCSVService = async (params) => {
   try {
@@ -57,5 +66,6 @@ export {
   getInscritosPorProcesoCarrerasService,
   getInscritosPorProcesoModalidadesService,
   getInscritosPorProcesoSedeService,
-  obtenerEstudiantesParaCSVService
+  obtenerEstudiantesParaCSVService,
+  obtenerReportePDFPadronService
 };

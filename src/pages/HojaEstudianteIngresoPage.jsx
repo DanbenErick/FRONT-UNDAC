@@ -2,10 +2,16 @@ import React from 'react'
 import qrcode from 'qrcode';
 import { Page, Text, View, Document, StyleSheet, PDFViewer, Image, Font } from '@react-pdf/renderer';
 import { obtenerDatosEstudianteCarnetService } from '../api/inscripcionDashEstudianteService';
+import LatoRegular from  '../assets/fuentes/Lato/Lato-Regular.ttf'
+import LatoBold from  '../assets/fuentes/Lato/Lato-Bold.ttf'
+import LatoLigth from  '../assets/fuentes/Lato/Lato-Light.ttf'
 
 
 const contenido = 'https://front-undac.vercel.app/consultar-estudiante-resumen/'+ localStorage.getItem('uuid');
 Font.register({ family: 'Roboto Condensed', src: 'https://fonts.gstatic.com/s/robotocondensed/v27/ieVo2ZhZI2eCN5jzbjEETS9weq8-_d6T_POl0fRJeyVVpcBO5Xw.woff2' });
+Font.register({ family: 'Lato', src: LatoRegular });
+Font.register({ family: 'Lato-Bold', src: LatoBold });
+Font.register({ family: 'Lato-Ligth', src: LatoLigth });
 // Estilos para el PDF
 const styles = StyleSheet.create({
     page: {
@@ -27,7 +33,13 @@ const styles = StyleSheet.create({
       fontSize: 20,
       textAlign: 'left',
       marginBottom: 10,
-      fontFamily: 'Times-Bold'
+      fontFamily: 'Lato',
+      
+      width: '450px'
+    },
+    textBold: {
+      fontFamily: 'Lato-Bold',
+      fontWeight: 'bold',
     },
     pdfViewer: {
         width: '100vw', // Ancho completo de la ventana del navegador
@@ -99,18 +111,18 @@ const styles = StyleSheet.create({
         <Document>
           <Page size="A4" style={styles.page}>
             <View style={styles.section}>
-            <Image src="encabezado-estudiante-carnet.jpg" style={styles.imagenFondo} />
+            <Image src="design-ordinario-1.jpeg" style={styles.imagenFondo} />
             <Image src={`${process.env.REACT_APP_API_URL}/${dataStudent.DNI}/${dataStudent.DNI}.jpeg`}  style={styles.fotoPerfil} />
             
               <View style={styles.containerText}>
-                <Text style={styles.text}>APELLIDO PATERNO: {dataStudent.AP_PATERNO}</Text>
-                <Text style={styles.text}>APELLIDO MATERNO: {dataStudent.AP_MATERNO}</Text>
-                <Text style={styles.text}>NOMBRES: {dataStudent.NOMBRES}</Text>
-                <Text style={styles.text}>CARRERA: {dataStudent.ESCUELA_COMPLETA}</Text>
-                <Text style={styles.text}>MODALIDAD: {dataStudent.MODALIDAD_ESTUDIANTE}</Text>
-                <Text style={styles.text}>AREA: {dataStudent.AREA}</Text>
-                <Text style={styles.text}>SEDE EXAMEN: {dataStudent.SEDE_EXAMEN}</Text>
-                <Text style={styles.text}>CODIGO ESTUDIANTE: {dataStudent.DNI}</Text>
+                <Text style={styles.text}><Text style={styles.textBold}>APELLIDO PATERNO:</Text> {dataStudent.AP_PATERNO}</Text>
+                <Text style={styles.text}><Text style={styles.textBold}>APELLIDO MATERNO:</Text> {dataStudent.AP_MATERNO}</Text>
+                <Text style={styles.text}><Text style={styles.textBold}>NOMBRES:</Text> {dataStudent.NOMBRES}</Text>
+                <Text style={styles.text}><Text style={styles.textBold}>CARRERA:</Text> {dataStudent.ESCUELA_COMPLETA}</Text>
+                {/* <Text style={styles.text}>MODALIDAD: {dataStudent .MODALIDAD_ESTUDIANTE}</Text> */}
+                <Text style={styles.text}><Text style={styles.textBold}>AREA:</Text> {dataStudent.AREA}</Text>
+                <Text style={styles.text}><Text style={styles.textBold}>SEDE EXAMEN:</Text> {dataStudent.SEDE_EXAMEN}</Text>
+                <Text style={styles.text}><Text style={styles.textBold}>CODIGO ESTUDIANTE:</Text> {dataStudent.DNI}</Text>
               </View>
             </View>
             <div style={styles.qrContainer}>

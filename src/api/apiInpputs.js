@@ -66,6 +66,15 @@ const obtenerProcesoActivoForm = async (params) => {
     console.error('Ocurrio un error', error);
   }
 };
+const obtenerSedesForm = async() => {
+  try {
+    const ruta = getRuta('obtener-sedes')
+    const resp = await axios.get(ruta)
+    return resp
+  }catch(error) {
+    console.error('Ocurrio un error', error)
+  }
+}
 const obtenerTodosLosProcesosActivosForm = async(params) => {
   try {
     const ruta = getRuta('obtener-todos-procesos-activo')
@@ -184,5 +193,6 @@ export {
   obtenerProcesosAbiertosAside,
   obtenerTodosLosProcesosActivosForm,
   obtenerDistritoUbigeoAutocompleteForm,
-  obtenerDatosResultadosEstudinateTable
+  obtenerDatosResultadosEstudinateTable,
+  obtenerSedesForm
 };

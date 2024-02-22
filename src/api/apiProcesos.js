@@ -1,6 +1,17 @@
 import axios from './axiosConfig';
 const API_HOST = process.env.REACT_APP_API_URL;
+const API_REPORTE = process.env.REACT_APP_API_URL_REPORTES
 const getRuta = (params) => `${API_HOST}/administrador/procesos/${params}`;
+const getRutaReporte = (params) => `${API_REPORTE}/${params}`;
+const obtenerReportePDFPadron = async(params) => {
+  try {
+    const ruta = getRutaReporte(`generar-pdf?inicio=${params.INICIO}&fin=${params.FIN}&area=${params.AREA}&aula=${params.AULA}`)
+    const resp = await axios.get(ruta)
+    return resp
+  }catch(error) {
+    console.error('Ocurrio un error', error)
+  }
+}
 const obtenerProcesosFull = async () => {
   try {
     const ruta = getRuta('obtener-procesos')
@@ -74,4 +85,4 @@ const obtenerInscritosPorModalidadService = async (params) => {
   }
 }
 
-export { obtenerProcesosFull, crearProceso, cerrarProceso, obtenerInscritosPorSedeService, obtenerInscritosPorCarreraService, obtenerInscritosPorModalidadService, obtenerInscritosPorAreaService, obtenerInscritosNombresService};
+export { obtenerProcesosFull, crearProceso, cerrarProceso, obtenerInscritosPorSedeService, obtenerInscritosPorCarreraService, obtenerInscritosPorModalidadService, obtenerInscritosPorAreaService, obtenerInscritosNombresService, obtenerReportePDFPadron};

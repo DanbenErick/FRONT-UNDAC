@@ -16,7 +16,8 @@ const obtenerEstudiantesService = async () => {
 
 const buscarEstudianteService = async (params) => {
   try {
-    const resp = await axios.post(getRuta('buscar-estudiante'), params);
+    console.log("PARAMS => ",params)
+    const resp = await axios.get(getRuta(`buscar-estudiante-por-nombre?DNI=${params.DNI}&NOMBRE=${params.NOMBRES}&CELULAR=${params.CELULAR}`));
     return resp;
   } catch (error) {
     console.error('Ocurrio un error', error);

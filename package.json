@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^13.5.0",
     "antd": "^5.12.4",
     "axios": "^1.6.2",
+    "dayjs": "^1.11.10",
     "file-saver": "^2.0.5",
     "jspdf": "^2.5.1",
     "moment": "^2.30.1",

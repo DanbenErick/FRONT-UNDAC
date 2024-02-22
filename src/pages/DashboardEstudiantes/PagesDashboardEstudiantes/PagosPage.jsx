@@ -1,5 +1,6 @@
 import { Button, DatePicker, Form, Input, Select, Table, message } from 'antd'
 import React, { useEffect, useState } from 'react'
+import dayjs from 'dayjs';
 import { comprobarVoucherPorFechaService, obtenerMisPagosService, registrarPagoService } from '../../../api/pagosDashEstudiService'
 import { obtenerModalidadesForm, obtenerProcesoActivoForm, obtenerTodosLosProcesosActivosForm } from '../../../api/apiInpputs';
 
@@ -14,7 +15,8 @@ const columnsTable = [
   { title: 'Proceso', dataIndex: 'NOMBRE_PROCESO', key: 'NOMBRE_PROCESO' },
   { title: 'Codigo', dataIndex: 'CODIGO', key: 'CODIGO' },
   { title: 'DNI', dataIndex: 'DNI', key: 'DNI' },
-  { title: 'Fecha de Pago', dataIndex: 'FECHA_PAGO', key: 'FECHA_PAGO', render: data => formatDateUtil(data) },
+  { title: 'Fecha de Pago', dataIndex: 'FECHA_PAGO', key: 'FECHA_PAGO', render: data => dayjs(data).format('DD/MM/YYYY') },
+  { title: 'Pago', dataIndex: 'MONTO', key: 'FECHA_PAGO', render: data => `S/. ${data}.00` },
   { title: 'Confirmado', dataIndex: 'ESTADO', key: 'ESTADO', render: data => data === 1 ? 'Confirmado': 'Por confirmar' },
 ]
 
@@ -136,7 +138,7 @@ const PagosEstudiantePage = () => {
     </div>
     <div className="cardDashEstudianteBody">
       <div className="">
-          <Table columns={columnsTable} dataSource={dataTable} scroll={{ x: 800  }} />
+          <Table columns={columnsTable} dataSource={dataTable} scroll={{ x: 800  }} pagination={false} />
       </div>
     </div>
     

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import SpinnerComponent from '../../components/Spinner';
-import { Breadcrumb, Button, DatePicker, Space, Table } from 'antd';
+import { Breadcrumb, Button, DatePicker, Space, Table, Tag, Tooltip } from 'antd';
 import { Card } from 'antd';
 import { Form } from 'antd';
 import { Input } from 'antd';
@@ -58,6 +58,13 @@ const InscritoPage = () => {
       title: 'DNI',
       dataIndex: 'DNI',
       key: '2',
+      render: (data, column) => {
+        return (
+          <Tooltip title={column.NOMBRE_COMPLETO}>
+            <span>{data}</span>
+          </Tooltip>
+        )
+      }
     },
     {
       title: 'Carrera',
@@ -74,7 +81,7 @@ const InscritoPage = () => {
       dataIndex: 'PREPARATORIA',
       key: '5',
       render: (data, column) => {
-        return data === 1 ? 'Si' : 'No';
+        return data === 1 ? <Tag color="red" block>Si</Tag> : <Tag color="green" block>No</Tag>;
       },
     },
     {

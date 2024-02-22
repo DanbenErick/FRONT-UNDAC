@@ -8,7 +8,7 @@ import {
 } from '../../api/apiProcesos';
 import '../../assets/styles/DashboardAdmin.css';
 import moment from 'moment';
-import { getInscritosPorProcesoAreasService, getInscritosPorProcesoCarrerasService, getInscritosPorProcesoModalidadesService, getInscritosPorProcesoSedeService, getInscritosPorProcesoService, getProcesosService, obtenerEstudiantesParaCSVService } from '../../services/ProcesosService';
+import { getInscritosPorProcesoAreasService, getInscritosPorProcesoCarrerasService, getInscritosPorProcesoModalidadesService, getInscritosPorProcesoSedeService, getInscritosPorProcesoService, getProcesosService, obtenerEstudiantesParaCSVService, obtenerReportePDFPadronService } from '../../services/ProcesosService';
 import { message } from 'antd/es';
 import { CloseCircleOutlined, EyeOutlined, FormOutlined, SnippetsOutlined } from '@ant-design/icons';
 
@@ -41,6 +41,10 @@ export default function ProcesosPage() {
   const [statusModal, setStatusModal] = useState(false);
   const [dataInscritos, setDataInscritos] = useState([]);
   const [columnsInscritosTable, setColumnsInscritosTable] = useState([])
+
+  const [statusPadronModal, setStatusPadronModal] = useState(false)
+  const [formPadronEstudiantes] = Form.useForm()
+
   const initialValues = {
     NOMBRE: '',
     FECHA_REGISTRO: '',
@@ -61,7 +65,7 @@ export default function ProcesosPage() {
     start();
   }, []);
   const generarCSVEstudiantes = async(params) => {
-    const resp = await obtenerEstudiantesParaCSVService()
+    const resp = await obtenerEstudiantesParaCSVService(params)
     console.log(resp)
     convertirACsv(resp.data)
     
@@ -91,6 +95,12 @@ export default function ProcesosPage() {
     setDataInscritos(resp.data)
   }
   
+  const generarPadronEstudiantes = async() => {
+    const params = formPadronEstudiantes.getFieldsValue()
+    obtenerReportePDFPadronService(params)
+    // alert("Generando padron")
+  }
+
   const columnsInscritos = [
     {
       title: 'Sede',
@@ -183,9 +193,18 @@ export default function ProcesosPage() {
         if (column.ESTADO === 1) {
           return (
             <>
+            <Tooltip title="Generar CSV de estudiantes">
+              <Button onClick={() => {generarCSVEstudiantes({ID_PROCESO: column.ID});  ID_MODALIDAD_LOCAL = column.ID}} type="link" icon={<SnippetsOutlined />} success ></Button>
+            </Tooltip>
+            <Tooltip title="Reporte">
+              <Button onClick={() => {obtenerInscritosPorProcesoSede({ID_PROCESO: column.ID});  ID_MODALIDAD_LOCAL = column.ID}} type="link" success icon={<FormOutlined />}></Button>
+            </Tooltip>
+            <Tooltip title="Generar padron">
+              <Button onClick={() => {showModalPadron({ID_PROCESO: column.ID});  ID_MODALIDAD_LOCAL = column.ID}} type="link" icon={<SnippetsOutlined />} success ></Button>
+            </Tooltip>
             <Popconfirm
               title="Proceso"
-              description="Quieres borrar este proceso?"
+              description="Quieres cerrar este proceso?"
               onConfirm={() => handleCerrarProceso({ ID: column.ID })}
               onCancel={() => ''}
               okText="Si"
@@ -193,20 +212,15 @@ export default function ProcesosPage() {
             >
               <Button type="link" danger icon={<CloseCircleOutlined />}></Button>
             </Popconfirm>
-            <Tooltip title="Reporte">
-              <Button onClick={() => {obtenerInscritosPorProcesoSede({ID_PROCESO: column.ID});  ID_MODALIDAD_LOCAL = column.ID}} type="link" success icon={<FormOutlined />}></Button>
-            </Tooltip>
-            <Tooltip title="Generar CSV de estudiantes">
-              <Button onClick={() => {generarCSVEstudiantes({ID_PROCESO: column.ID});  ID_MODALIDAD_LOCAL = column.ID}} type="link" icon={<SnippetsOutlined />} success ></Button>
-            </Tooltip>
-            <Tooltip title="Generar padron">
-              <Button onClick={() => {generarCSVEstudiantes({ID_PROCESO: column.ID});  ID_MODALIDAD_LOCAL = column.ID}} type="link" icon={<SnippetsOutlined />} success ></Button>
-            </Tooltip>
-            
             </>
           );
         }
-        return '';
+        return (
+          <Tooltip title="Reporte">
+            <Button onClick={() => {obtenerInscritosPorProcesoSede({ID_PROCESO: column.ID});  ID_MODALIDAD_LOCAL = column.ID}} type="link" success icon={<FormOutlined />}></Button>
+          </Tooltip>
+        )
+        
       },
     },
   ];
@@ -257,6 +271,10 @@ export default function ProcesosPage() {
       content: message,
     });
   };
+  const showModalPadron = (params) => {
+    //TODO: Show modal padron
+    setStatusPadronModal(true)
+  }
   const itemsTabs = [
     {
       key: 'sedes',
@@ -368,6 +386,28 @@ export default function ProcesosPage() {
           <Table dataSource={dataTable} columns={columns} size="small" />
         </Card>
       </div>
+      <Modal title="Padron de Estudiantes" open={statusPadronModal} onOk={() => {formPadronEstudiantes.submit()}} onCancel={() => setStatusPadronModal(false)}>
+        <Form layout='vertical' form={formPadronEstudiantes} onFinish={generarPadronEstudiantes}>
+          <Form.Item label="Proceso" name="ID_PROCESO">
+            <Input  />
+          </Form.Item>
+          <Form.Item label="Inicio" name="INICIO">
+            <Input  />
+          </Form.Item>
+          <Form.Item label="Fin" name="FIN">
+            <Input  />
+          </Form.Item>
+          <Form.Item label="Area" name="AREA">
+            <Input  />
+          </Form.Item>
+          <Form.Item label="Fecha" name="FECHA">
+            <Input  />
+          </Form.Item>
+          <Form.Item label="Sede" name="SEDE">
+            <Input  />
+          </Form.Item>
+        </Form>
+      </Modal>
       <Modal title="Informcion del Proceso" open={statusModal} onOk={() => setStatusModal(false)} onCancel={() => setStatusModal(false)}>
         <Tooltip placement="left" title='Exportar excel'>
           <Button type="success" style={{ background: '#006400', color: 'white' }}><i class="ri-file-excel-2-fill"></i></Button>

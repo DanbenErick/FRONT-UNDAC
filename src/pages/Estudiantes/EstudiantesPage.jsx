@@ -235,7 +235,7 @@ const EstudiantesPage = () => {
   };
   const initialValues = {
     DNI: '',
-    CORREO: '',
+    NOMBRES: '',
     CELULAR: '',
   };
   const hiddenPanelEditEstudiante = () => {
@@ -296,14 +296,15 @@ const EstudiantesPage = () => {
   }
   const buscarEstudiante = async () => {
     const params = formEstudiantes.getFieldValue();
+    console.log(params)
     params.DNI = params.DNI || '';
-    params.CORREO = params.CORREO || '';
+    params.NOMBRES = params.NOMBRES || '';
     params.CELULAR = params.CELULAR || '';
-    if (params.DNI === '' && params.CORREO === '' && params.CELULAR === '') {
+    if (params.DNI === '' && params.NOMBRES === '' && params.CELULAR === '') {
       refreshTable();
       return;
     }
-
+    
     const resp = await buscarEstudianteService(params);
     setDataTable(resp.data);
   };
@@ -391,7 +392,7 @@ const EstudiantesPage = () => {
               <Form.Item label="DNI" name="DNI">
                 <Input />
               </Form.Item>
-              <Form.Item label="Correo" name="CORREO">
+              <Form.Item label="Nombres Completos" name="NOMBRES">
                 <Input />
               </Form.Item>
               <Form.Item label="Celular" name="CELULAR">

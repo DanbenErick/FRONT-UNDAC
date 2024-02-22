@@ -5,9 +5,13 @@ const NotFound = () => {
   return (
     <div className="bodyNF">
       <div className="container">
-        <h1>404</h1>
-        <h2>Página no encontrada</h2>
-        <a href="/login">Volver al inicio</a>
+        <img
+          style={{ width: '350px', height: '300px' }}
+          src={process.env.PUBLIC_URL + '/logo.jpg'}
+        />
+        <h1>UNDAC ADMISION</h1>
+        <h2>La pagina que buscas no existe</h2>
+        <a href="/login-estudiante">Volver al inicio</a>
       </div>
     </div>
   );
