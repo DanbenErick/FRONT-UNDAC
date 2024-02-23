@@ -90,7 +90,7 @@ const InscripcionOdinarioPage = () => {
   const getInputs = async () => {
     setLoading(true);
     const resp_proceso_activo = await obtenerProcesoActivoForm({TIPO_PROCESO: 'O'});
-    const resp_sedes_examen = await obtenerSedesForm();
+    const resp_sedes_examen = await obtenerSedesForm({TIPO_PROCESO: 'O'});
     const resp_carreras = await obtenerCarrerasCodigoForm();
     const resp_discapacidades = await obtenerDiscapacidadesForm();
     const resp_razas_etnicas = await obtenerRazasEtnicasForm();

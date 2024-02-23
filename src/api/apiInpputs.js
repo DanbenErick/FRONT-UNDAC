@@ -66,9 +66,9 @@ const obtenerProcesoActivoForm = async (params) => {
     console.error('Ocurrio un error', error);
   }
 };
-const obtenerSedesForm = async() => {
+const obtenerSedesForm = async(params) => {
   try {
-    const ruta = getRuta('obtener-sedes')
+    const ruta = getRuta('obtener-sedes/' + params.TIPO_PROCESO)
     const resp = await axios.get(ruta)
     return resp
   }catch(error) {

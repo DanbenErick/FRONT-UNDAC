@@ -4,7 +4,7 @@ import { Breadcrumb, Button, Table, message } from 'antd';
 import { Card } from 'antd';
 import { Form } from 'antd';
 import { Popconfirm } from 'antd';
-import { SaveFilled, SearchOutlined } from '@ant-design/icons';
+import { ReloadOutlined, SaveFilled, SearchOutlined } from '@ant-design/icons';
 import { Input } from 'antd';
 import { obtenerProcesosForm } from '../../api/apiInpputs';
 import { Select } from 'antd';
@@ -28,8 +28,8 @@ const VoucherPage = () => {
   const columnsTable = [
     {
       title: 'Proceso',
-      dataIndex: 'ID_PROCESO',
-      key: 'ID_PROCESO',
+      dataIndex: 'NOMBRE_PROCESO',
+      key: 'NOMBRE_PROCESO',
     },
     {
       title: 'DNI',
@@ -140,7 +140,7 @@ const VoucherPage = () => {
           <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
           <Breadcrumb.Item>Voucher</Breadcrumb.Item>
         </Breadcrumb>
-        <Card type="inner" title="Crear carrera">
+        <Card type="inner" title="Crear voucher">
           <Form layout="vertical" form={formVoucher} onFinish={guardarCarrera}>
             <div className="vacantesPageContainerFormCrearVacante">
               <Form.Item label="Proceso" name="ID_PROCESO">
@@ -219,10 +219,10 @@ const VoucherPage = () => {
                   Guardar Cambios
                 </Button>
               </Popconfirm>
-              <Button  icon={<SearchOutlined />} onClick={comprobarVoucher}>
+              <Button  icon={<ReloadOutlined />} onClick={comprobarVoucher} type="primary" style={{ background: '#3C887E' }}>
                 Comprobar
               </Button>
-              <Button icon={<SearchOutlined />} onClick={buscarVoucher}>
+              <Button icon={<SearchOutlined />} onClick={buscarVoucher} type="primary" style={{ background: '#031927' }}>
                 Buscar
               </Button>
             </Form.Item>
