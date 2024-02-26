@@ -120,7 +120,7 @@ const PagosEstudiantePage = () => {
               name="MONTO"
               rules={[{ required: true }]}
             >
-              <Input maxLength={6} />
+              <Input maxLength={3} />
             </Form.Item>
           </div>
             <Form.Item>

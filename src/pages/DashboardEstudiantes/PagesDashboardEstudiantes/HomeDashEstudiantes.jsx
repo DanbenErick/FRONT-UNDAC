@@ -90,7 +90,7 @@ const HomeDashEstudinte = () => {
         <div className="containerMain">
           {/* <div className="containerMainImage"> */}
           <img
-            src="https://undac.edu.pe/wp-content/uploads/2024/02/facebook_Mesa-de-trabajo-1-2048x758.png"
+            src={process.env.REACT_APP_RUTA_IMG_DASH_ESTU}
             alt="Banner"
           />
           {/* </div> */}
@@ -125,8 +125,9 @@ const HomeDashEstudinte = () => {
           {
             statusCarnet
               ?
-              <a href="/generar-pdf" target="_blank">
-                <Button block type="primary">Ver mi carnet</Button>
+              <a href="/generar-pdf" target="_blank" style={{ display: 'flex', gap: '5px', textDecoration: 'none', padding: '10px 30px' }}>
+                <Button block type="primary" style={{ boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px' }}><i class="ri-refund-line" style={{ fontSize: '14px' }}></i>Ver mi carnet</Button>
+                {/* <a href="https://wa.me/5192070271?text=UNIVERSIDAD DANIEL ALCIDES CARRION" target="_blank"><Button block type="primary" style={{ backgroundColor: '#25D366' }}><i class="ri-whatsapp-fill"></i> Enviar Whatsapp</Button></a> */}
               </a>
               :
               ''

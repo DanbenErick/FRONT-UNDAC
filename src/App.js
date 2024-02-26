@@ -86,6 +86,7 @@ const App = () => {
                     <DashboardEstudiantes />
                   </PrivateRoute>
                 }>
+                <Route path="" element={<HomeDashEstudinte />} />
                 <Route path="home" element={<HomeDashEstudinte />} />
                 <Route path="inscripcion-cepre" element={<InscripcionDashboardEstudiante />}/>
                 <Route path="inscripcion-ordinario" element={<InscripcionOdinarioPage />}/>

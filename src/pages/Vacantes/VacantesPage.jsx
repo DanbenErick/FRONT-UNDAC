@@ -203,7 +203,7 @@ const VacantesPage = () => {
               <Form.Item label="Cantidad de vacantes" name="CANTIDAD">
                 <InputNumber
                   min={1}
-                  max={20}
+                  max={80}
                   style={{ width: '100%' }}
                   placeholder="Cuantas vacantes habra?"
                 />
