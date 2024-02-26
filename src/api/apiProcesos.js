@@ -7,7 +7,11 @@ const obtenerReportePDFPadron = async(params) => {
   try {
     const ruta = getRutaReporte(`generar-pdf?inicio=${params.INICIO}&fin=${params.FIN}&area=${params.AREA}&aula=${params.AULA}`)
     const resp = await axios.get(ruta)
-    return resp
+    const pdfData = resp.data;
+    const blob = new Blob([pdfData], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
+    return {ok: true, message: 'Se creo correctamente el pdf'}
   }catch(error) {
     console.error('Ocurrio un error', error)
   }
