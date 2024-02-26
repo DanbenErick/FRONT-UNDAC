@@ -14,7 +14,7 @@ const obtenerReportePDFPadron = async({ID_PROCESO, INICIO, FIN, AREA, AULA, FECH
         area: AREA,
         aula: AULA,
         fecha: FECHA,
-        SEDE: SEDE,
+        sede: SEDE,
       }
     })
     const pdfData = resp.data;
