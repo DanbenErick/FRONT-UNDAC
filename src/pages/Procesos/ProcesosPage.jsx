@@ -97,6 +97,7 @@ export default function ProcesosPage() {
   
   const generarPadronEstudiantes = async() => {
     const params = formPadronEstudiantes.getFieldsValue()
+    
     obtenerReportePDFPadronService(params)
     // alert("Generando padron")
   }
@@ -398,6 +399,9 @@ export default function ProcesosPage() {
             <Input  />
           </Form.Item>
           <Form.Item label="Area" name="AREA">
+            <Input  />
+          </Form.Item>
+          <Form.Item label="Aula" name="AULA">
             <Input  />
           </Form.Item>
           <Form.Item label="Fecha" name="FECHA">
