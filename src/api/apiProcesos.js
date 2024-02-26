@@ -3,10 +3,20 @@ const API_HOST = process.env.REACT_APP_API_URL;
 const API_REPORTE = process.env.REACT_APP_API_URL_REPORTES
 const getRuta = (params) => `${API_HOST}/administrador/procesos/${params}`;
 const getRutaReporte = (params) => `${API_REPORTE}/${params}`;
-const obtenerReportePDFPadron = async(params) => {
+const obtenerReportePDFPadron = async({ID_PROCESO, INICIO, FIN, AREA, AULA, FECHA, SEDE}) => {
   try {
-    const ruta = getRutaReporte(`generar-pdf?inicio=${params.INICIO}&fin=${params.FIN}&area=${params.AREA}&aula=${params.AULA}`)
-    const resp = await axios.get(ruta)
+    const ruta = getRutaReporte(`generar-pdf`)
+    const resp = await axios.get(ruta, {
+      params: {
+        id_proceso: ID_PROCESO,
+        inicio: INICIO,
+        fin: FIN,
+        area: AREA,
+        aula: AULA,
+        fecha: FECHA,
+        SEDE: SEDE,
+      }
+    })
     const pdfData = resp.data;
     const blob = new Blob([pdfData], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);

@@ -11,6 +11,7 @@ import moment from 'moment';
 import { getInscritosPorProcesoAreasService, getInscritosPorProcesoCarrerasService, getInscritosPorProcesoModalidadesService, getInscritosPorProcesoSedeService, getInscritosPorProcesoService, getProcesosService, obtenerEstudiantesParaCSVService, obtenerReportePDFPadronService } from '../../services/ProcesosService';
 import { message } from 'antd/es';
 import { CloseCircleOutlined, EyeOutlined, FormOutlined, SnippetsOutlined } from '@ant-design/icons';
+import { obtenerProcesosForm, obtenerSedesForm } from '../../api/apiInpputs';
 
 const convertirACsv = (data) => {
   let csvContent = "data:text/csv;charset=utf-8,";
@@ -41,6 +42,9 @@ export default function ProcesosPage() {
   const [statusModal, setStatusModal] = useState(false);
   const [dataInscritos, setDataInscritos] = useState([]);
   const [columnsInscritosTable, setColumnsInscritosTable] = useState([])
+
+  const [selectProcesos, setSelectProcesos] = useState([])
+  const [optionsSedes, setOptionsSedes] = useState([])
 
   const [statusPadronModal, setStatusPadronModal] = useState(false)
   const [formPadronEstudiantes] = Form.useForm()
@@ -200,9 +204,6 @@ export default function ProcesosPage() {
             <Tooltip title="Reporte">
               <Button onClick={() => {obtenerInscritosPorProcesoSede({ID_PROCESO: column.ID});  ID_MODALIDAD_LOCAL = column.ID}} type="link" success icon={<FormOutlined />}></Button>
             </Tooltip>
-            <Tooltip title="Generar padron">
-              <Button onClick={() => {showModalPadron({ID_PROCESO: column.ID});  ID_MODALIDAD_LOCAL = column.ID}} type="link" icon={<SnippetsOutlined />} success ></Button>
-            </Tooltip>
             <Popconfirm
               title="Proceso"
               description="Quieres cerrar este proceso?"
@@ -272,9 +273,17 @@ export default function ProcesosPage() {
       content: message,
     });
   };
+  const getInputs = async(params) => {
+    const resp = await obtenerProcesosForm()
+    const resp_2 = await obtenerSedesForm({ TIPO_PROCESO: 'O' })
+    setSelectProcesos(resp.data)
+    setOptionsSedes(resp_2.data)
+
+  }
   const showModalPadron = (params) => {
     //TODO: Show modal padron
     setStatusPadronModal(true)
+    getInputs()
   }
   const itemsTabs = [
     {
@@ -379,6 +388,7 @@ export default function ProcesosPage() {
                 >
                   <Button type="primary">Guardar Cambios</Button>
                 </Popconfirm>
+                <Button onClick={showModalPadron} type="link" icon={<SnippetsOutlined />} success >Generar padron</Button>
               </Form.Item>
             </div>
           </Form>
@@ -390,26 +400,45 @@ export default function ProcesosPage() {
       <Modal title="Padron de Estudiantes" open={statusPadronModal} onOk={() => {formPadronEstudiantes.submit()}} onCancel={() => setStatusPadronModal(false)}>
         <Form layout='vertical' form={formPadronEstudiantes} onFinish={generarPadronEstudiantes}>
           <Form.Item label="Proceso" name="ID_PROCESO">
-            <Input  />
+            <Select
+              options={selectProcesos}
+            />
           </Form.Item>
-          <Form.Item label="Inicio" name="INICIO">
-            <Input  />
-          </Form.Item>
-          <Form.Item label="Fin" name="FIN">
-            <Input  />
-          </Form.Item>
-          <Form.Item label="Area" name="AREA">
-            <Input  />
-          </Form.Item>
-          <Form.Item label="Aula" name="AULA">
-            <Input  />
-          </Form.Item>
-          <Form.Item label="Fecha" name="FECHA">
-            <Input  />
-          </Form.Item>
-          <Form.Item label="Sede" name="SEDE">
-            <Input  />
-          </Form.Item>
+          <div className="container-inicio-fin" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+            <Form.Item label="Inicio" name="INICIO">
+              <Input  />
+            </Form.Item>
+            <Form.Item label="Fin" name="FIN">
+              <Input  />
+            </Form.Item>
+          </div>
+          <div className="container-inicio-fin" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+            <Form.Item label="Area" name="AREA">
+              <Select
+                options={[
+                  {label: '1', value:'1'},
+                  {label: '2', value:'2'},
+                  {label: '3', value:'3'},
+                  {label: '4', value:'4'},
+                  {label: '5', value:'5'},
+                  {label: '6', value:'6'},
+                ]}
+              />
+            </Form.Item>
+            <Form.Item label="Aula" name="AULA">
+              <Input  />
+            </Form.Item>
+          </div>
+          <div className="container-inicio-fin" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+            <Form.Item label="Fecha" name="FECHA">
+              <Input  />
+            </Form.Item>
+            <Form.Item label="Sede" name="SEDE">
+              <Select
+                options={optionsSedes}
+              />
+            </Form.Item>
+          </div>
         </Form>
       </Modal>
       <Modal title="Informcion del Proceso" open={statusModal} onOk={() => setStatusModal(false)} onCancel={() => setStatusModal(false)}>
