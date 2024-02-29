@@ -120,17 +120,17 @@ const InscripcionOdinarioPage = () => {
     params.YEAR_CONCLU = params.YEAR_CONCLU.getFullYear();
     
 
-    // const resp_inscripcion_estudiante = await inscribirEstudianteService(params);
-    // const resp_subir_foto = await subirFoto(params.DNI);
-    // // const resp_subir_documento = await subirDocumentosEstudiante(params.DNI);
-    // if (
-    //   resp_inscripcion_estudiante.data.ok &&
-    //   resp_subir_foto
-    // ) {
-    //   message.success('Registrado correctamente');
-    //   setVerificarRegistroEstudiante(true )
-    //   return;
-    // }
+    const resp_inscripcion_estudiante = await inscribirEstudianteService(params);
+    const resp_subir_foto = await subirFoto(params.DNI);
+    // const resp_subir_documento = await subirDocumentosEstudiante(params.DNI);
+    if (
+      resp_inscripcion_estudiante.data.ok &&
+      resp_subir_foto
+    ) {
+      message.success('Registrado correctamente');
+      setVerificarRegistroEstudiante(true )
+      return;
+    }
   };
   const buscarDistrito = async (params) => {
     const resp = await obtenerDistritosForm({ PROVINCIA: params });
