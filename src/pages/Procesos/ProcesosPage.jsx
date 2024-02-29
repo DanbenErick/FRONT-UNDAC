@@ -103,7 +103,7 @@ export default function ProcesosPage() {
     const params = formPadronEstudiantes.getFieldsValue()
     setLoading(true)
     const resp = await obtenerReportePDFPadronService(params)
-    if(resp && resp.status === 200 && resp.data.ok) {
+    if(resp && resp.status === 200 && resp.ok) {
       message.success(resp.data.message)
     }else { message.error('Ocurrio un error') }
     // alert("Generando padron")

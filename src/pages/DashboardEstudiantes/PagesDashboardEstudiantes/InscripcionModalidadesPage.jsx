@@ -132,7 +132,8 @@ const InscripcionModalidadesPage = () => {
     params.FECHA_NACIMIENTO = moment(params.FECHA_NACIMIENTO).format(
       'YYYY-MM-DD',
     );
-    params.YEAR_CONCLU = moment(params.YEAR_CONCLU).format('YYYY');
+    params.YEAR_CONCLU = new Date(params.YEAR_CONCLU)
+    params.YEAR_CONCLU = params.YEAR_CONCLU.getFullYear();
 
     const resp_inscripcion_estudiante = await inscribirEstudianteService(params);
     const resp_subir_foto = await subirFoto(params.DNI);
