@@ -1,15 +1,19 @@
 import { Breadcrumb, Button, Card, Select, message } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form } from 'antd'
 import { procesarMultiPService, procesarSolapasService } from '../../api/resultadosService';
 import SpinnerComponent from '../../components/Spinner';
+import { obtenerProcesosForm } from '../../api/apiInpputs';
 const ResultadosAdmPage = () => {
 
   
   const [loading, setLoading] = useState(false)
   const [fileSolapa, setFileSolapa] = useState(null);
   const [fileMultiP, setFileMultiP] = useState(null);
-
+  const [stateProceso, setStateProceso] = useState(true)
+  const [selectProcesos, setSelectProcesos] = useState([])
+  const [nameProceso, setNameProceso] = useState('')
+  const [formProceso] = Form.useForm()
 
   const cargarArchivoSolapasCSV = async () => {
 
@@ -20,8 +24,8 @@ const ResultadosAdmPage = () => {
     formData.append('solapa', fileSolapa);
 
     // Enviar el archivo al servidor usando Axios
-  
-    const resp = await procesarSolapasService(formData)
+    const formValues = formProceso.getFieldsValue()
+    const resp = await procesarSolapasService(formData, formValues)
     if(resp && resp.data && resp.data.ok) {
       message.success(resp.data.message)
     }else {
@@ -37,8 +41,8 @@ const ResultadosAdmPage = () => {
     formData.append('multip', fileMultiP);
 
     // Enviar el archivo al servidor usando Axios
-  
-    const resp = await procesarMultiPService(formData)
+    const formValues = formProceso.getFieldsValue()
+    const resp = await procesarMultiPService(formData, formValues)
     if(resp && resp.data && resp.data.ok) {
       message.success(resp.data.message)
     }else {
@@ -47,11 +51,24 @@ const ResultadosAdmPage = () => {
     setLoading(false)
     console.log("Cargando archivo")
   }
+  const getSelects = async() => {
+    const resp = await obtenerProcesosForm()
+    setSelectProcesos(resp.data)
+  }
+  useEffect(() => {
+    getSelects()
+  },[])
+  const onChageSelectProcesos = async(valor) => {
+    const [procesoSeleccionado] = selectProcesos.filter(proceso => proceso.value == valor)
+    console.log(procesoSeleccionado)
+    setNameProceso(procesoSeleccionado.label)
+    setStateProceso(false)
+  }
   return (
     <>
     {loading ? <SpinnerComponent /> : ''}
     <div className="contentDashboard">
-        <h1 className="titlePageDashboard">Procesos</h1>
+        <h1 className="titlePageDashboard">Resultados</h1>
         <Breadcrumb className="bradcrumpPadding">
           <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
           <Breadcrumb.Item>Resultados</Breadcrumb.Item>
@@ -61,16 +78,26 @@ const ResultadosAdmPage = () => {
           <Form
             layout="vertical"
             onFinish={cargarArchivoSolapasCSV}
+            form={formProceso}         
           >
-            <Form.Item label="Procesos">
+            <Form.Item label="Procesos" name="ID_PROCESO">
               <Select
-                options={[]}
+                options={selectProcesos}
+                onChange={onChageSelectProcesos}
               />
             </Form.Item>
-
+            {
+              !stateProceso
+              ?
+              <h2>Selecciona solapa y hojas de respuesta del proceso: {nameProceso}</h2>
+              :
+              ''
+            }
             <Form.Item>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <input type="file" onChange={(event) => setFileSolapa(event.target.files[0])} />
-              <Button htmlType='submit' type="primary">Procesar Solapa</Button>
+              <Button htmlType='submit' type="primary" disabled={stateProceso}>Procesar Solapa {nameProceso}</Button>
+            </div>
             </Form.Item>
             
           </Form>
@@ -78,13 +105,13 @@ const ResultadosAdmPage = () => {
             onFinish={cargarArchivoMultiPCSV}
           >
             <Form.Item>
-              <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <input type="file" onChange={(event) => setFileMultiP(event.target.files[0])} />
+                <Button type="primary" htmlType='submit' disabled={stateProceso}>Procesar Respuestas {nameProceso}</Button>
               </div>
-              <Button type="primary" htmlType='submit'>Procesar MultiP</Button>
             </Form.Item>
           </Form>
-          <Button>Procesar Ingresantes</Button>
+          <Button type="primary" disabled={stateProceso}>Obtener PDF {nameProceso}</Button>
         </Card>
       </div>
       </>
