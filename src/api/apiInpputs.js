@@ -14,7 +14,7 @@ const buscarAulaPorTurnoForm = async (params) => {
 } 
 const obtenerDatosResultadosEstudinateTable = async(params) => {
   try {
-    const ruta = getRuta('/obtener-resultados-modalidades/'+ params)
+    const ruta = getRuta('obtener-resultados-modalidades/'+ params)
     const resp = await axios.get(ruta)
     return resp
   }catch(error) {
