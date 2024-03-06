@@ -1,7 +1,7 @@
 import { Breadcrumb, Button, Card, Select, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Form } from 'antd'
-import { procesarMultiPService, procesarSolapasService } from '../../api/resultadosService';
+import { obtenerPDFResultadosService, procesarMultiPService, procesarSolapasService } from '../../api/resultadosService';
 import SpinnerComponent from '../../components/Spinner';
 import { obtenerProcesosForm } from '../../api/apiInpputs';
 const ResultadosAdmPage = () => {
@@ -64,6 +64,19 @@ const ResultadosAdmPage = () => {
     setNameProceso(procesoSeleccionado.label)
     setStateProceso(false)
   }
+  const obtenerPDFResultados = async(data) => {
+    setLoading(true)
+    const [procesoSeleccionado] = selectProcesos.filter(proceso => proceso.value == valor)
+    console.log(procesoSeleccionado)
+    const resp = await obtenerPDFResultadosService({ID_PROCESO: procesoSeleccionado.value})
+    console.log(resp)
+    if(resp && resp.status === 200 && resp.ok) {
+      message.success(resp.data.message)
+    }else { message.error('Ocurrio un error') }
+    // alert("Generando padron")
+    setLoading(false)
+    
+  }
   return (
     <>
     {loading ? <SpinnerComponent /> : ''}
@@ -111,7 +124,7 @@ const ResultadosAdmPage = () => {
               </div>
             </Form.Item>
           </Form>
-          <Button type="primary" disabled={stateProceso}>Obtener PDF {nameProceso}</Button>
+          <Button type="primary" disabled={stateProceso} onClick={obtenerPDFResultados}>Obtener PDF {nameProceso}</Button>
         </Card>
       </div>
       </>
