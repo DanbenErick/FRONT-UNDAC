@@ -70,7 +70,7 @@ const ResultadosAdmPage = () => {
     
     const resp = await obtenerPDFResultadosService(params)
     console.log(resp)
-    if(resp && resp.status === 200 && resp.ok) {
+    if(resp && resp.ok) {
       message.success(resp.data.message)
     }else { message.error('Ocurrio un error') }
     // alert("Generando padron")
