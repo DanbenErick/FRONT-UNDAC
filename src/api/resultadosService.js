@@ -1,6 +1,7 @@
 import axios from './axiosConfig'
 
 const API_HOST = process.env.REACT_APP_API_URL;
+const API_REPORTE = process.env.REACT_APP_API_URL_REPORTES
 const getRuta = (params) => `${API_HOST}/administrador/resultados/${params}`;
 const getRutaResultado = (params) => `${API_REPORTE}/${params}`;
 const procesarSolapasService = async (params, params2) => {
@@ -24,6 +25,7 @@ const procesarMultiPService = async(params, params2) => {
 const obtenerPDFResultadosService = async(params) => {
     try {
         const ruta = getRutaResultado('generar-resultados-pdf?id_proceso='+ params.ID_PROCESO)
+        const resp = await axios.get(ruta)
         const pdfData = resp.data;
         const blob = new Blob([pdfData], { type: 'application/pdf' });
         const url = URL.createObjectURL(blob);

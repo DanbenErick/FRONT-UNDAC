@@ -66,9 +66,9 @@ const ResultadosAdmPage = () => {
   }
   const obtenerPDFResultados = async(data) => {
     setLoading(true)
-    const [procesoSeleccionado] = selectProcesos.filter(proceso => proceso.value == valor)
-    console.log(procesoSeleccionado)
-    const resp = await obtenerPDFResultadosService({ID_PROCESO: procesoSeleccionado.value})
+    const params = formProceso.getFieldsValue()
+    
+    const resp = await obtenerPDFResultadosService(params)
     console.log(resp)
     if(resp && resp.status === 200 && resp.ok) {
       message.success(resp.data.message)
