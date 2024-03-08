@@ -101,13 +101,23 @@ export default function ProcesosPage() {
   
   const generarPadronEstudiantes = async() => {
     const params = formPadronEstudiantes.getFieldsValue()
+    debugger
     setLoading(true)
-    const resp = await obtenerReportePDFPadronService(params)
-    if(resp && resp.ok) {
-      message.success(resp.data.message)
-    }else { message.error('Ocurrio un error') }
-    // alert("Generando padron")
-    setLoading(false)
+    try {
+      const resp = await obtenerReportePDFPadronService(params)
+      console.log(resp)
+      if(resp && resp.ok) {
+        message.success('Se genero correctamente el padron')
+      }
+      else {
+        message.error('Ocurrio un error')
+      }
+      setLoading(false)
+    }catch(error) {
+      message.error('Ocurrio un error')
+      console.info('Ocurrio un error', error)
+      setLoading(false)
+    }
   }
 
   const columnsInscritos = [

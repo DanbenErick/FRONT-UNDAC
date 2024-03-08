@@ -21,7 +21,6 @@ const obtenerReportePDFPadron = async({ID_PROCESO, INICIO, FIN, AREA, AULA, FECH
     const blob = new Blob([pdfData], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     const newTab = window.open(url, '_blank');
-    newTab.name = `${SEDE} - AREA ${AREA} - ${INICIO} - ${FIN} - ${FECHA}`
     return {ok: true, message: 'Se creo correctamente el pdf'}
   }catch(error) {
     console.error('Ocurrio un error', error)
