@@ -42,6 +42,11 @@ const getRutas = () => {
       ruta: '/dashboard/aulas',
       icon: 'SnippetsFilled',
     },
+    {
+      nombre: 'Cordinadores',
+      ruta: '/dashboard/cordinadores',
+      icon: 'SnippetsFilled',
+    },
   ];
 };
 

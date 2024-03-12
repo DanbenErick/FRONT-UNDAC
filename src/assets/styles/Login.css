@@ -1,9 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
-
+.App {
+  min-height: 100vh !important;
+}
 .pageLogin {
   max-width: 100%;
-  max-height: 100vh;
-  overflow: hidden;
+  height: 100%;
+  min-height: 100vh;
+  /* overflow: hidden; */
 }
 .pageLogin .containerImg {
   display: flex;

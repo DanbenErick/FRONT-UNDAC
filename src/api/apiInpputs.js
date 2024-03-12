@@ -11,7 +11,16 @@ const buscarAulaPorTurnoForm = async (params) => {
   }catch(error) {
     console.error('Ocurrio un error', error)
   }
-} 
+}
+const validarCordinadorService = async(params) => {
+  try {
+    const ruta = getRuta('validar-cordinador', params)
+    const resp = await axios.post(ruta, params)
+    return resp
+  }catch(error) {
+    console.error('Ocurrio un error', error)
+  }
+}
 const obtenerDatosResultadosEstudinateTable = async(params) => {
   try {
     const ruta = getRuta('obtener-resultados-modalidades/'+ params)
@@ -194,5 +203,6 @@ export {
   obtenerTodosLosProcesosActivosForm,
   obtenerDistritoUbigeoAutocompleteForm,
   obtenerDatosResultadosEstudinateTable,
-  obtenerSedesForm
+  obtenerSedesForm,
+  validarCordinadorService
 };

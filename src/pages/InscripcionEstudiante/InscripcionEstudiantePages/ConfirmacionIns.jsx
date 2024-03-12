@@ -14,8 +14,8 @@ const ConfirmacionIns = (props) => {
       message.error('Las contraseas no coindicen');
       return;
     }
-    setEstudiante({ ...estudiante, PASSWORD: params.PASSWORD });
-    const resp = await registrarEstudianteService({ ...estudiante, PASSWORD: params.PASSWORD });
+    setEstudiante({ ...estudiante, PASSWORD: params.PASSWORD, CORDINADOR: localStorage.getItem('CORDINADOR') || '' });
+    const resp = await registrarEstudianteService({ ...estudiante, PASSWORD: params.PASSWORD, CORDINADOR: localStorage.getItem('CORDINADOR') || '' });
     if (!resp.data.ok) {
       message.error(resp.data.message);
       return;

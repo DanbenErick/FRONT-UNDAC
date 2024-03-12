@@ -5,6 +5,7 @@ import SpinnerCompoent from '../../components/Spinner';
 import {
   crearProceso,
   cerrarProceso,
+  connectServerSocketIO,
 } from '../../api/apiProcesos';
 import '../../assets/styles/DashboardAdmin.css';
 import moment from 'moment';
@@ -101,7 +102,6 @@ export default function ProcesosPage() {
   
   const generarPadronEstudiantes = async() => {
     const params = formPadronEstudiantes.getFieldsValue()
-    debugger
     setLoading(true)
     try {
       const resp = await obtenerReportePDFPadronService(params)

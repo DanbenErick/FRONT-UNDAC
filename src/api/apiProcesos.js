@@ -1,4 +1,5 @@
 import axios from './axiosConfig';
+import io from 'socket.io-client'
 const API_HOST = process.env.REACT_APP_API_URL;
 const API_REPORTE = process.env.REACT_APP_API_URL_REPORTES
 const getRuta = (params) => `${API_HOST}/administrador/procesos/${params}`;
@@ -24,6 +25,15 @@ const obtenerReportePDFPadron = async({ID_PROCESO, INICIO, FIN, AREA, AULA, FECH
     return {ok: true, message: 'Se creo correctamente el pdf'}
   }catch(error) {
     console.error('Ocurrio un error', error)
+  }
+}
+const connectServerSocketIO = async() => {
+  try {
+    const ruta = `http://localhost:3500`
+    const socket = io(ruta)
+    return socket
+  }catch(error) {
+    console.error('Error ', error)
   }
 }
 const obtenerProcesosFull = async () => {
@@ -99,4 +109,4 @@ const obtenerInscritosPorModalidadService = async (params) => {
   }
 }
 
-export { obtenerProcesosFull, crearProceso, cerrarProceso, obtenerInscritosPorSedeService, obtenerInscritosPorCarreraService, obtenerInscritosPorModalidadService, obtenerInscritosPorAreaService, obtenerInscritosNombresService, obtenerReportePDFPadron};
+export { connectServerSocketIO, obtenerProcesosFull, crearProceso, cerrarProceso, obtenerInscritosPorSedeService, obtenerInscritosPorCarreraService, obtenerInscritosPorModalidadService, obtenerInscritosPorAreaService, obtenerInscritosNombresService, obtenerReportePDFPadron};

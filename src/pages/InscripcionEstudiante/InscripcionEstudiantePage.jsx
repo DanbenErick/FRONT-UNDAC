@@ -32,7 +32,7 @@ const InscripcionEstudiantePage = () => {
       content: <ResumenIns current={current} setCurrent={setCurrent} />,
     },
     {
-      title: <b>Correo</b>,
+      title: <b>Cordinador</b>,
       content: <ValidacionIns current={current} setCurrent={setCurrent} />,
     },
     {

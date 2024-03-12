@@ -36,6 +36,7 @@ import TablaResultadosPage from './pages/Resultados/TablaResultadosPage';
 import HojaEstudianteIngresoPage from './pages/HojaEstudianteIngresoPage';
 import PadronEstudianteAulaPDF from './pages/PadronEstudianteAula';
 import Resultados2Page, { ResultadoDEPORTISTASCALIFICADOSPage, ResultadoPERSONASCONDISCAPACIDADPage, ResultadoPUEBLOSORIGINARIOSPage, ResultadoPrimerSegundoPuestoPage, ResultadoTITULOSYGRADUADOSPage, ResultadoTRASLADOSEXTERNOSPage, ResultadoTRASLADOSINTERNOSPage, ResultadoVICTIMASDETERRORISMOYFAMILIARESPage } from './pages/Resultados2Page';
+import CordinadoresPage from './pages/Cordinadores/CordinadoresPage';
 
 const App = () => {
   return (
@@ -111,6 +112,7 @@ const App = () => {
                 <Route path="inscritos" element={<InscritoPage />} />
                 <Route path="resultados" element={<ResultadosAdmPage />} />
                 <Route path="aulas" element={<AulasPage />} />
+                <Route path="cordinadores" element={<CordinadoresPage />} />
               </Route>
               <Route path="/resultados" element={<ResultadoPage />} />
               <Route path='/resultados-lis-carreras/:nombre/:id' element={<CarreraResultadoPage />} />
