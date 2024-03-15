@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { Breadcrumb, Button, Modal, Select, Table, Tabs, Tooltip } from 'antd';
 import { Tag, Popconfirm, Card, Form, Input, Radio, DatePicker } from 'antd';
+import * as XLSX from 'xlsx';
 import SpinnerCompoent from '../../components/Spinner';
 import {
   crearProceso,
   cerrarProceso,
-  connectServerSocketIO,
+  procesarPadronPorExcel,
 } from '../../api/apiProcesos';
 import '../../assets/styles/DashboardAdmin.css';
 import moment from 'moment';
 import { getInscritosPorProcesoAreasService, getInscritosPorProcesoCarrerasService, getInscritosPorProcesoModalidadesService, getInscritosPorProcesoSedeService, getInscritosPorProcesoService, getProcesosService, obtenerEstudiantesParaCSVService, obtenerReportePDFPadronService } from '../../services/ProcesosService';
 import { message } from 'antd/es';
-import { CloseCircleOutlined, EyeOutlined, FormOutlined, SnippetsOutlined } from '@ant-design/icons';
+import { CloseCircleOutlined, EyeOutlined, FileExcelFilled, FormOutlined, SnippetsOutlined } from '@ant-design/icons';
 import { obtenerProcesosForm, obtenerSedesForm } from '../../api/apiInpputs';
+import { ignore } from 'antd/es/theme/useToken';
 
 const convertirACsv = (data) => {
   let csvContent = "data:text/csv;charset=utf-8,";
@@ -294,6 +296,58 @@ export default function ProcesosPage() {
     setOptionsSedes(resp_2.data)
 
   }
+  const [jsonData, setJsonData] = useState([]);
+  const [fileExcel, setFileExcel] = useState(null)
+  const procesarExcel = async() => {
+
+    if (!fileExcel) {
+      alert("Por favor selecciona un archivo Excel primero.");
+      return;
+    }
+
+
+    // const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = async (event) => {
+      
+      const data = new Uint8Array(event.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+
+      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+
+      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+      console.log(jsonData)
+      // Convertir los datos a tu formato JSON deseado
+      const formattedData = []
+      for(let i = 1; i < jsonData.length; i++) {
+        if(jsonData[i][0] != undefined) {
+          formattedData.push(
+            {
+              area: jsonData[i][0],
+              aula: jsonData[i][1],
+              inicio: jsonData[i][2],
+              cantidad: jsonData[i][3],
+              id_proceso: jsonData[i][4],
+              sede: jsonData[i][5]
+            }
+          )
+        }
+      }
+      const jsonDatas = JSON.stringify(formattedData)
+      console.log("datos", jsonDatas)
+      setJsonData(jsonDatas)
+      const resp = await procesarPadronPorExcel(jsonDatas)
+      if(resp && resp.ok) {
+        message.success('Generado correctamente')
+      }
+    };
+
+    reader.readAsArrayBuffer(fileExcel);
+  }
+  const handleFileChangeExcel = (event) => {
+    setFileExcel(event.target.files[0])
+  };
   const showModalPadron = (params) => {
     //TODO: Show modal padron
     setStatusPadronModal(true)
@@ -412,6 +466,8 @@ export default function ProcesosPage() {
         </Card>
       </div>
       <Modal title="Padron de Estudiantes" open={statusPadronModal} onOk={() => {formPadronEstudiantes.submit()}} onCancel={() => setStatusPadronModal(false)}>
+      <input type="file" onChange={handleFileChangeExcel} accept=".xlsx, .xls" />
+        <Button type='primary' onClick={procesarExcel}>Procesar con excel</Button>
         <Form layout='vertical' form={formPadronEstudiantes} onFinish={generarPadronEstudiantes}>
           <Form.Item label="Proceso" name="ID_PROCESO">
             <Select

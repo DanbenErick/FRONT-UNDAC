@@ -27,6 +27,24 @@ const obtenerReportePDFPadron = async({ID_PROCESO, INICIO, FIN, AREA, AULA, FECH
     console.error('Ocurrio un error', error)
   }
 }
+const procesarPadronPorExcel = async(params) => {
+  try {
+    const ruta = getRutaReporte('generar-pdf-bloque')
+    const resp = await axios.get(ruta, {
+      params: {
+        data: params,
+      }
+    })
+    const pdfData = resp.data;
+    const blob = new Blob([pdfData], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const newTab = window.open(url, '_blank');
+    return {ok: true, message: 'Se creo correctamente el pdf'}
+    return 
+  }catch(error) {
+    console.error('Error ', error)
+  }
+}
 const connectServerSocketIO = async() => {
   try {
     const ruta = `http://localhost:3500`
@@ -109,4 +127,4 @@ const obtenerInscritosPorModalidadService = async (params) => {
   }
 }
 
-export { connectServerSocketIO, obtenerProcesosFull, crearProceso, cerrarProceso, obtenerInscritosPorSedeService, obtenerInscritosPorCarreraService, obtenerInscritosPorModalidadService, obtenerInscritosPorAreaService, obtenerInscritosNombresService, obtenerReportePDFPadron};
+export { procesarPadronPorExcel, connectServerSocketIO, obtenerProcesosFull, crearProceso, cerrarProceso, obtenerInscritosPorSedeService, obtenerInscritosPorCarreraService, obtenerInscritosPorModalidadService, obtenerInscritosPorAreaService, obtenerInscritosNombresService, obtenerReportePDFPadron};

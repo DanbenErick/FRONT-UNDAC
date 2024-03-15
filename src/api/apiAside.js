@@ -47,6 +47,11 @@ const getRutas = () => {
       ruta: '/dashboard/cordinadores',
       icon: 'SnippetsFilled',
     },
+    {
+      nombre: 'Constancias',
+      ruta: '/dashboard/constancias',
+      icon: 'SnippetsFilled',
+    },
   ];
 };
 
