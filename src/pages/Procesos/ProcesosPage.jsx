@@ -427,7 +427,8 @@ export default function ProcesosPage() {
                     {label: 'CEPRE', value: 'C'},
                     {label: 'ORDINARIO', value: 'O'},
                     {label: 'MODALIDADES', value: 'M'},
-                    {label: 'PRIMARA SELECCION', value: 'P'},
+                    {label: 'PRIMERA SELECCION', value: 'P'},
+                    {label: 'POSTGRADO', value: 'V'},
                   ]}
                 />
                   

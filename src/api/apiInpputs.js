@@ -93,6 +93,15 @@ const obtenerTodosLosProcesosActivosForm = async(params) => {
     console.error('Ocurrio un error', error);
   }
 }
+const obtenerMencionesForm = async() => {
+  try {
+    const ruta = getRuta('obtener-menciones')
+    const resp = await axios.get(ruta)
+    return resp
+  }catch(error) {
+    console.error('Ocurrio un error', error)
+  }
+}
 const obtenerDiscapacidadesForm = async () => {
   try {
     const ruta = getRuta('obtener-discapacidades')
@@ -204,5 +213,6 @@ export {
   obtenerDistritoUbigeoAutocompleteForm,
   obtenerDatosResultadosEstudinateTable,
   obtenerSedesForm,
+  obtenerMencionesForm,
   validarCordinadorService
 };

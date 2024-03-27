@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
         <Document>
           <Page size="A4" style={styles.page}>
             <View style={styles.section}>
-            <Image src="design-ordinario-1.jpeg" style={styles.imagenFondo} />
+            <Image src="design-postgrado.jpeg" style={styles.imagenFondo} />
             <Image src={`${process.env.REACT_APP_API_URL}/${dataStudent.DNI}/${dataStudent.DNI}.jpeg`}  style={styles.fotoPerfil} />
             
               <View style={styles.containerText}>

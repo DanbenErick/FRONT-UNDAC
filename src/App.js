@@ -37,6 +37,7 @@ import HojaEstudianteIngresoPage from './pages/HojaEstudianteIngresoPage';
 import PadronEstudianteAulaPDF from './pages/PadronEstudianteAula';
 import Resultados2Page, { ResultadoDEPORTISTASCALIFICADOSPage, ResultadoPERSONASCONDISCAPACIDADPage, ResultadoPUEBLOSORIGINARIOSPage, ResultadoPrimerSegundoPuestoPage, ResultadoTITULOSYGRADUADOSPage, ResultadoTRASLADOSEXTERNOSPage, ResultadoTRASLADOSINTERNOSPage, ResultadoVICTIMASDETERRORISMOYFAMILIARESPage } from './pages/Resultados2Page';
 import CordinadoresPage from './pages/Cordinadores/CordinadoresPage';
+import InscripcionPostgrado from './pages/DashboardEstudiantes/PagesDashboardEstudiantes/InscripcionPostgrado';
 
 const App = () => {
   return (
@@ -74,8 +75,8 @@ const App = () => {
                 path="/inscripcion"
                 element={
                   <EstudianteProvider>
-                    <h1>Inscripciones cerradas</h1>
-                    {/* <InscripcionEstudiantePage /> */}
+                    {/* <h1>Inscripciones cerradas</h1> */}
+                    <InscripcionEstudiantePage />
                   </EstudianteProvider>
                 }
               />
@@ -93,6 +94,7 @@ const App = () => {
                 <Route path="inscripcion-ordinario" element={<InscripcionOdinarioPage />}/>
                 <Route path="inscripcion-modalidad" element={<InscripcionModalidadesPage />}/>
                 <Route path="inscripcion-extraordinario" element={<InscripcionEstraordinarioPage />}/>
+                <Route path="inscripcion-postgrado" element={<InscripcionPostgrado />}/>
                 <Route path="test-psicologico" element={<TestpsicologicoPage />}/>
                 <Route path="pagos" element={<PagosEstudiantePage />}/>
               </Route>

@@ -13,6 +13,7 @@ const AsideDashboardEstudiantes = () => {
   const [statusOrdinario, setStatusOrdinario] = React.useState(false);
   const [statusModalidades, setStatusModalidades] = React.useState(false);
   const [statusExtraOrdinario, setStatusExtraOrdinario] = React.useState(false)
+  const [statusPostgrado, setStatusPostgrado] = React.useState(false)
   const navigate = useNavigate()
   const cerrarSesion = () => {
     localStorage.removeItem('token')
@@ -30,6 +31,7 @@ const AsideDashboardEstudiantes = () => {
       if(element.TIPO_PROCESO === 'O') setStatusOrdinario(true) 
       if(element.TIPO_PROCESO === 'M') setStatusModalidades(true) 
       if(element.TIPO_PROCESO === 'P') setStatusExtraOrdinario(true) 
+      if(element.TIPO_PROCESO === 'V') setStatusPostgrado(true) 
     })
     setSelectProcesos(data)
   }
@@ -97,6 +99,20 @@ const AsideDashboardEstudiantes = () => {
                   activeclassname="active">
                   <i className="icon ri-file-paper-fill"></i>
                   Inscripcion Extraordinario
+                </NavLink>
+              </li>
+            :
+            ''
+          }
+          {
+            statusPostgrado === true
+            ?
+              <li>
+                <NavLink
+                  to="/dashboard-estudiantes/inscripcion-postgrado"
+                  activeclassname="active">
+                  <i className="icon ri-file-paper-fill"></i>
+                  Inscripcion Postgrado
                 </NavLink>
               </li>
             :
