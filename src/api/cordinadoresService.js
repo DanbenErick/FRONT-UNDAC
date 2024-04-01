@@ -61,7 +61,7 @@ const obtenerIngresanteParaConstanciaPorDNIService = async (params) => {
         console.error('Ocurrio un erro', error)
     }
 }
-const generarConstanciasBloque = async(params) => {
+const generarConstanciasBloqueService = async(params) => {
     try {
         const ruta = getRutaReporte(`generar-constancia-bloque?id_proceso=${params.proceso}`)
         const resp = await axios.get(ruta)
@@ -76,7 +76,7 @@ const generarConstanciasBloque = async(params) => {
 }
 const generarConstanciaEstudiante = async(params) => {
     try {
-        const ruta = getRutaReporte(`generar-constancia-estudiante?dni=${params.dni}&id_proceso=${params.proceso}`)
+        const ruta = getRutaReporte(`generar-constancia-estudiante?dni=${params.dni}&id_proceso=${params.proceso}&tipo_documento=${params.tipo_documento}`)
         const resp = await axios.get(ruta)
         const pdfData = resp.data;
         const blob = new Blob([pdfData], { type: 'application/pdf' });
@@ -88,4 +88,4 @@ const generarConstanciaEstudiante = async(params) => {
     }
 }
 
-export { generarConstanciasBloque, generarConstanciaEstudiante, obtenerCordinadoresService, registrarCordinadorService, buscarCordinadorService, modificarEstadoCordinador, obtenerIngresantesService, obtenerIngresanteParaConstanciaPorDNIService }
+export { generarConstanciasBloqueService, generarConstanciaEstudiante, obtenerCordinadoresService, registrarCordinadorService, buscarCordinadorService, modificarEstadoCordinador, obtenerIngresantesService, obtenerIngresanteParaConstanciaPorDNIService }

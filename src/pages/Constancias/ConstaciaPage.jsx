@@ -11,13 +11,14 @@ import {
   Input,
   Select,
   Tooltip,
+  Radio,
   
 } from 'antd';
 import { CheckOutlined, SaveFilled, SearchOutlined } from '@ant-design/icons';
 
 import '../../assets/styles/VacantesPage.css';
 
-import { generarConstanciaEstudiante, obtenerIngresanteParaConstanciaPorDNIService, obtenerIngresantesService } from '../../api/cordinadoresService';
+import { generarConstanciaEstudiante, generarConstanciasBloqueService, obtenerIngresanteParaConstanciaPorDNIService, obtenerIngresantesService } from '../../api/cordinadoresService';
 import { obtenerProcesosForm } from '../../api/apiInpputs';
 
 
@@ -88,7 +89,7 @@ const ConstanciaPage = () => {
       render: (data, col) => (
         
         <>
-          <Button onClick={() => { obtenerConstancia({dni: col.DNI, proceso: col.PROCESO}) }} type="link" icon={<CheckOutlined />}></Button>
+          <Button onClick={() => { obtenerConstancia({dni: col.DNI, proceso: col.PROCESO, tipo_documento: formCordinador.getFieldValue('TIPO_DOCUMENTO')}) }} type="link" icon={<CheckOutlined />}></Button>
         </>
       )
     }
@@ -116,7 +117,10 @@ const ConstanciaPage = () => {
     const resp = await obtenerIngresanteParaConstanciaPorDNIService({dni: form.DNI, proceso: form.ID_PROCESO})
     setDataTable(resp.data)
   }
-  
+  const generarConstanciasBloque = async({ ID_PROCESO, TIPO_DOCUMENTO }) => {
+    await generarConstanciasBloqueService({ proceso: ID_PROCESO, tipo_documento: TIPO_DOCUMENTO })
+    
+  }
   return (
     <div>
       
@@ -131,7 +135,7 @@ const ConstanciaPage = () => {
           <Form
             layout="vertical"
             form={formCordinador}
-            
+            onFinish={generarConstanciasBloque}
           >
             <div className="vacantesPageContainerFormCrearVacante">
               
@@ -146,8 +150,11 @@ const ConstanciaPage = () => {
               <Form.Item label="DNI" name="DNI">
                 <Input maxLength={8} />
               </Form.Item>
-              <Form.Item label="Codigo de Matricula" name="DNI">
-                <Input maxLength={8} />
+              <Form.Item label="Codigo de Matricula" name="TIPO_DOCUMENTO">
+              <Radio.Group defaultValue="a" buttonStyle="solid">
+                <Radio.Button value="ORIGINAL">Original</Radio.Button>
+                <Radio.Button value="CARGO">Cargo</Radio.Button>
+              </Radio.Group>
               </Form.Item>
             </div>
                 <Popconfirm
