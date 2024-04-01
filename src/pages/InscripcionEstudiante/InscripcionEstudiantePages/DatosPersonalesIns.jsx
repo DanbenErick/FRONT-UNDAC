@@ -64,7 +64,7 @@ const DatosPersonalIncripcion = (props) => {
           <Select options={[{ value: 'DNI', label: 'DNI' }, { value: 'CE', label: 'Carnet de Extrangeria' }]} />
         </Form.Item>
         <Form.Item label="DNI" name="DNI" rules={[{ required: true }]}>
-          <Input maxLength="20" placeholder="Ingresa tu numero de DNI" style={{ width: '100%' }} onChange={buscarDNI} />
+          <Input maxLength="8" placeholder="Ingresa tu numero de DNI" style={{ width: '100%' }} onChange={buscarDNI} />
         </Form.Item>
         <Form.Item label="Apellidos Paterno" name="AP_PATERNO" rules={[{ required: true }]}>
           <Input placeholder="Tu apellido paterno" />

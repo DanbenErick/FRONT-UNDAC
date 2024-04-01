@@ -1,33 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { SaveFilled, UploadOutlined } from '@ant-design/icons';
-import {
-  Button,
-  Form,
-  Input,
-  Select,
-  DatePicker,
-  Radio,
-  message,
-  Alert,
-} from 'antd';
-import {
-  subirFotoEstudianteService,
-  subirDocumentacionEstudianteService,
-  inscribirEstudianteService,
-  verificarInscripcionEstudianteService,
-  verificarDatosComplementariosEstudiante,
-} from '../../../api/inscripcionDashEstudianteService';
-import {
-  buscarAulaPorTurnoForm,
-  obtenerCarrerasCodigoForm,
-  obtenerDepartamentosForm,
-  obtenerDiscapacidadesForm,
-  obtenerDistritosForm,
-  obtenerMencionesForm,
-  obtenerProcesoActivoForm,
-  obtenerProvinciasForm,
-  obtenerRazasEtnicasForm,
-} from '../../../api/apiInpputs';
+import { Button, Form, Input, Select, DatePicker, Radio, message, Alert, AutoComplete, Switch } from 'antd';
+import { subirFotoEstudianteService, subirDocumentacionEstudianteService, inscribirEstudianteService, verificarInscripcionEstudianteService, verificarDatosComplementariosEstudiante } from '../../../api/inscripcionDashEstudianteService';
+import { buscarAulaPorTurnoForm, obtenerCarrerasCodigoForm, obtenerDepartamentosForm, obtenerDiscapacidadesForm, obtenerDistritosForm, obtenerMencionesForm, obtenerProcesoActivoForm, obtenerProvinciasForm, obtenerRazasEtnicasForm, obtenerSedesForm } from '../../../api/apiInpputs';
 import moment from 'moment';
 import 'remixicon/fonts/remixicon.css';
 import SpinnerComponent from '../../../components/Spinner';
@@ -43,7 +18,13 @@ const InscripcionPostgrado = () => {
   const [verificarRegistroEstudiante, setVerificarRegistroEstudiante] = useState(0);
   const [stateInscripcionEstudiante, setStateInscripcionEstudiante] = useState(false);
   const [stateDatComplEstudiante, setStateDatComplEstudiante] = useState(false);
+  const [selectSedesExamen, setSelectSedesExamen] = useState([])
+
   const [estudianteInscrito, setEstudianteInscrito] = useState(false);
+
+  const [statusCardDatosApoderado, setStatusCardDatosApoderado] = useState(false)
+
+  const [statusInputDiscapacidad, setStatusInputDiscapacidad] = useState(false)
 
   const [optionsDepartamento, setOptionsDepartamento] = useState();
   const [optionsProvincia, setOptionsProvincia] = useState();
@@ -53,15 +34,11 @@ const InscripcionPostgrado = () => {
   const fileInputImgRef = useRef(null);
 
   const verificarInscritoDatosComplEstudiante = async () => {
-  // TODO: Primera seleccion
-    const params = { DNI: localStorage.getItem('dni'), TIPO_PROCESO: 'V' };
+    const params = { DNI: localStorage.getItem('dni'), TIPO_PROCESO: 'O' };
     
     const resp_dat_compl = await verificarDatosComplementariosEstudiante(params);
-    
     setStateDatComplEstudiante(resp_dat_compl.data.ok)
-    
     const resp_insc = await verificarInscripcionEstudianteService(params);
-    
     setStateInscripcionEstudiante(resp_insc.data.ok)
     if (resp_dat_compl.data.ok && resp_insc.data.ok) {
       setVerificarRegistroEstudiante(true);
@@ -69,6 +46,9 @@ const InscripcionPostgrado = () => {
     }
     return false
   };
+  // const filterOption = (input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
+  
+  const filterOption = (input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
 
   const subirFoto = async (params) => {
     const formData = new FormData();
@@ -110,14 +90,16 @@ const InscripcionPostgrado = () => {
   const getInputs = async () => {
     setLoading(true);
     const resp_proceso_activo = await obtenerProcesoActivoForm({TIPO_PROCESO: 'V'});
+    const resp_sedes_examen = await obtenerSedesForm({TIPO_PROCESO: 'V'});
     const resp_carreras = await obtenerMencionesForm();
     const resp_discapacidades = await obtenerDiscapacidadesForm();
     const resp_razas_etnicas = await obtenerRazasEtnicasForm();
     const resp_departamentos = await obtenerDepartamentosForm();
-
+    
     // const resp_ubicaciones = await obtenerUbicacionesForm();
-
+    
     // setOptionsUbicacion(resp_ubicaciones.data);
+    setSelectSedesExamen(resp_sedes_examen.data)
     setOptionsDepartamento(resp_departamentos.data);
     setSelectProcesos(resp_proceso_activo.data);
     setSelectCarreras(resp_carreras.data);
@@ -130,26 +112,25 @@ const InscripcionPostgrado = () => {
     params.RUTA_FOTO = params.DNI + '.jpg';
     params.LUGAR_NACIMIENTO = '010101';
     params.CELULAR = '999999999';
-    params.FECHA_NACIMIENTO = moment(params.FECHA_NACIMIENTO).format('YYYY-MM-DD',);
+    params.FECHA_NACIMIENTO = moment(params.FECHA_NACIMIENTO).format(
+      'YYYY-MM-DD',
+    );
+    
     params.YEAR_CONCLU = new Date(params.YEAR_CONCLU)
     params.YEAR_CONCLU = params.YEAR_CONCLU.getFullYear();
+    
 
     const resp_inscripcion_estudiante = await inscribirEstudianteService(params);
     const resp_subir_foto = await subirFoto(params.DNI);
-    const resp_subir_documento = await subirDocumentosEstudiante(params.DNI);
-    
-    // if (
-    //   resp_inscripcion_estudiante.data.ok &&
-    //   resp_subir_foto &&
-    //   resp_subir_documento
-    // ) {
-    //   message.success('Registrado correctamente');
-    //   setVerificarRegistroEstudiante(true )
-    //   return;
-    // }
-    message.success('Registrado correctamente');
-    setVerificarRegistroEstudiante(true )
-    return;
+    // const resp_subir_documento = await subirDocumentosEstudiante(params.DNI);
+    if (
+      resp_inscripcion_estudiante.data.ok &&
+      resp_subir_foto
+    ) {
+      message.success('Registrado correctamente');
+      setVerificarRegistroEstudiante(true )
+      return;
+    }
   };
   const buscarDistrito = async (params) => {
     const resp = await obtenerDistritosForm({ PROVINCIA: params });
@@ -168,11 +149,14 @@ const InscripcionPostgrado = () => {
     }
     exe()
   }, []);
+  const changeEventDiscapacidad = (event) => {
+    event === 1 ? setStatusInputDiscapacidad(true) : setStatusInputDiscapacidad(false) 
+    
+  }
   const handleFileDocChange = (e) => {
     const file = e.target.files[0];
     if (file && file.type === 'application/pdf') {
       // Aquí puedes manejar el archivo PDF
-      
 
       // Puedes realizar más acciones, como enviar el archivo al servidor
     } else {
@@ -186,7 +170,6 @@ const InscripcionPostgrado = () => {
     const file = e.target.files[0];
     if (file.type === 'image/png' || file.type === 'image/jpeg') {
       // Aquí puedes manejar el archivo PDF
-      
 
       // Puedes realizar más acciones, como enviar el archivo al servidor
     } else {
@@ -196,6 +179,9 @@ const InscripcionPostgrado = () => {
       fileInputImgRef.current.value = '';
     }
   };
+  const onChangeSwitchMayorEdad = async(params) => {
+    params ? setStatusCardDatosApoderado(true): setStatusCardDatosApoderado(false)
+  }
   const buscarAulaPorTurno = async(e) => {
     const resp = await buscarAulaPorTurnoForm({TURNO: e})
     setSelectAulas(resp.data)
@@ -203,13 +189,14 @@ const InscripcionPostgrado = () => {
   return verificarRegistroEstudiante ? (
     <Alert
       message="Registro exitoso"
-      description="Usted ya realizo su test psicologico"
+      description="Usted ya esta inscrito para el examen ordinario"
       type="success"
       showIcon
     />
   ) : (
     <>
       {loading ? <SpinnerComponent /> : ''}
+      
       <h1>
         <i className="ri-draft-fill"></i>Datos Complementarios
       </h1>
@@ -219,7 +206,6 @@ const InscripcionPostgrado = () => {
         onFinish={guardarDatosComplementarios}
       >
         <div className="gridInscripcionEstudianteDashboard">
-          
           <div className="cardDashEstudiante">
             <div className="cardDashEstudianteHeader">
               <p>
@@ -232,31 +218,33 @@ const InscripcionPostgrado = () => {
                   className="FormItem"
                   label="Proceso"
                   name="PROCESO"
-                  rules={[{ required: false }]}
+                  rules={[{ required: true }]}
                 >
                   <Select
                     showSearch
                     placeholder="Selecciona un proceso"
                     options={selectProcesos}
+                    filterOption={filterOption}
                   />
                 </Form.Item>
                 <Form.Item
                   className="FormItem"
                   label="Mencion"
                   name="COD_CARRERA"
-                  rules={[{ required: false }]}
+                  rules={[{ required: true }]}
                 >
                   <Select
                     showSearch
                     placeholder="Selecciona un proceso"
                     options={selectCarreras}
+                    filterOption={filterOption}
                   />
                 </Form.Item>
                 <Form.Item
                   className="FormItem"
-                  label="Año termino universidad"
+                  label="Año termino universitaria"
                   name="YEAR_CONCLU"
-                  rules={[{ required: false }]}
+                  rules={[{ required: true }]}
                 >
                   <DatePicker picker="year" style={{ width: '100%' }} />
                 </Form.Item>
@@ -264,7 +252,7 @@ const InscripcionPostgrado = () => {
                   className="FormItem"
                   label="Tipo de Universidad"
                   name="TIPO_COLEGIO"
-                  rules={[{ required: false }]}
+                  rules={[{ required: true }]}
                 >
                   <Radio.Group defaultValue="a" buttonStyle="solid">
                     <Radio.Button value="E">Estatal</Radio.Button>
@@ -275,7 +263,7 @@ const InscripcionPostgrado = () => {
                   className="FormItem"
                   label="Nombre de Universidad"
                   name="NOMBRE_COLEGIO"
-                  rules={[{ required: false }]}
+                  rules={[{ required: true }]}
                 >
                   <Input />
                 </Form.Item>
@@ -283,26 +271,22 @@ const InscripcionPostgrado = () => {
                   className="FormItem"
                   label="Sede de Examen"
                   name="SEDE_EXAM"
-                  rules={[{ required: false }]}
+                  rules={[{ required: true }]}
                 >
                   <Select
-                    options={[
-                      {
-                        value: 'Pasco',
-                        label: 'Pasco',
-                      },
-                      {
-                        value: 'Tarma',
-                        label: 'Tarma',
-                      },
-                      {
-                        value: 'Oxampampa',
-                        label: 'Oxampampa',
-                      },
-                    ]}
+                    options={
+                      [{ label: 'Virtual', value: 'Virtual' }]
+                    }
+                    filterOption={filterOption}
                   />
+                  {/* <Select
+                    options={selectSedesExamen}
+                    filterOption={filterOption}
+                  /> */}
                 </Form.Item>
-                <Form.Item className="FormItem" label="Foto" name="RUTA_FOTO">
+                
+                
+                <Form.Item className="FormItem" label="Foto" name="RUTA_FOTO" rules={[{ required: true }]}>
                   <input
                     type="file"
                     accept=".png, .jpg, .jpeg"
@@ -313,6 +297,8 @@ const InscripcionPostgrado = () => {
                 {/* <Form.Item
                   className="FormItem"
                   label="Archivos DNI y Cert. estudios"
+                  name="RUTA_DOCUMENTO"
+                  rules={[{ required: true }]}
                 >
                   <input
                     type="file"
@@ -340,7 +326,7 @@ const InscripcionPostgrado = () => {
                         className="FormItem"
                         label="Genero"
                         name="SEXO"
-                        rules={[{ required: false }]}
+                        rules={[{ required: true }]}
                       >
                         <Select
                           options={[
@@ -353,23 +339,26 @@ const InscripcionPostgrado = () => {
                               label: 'Femenino',
                             },
                           ]}
+                          filterOption={filterOption}
                         />
                       </Form.Item>
                       <Form.Item
                         className="FormItem"
                         label="Fecha de Nacimiento"
                         name="FECHA_NACIMIENTO"
-                        rules={[{ required: false }]}
+                        rules={[{ required: true }]}
                       >
                         <DatePicker style={{ width: '100%' }} />
                       </Form.Item>
                       <Form.Item
                         className="FormItem"
-                        label="Departamento"
+                        label="Region"
                         name="DEPARTAMENTO"
-                        rules={[{ required: false }]}
+                        rules={[{ required: true }]}
                       >
                         <Select
+                          showSearch
+                          filterOption={filterOption}
                           options={optionsDepartamento}
                           onChange={buscarProvincia}
                         />
@@ -378,26 +367,28 @@ const InscripcionPostgrado = () => {
                         className="FormItem"
                         label="Provincia"
                         name="PROVINCIA"
-                        rules={[{ required: false }]}
+                        rules={[{ required: true }]}
                       >
                         <Select
+                          showSearch
                           onChange={buscarDistrito}
                           options={optionsProvincia}
+                          filterOption={filterOption}
                         />
                       </Form.Item>
                       <Form.Item
                         className="FormItem"
-                        label="Distrito"
+                        label="DISTRITO"
                         name="DISTRITO"
-                        rules={[{ required: false }]}
+                        rules={[{ required: true }]}
                       >
-                        <Select options={optionsDistrito} />
+                        <Select showSearch options={optionsDistrito} filterOption={filterOption} />
                       </Form.Item>
                       <Form.Item
                         className="FormItem"
                         label="Direccion Actual"
                         name="DIRECCION"
-                        rules={[{ required: false }]}
+                        rules={[{ required: true }]}
                       >
                         <Input />
                       </Form.Item>
@@ -405,11 +396,12 @@ const InscripcionPostgrado = () => {
                         className="FormItem"
                         label="¿Tiene discapacidad?"
                         name="TIPO_DISCAPACIDAD"
-                        rules={[{ required: false }]}
+                        rules={[{ required: true }]}
                       >
                         <Select
                           showSearch
                           placeholder="Si o No"
+                          onChange={changeEventDiscapacidad}
                           options={[
                             {
                               label: 'Si',
@@ -420,55 +412,57 @@ const InscripcionPostgrado = () => {
                               value: 0,
                             },
                           ]}
+                          filterOption={filterOption}
                         />
                       </Form.Item>
-                      <Form.Item
-                        className="FormItem"
-                        label="Tipo de Discapacidad"
-                        name="DISCAPACIDAD"
-                        rules={[{ required: false }]}
-                      >
-                        <Select
-                          showSearch
-                          placeholder="Selecciona un proceso"
-                          options={selectDiscapacidades}
-                        />
-                      </Form.Item>
+                      {
+                      statusInputDiscapacidad
+                        ?
+                        <Form.Item
+                          className="FormItem"
+                          label="Tipo de Discapacidad"
+                          name="DISCAPACIDAD"
+                          rules={[{ required: true }]}
+                        >
+                          <Select
+                            showSearch
+                            placeholder="Selecciona un proceso"
+                            options={selectDiscapacidades}
+                            filterOption={filterOption}
+                          />
+                        </Form.Item>
+                        :
+                        ''
+                      }
                       <Form.Item
                         className="FormItem"
                         label="Identidad Etnica"
                         name="ETNICA"
-                        rules={[{ required: false }]}
+                        rules={[{ required: true }]}
                       >
                         <Select
                           showSearch
                           placeholder="Selecciona un proceso"
                           options={selectRazasEtnicas}
+                          filterOption={filterOption}
                         />
                       </Form.Item>
-                      <Form.Item
+                      {/* <Form.Item
                         className="FormItem"
                         label="Telefono Fijo"
                         name="TELEFONO"
-                        rules={[{ required: false }]}
+                        rules={[{ required: true }]}
                       >
                         <Input />
-                      </Form.Item>
+                      </Form.Item> */}
                     </div>
-                    <Button
-                      type="primary"
-                      block
-                      icon={<SaveFilled />}
-                      htmlType="submit"
-                    >
-                      Guardar
-                    </Button>
                   </div>
                 </div>
               )
           }
         </div>
       </Form>
+      <Button type="primary" block icon={<SaveFilled />} style={{ marginTop: '10px' }} onClick={formDatosComplementariosEstudiante.submit}>Inscribir estudiante</Button>
     </>
   );
 };

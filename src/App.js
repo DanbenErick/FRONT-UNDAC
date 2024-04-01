@@ -38,6 +38,7 @@ import PadronEstudianteAulaPDF from './pages/PadronEstudianteAula';
 import Resultados2Page, { ResultadoDEPORTISTASCALIFICADOSPage, ResultadoPERSONASCONDISCAPACIDADPage, ResultadoPUEBLOSORIGINARIOSPage, ResultadoPrimerSegundoPuestoPage, ResultadoTITULOSYGRADUADOSPage, ResultadoTRASLADOSEXTERNOSPage, ResultadoTRASLADOSINTERNOSPage, ResultadoVICTIMASDETERRORISMOYFAMILIARESPage } from './pages/Resultados2Page';
 import CordinadoresPage from './pages/Cordinadores/CordinadoresPage';
 import InscripcionPostgrado from './pages/DashboardEstudiantes/PagesDashboardEstudiantes/InscripcionPostgrado';
+import ConstanciaPage from './pages/Constancias/ConstaciaPage';
 
 const App = () => {
   return (
@@ -115,6 +116,7 @@ const App = () => {
                 <Route path="resultados" element={<ResultadosAdmPage />} />
                 <Route path="aulas" element={<AulasPage />} />
                 <Route path="cordinadores" element={<CordinadoresPage />} />
+                <Route path="constancias" element={<ConstanciaPage />} />
               </Route>
               <Route path="/resultados" element={<ResultadoPage />} />
               <Route path='/resultados-lis-carreras/:nombre/:id' element={<CarreraResultadoPage />} />

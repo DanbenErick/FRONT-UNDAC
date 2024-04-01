@@ -1,7 +1,41 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;700&display=swap');
 
+.App {
+  
+  border: 1px solid #aaa;
+  height: 300px;
+  /* width:90%; */
+  /* max-width: 400px; */
+  
+}
 
+/* Estilos para motores Webkit y blink (Chrome, Safari, Opera... )*/
 
+*::-webkit-scrollbar {
+  -webkit-appearance: none;
+}
+
+*::-webkit-scrollbar:vertical {
+  width:10px;
+}
+
+*::-webkit-scrollbar-button:increment,*::-webkit-scrollbar-button {
+  display: none;
+} 
+
+*::-webkit-scrollbar:horizontal {
+  height: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #797979;
+  border-radius: 20px;
+  border: 2px solid #f1f2f3;
+}
+
+*::-webkit-scrollbar-track {
+  border-radius: 10px;  
+}
   
 * {
   font-family: 'Noto Sans';

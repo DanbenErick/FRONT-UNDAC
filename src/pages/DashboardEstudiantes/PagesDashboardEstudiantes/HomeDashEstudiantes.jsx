@@ -90,7 +90,7 @@ const HomeDashEstudinte = () => {
         <div className="containerMain">
           {/* <div className="containerMainImage"> */}
           <img
-            src={process.env.REACT_APP_RUTA_IMG_DASH_ESTU}
+            src={process.env.PUBLIC_URL + '/wallpaper_panel.png'}
             alt="Banner"
           />
           {/* </div> */}

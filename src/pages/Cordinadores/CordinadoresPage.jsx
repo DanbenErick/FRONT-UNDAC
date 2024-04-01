@@ -4,33 +4,21 @@ import {
   message,
   Popconfirm,
   Form,
-  InputNumber,
-  Select,
   Breadcrumb,
   Button,
   Card,
   Table,
   Input,
+  Tag,
+  
 } from 'antd';
-import { SaveFilled, SearchOutlined } from '@ant-design/icons';
-import { obtenerModalidadesForm, obtenerProcesosForm } from '../../api/apiInpputs';
+import { CheckOutlined, SaveFilled, SearchOutlined, StopOutlined } from '@ant-design/icons';
+
 import '../../assets/styles/VacantesPage.css';
-import {
-  crearVacante,
-  obtenerVacantesProcesoActivo,
-  verificarDisponibilidadProceso,
-  obtenerCarrerasPorProcesoInput,
-  obtenerVacantesPorId,
-} from '../../api/apiVacantes';
-import { buscarCordinadorService, obtenerCordinadoresService, obtenerUsuariosService, registrarCordinadorService } from '../../api/cordinadoresService';
 
-const onSearch = (value) => {
-  console.log('search:', value);
-};
+import { buscarCordinadorService, modificarEstadoCordinador, obtenerCordinadoresService, obtenerUsuariosService, registrarCordinadorService } from '../../api/cordinadoresService';
 
-const filterOption = (input, option) => {
-  return (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
-};
+
 
 const cancel = (e) => {
   message.error('Proceso cancelado');
@@ -43,8 +31,10 @@ const CordinadoresPage = () => {
   
   
   const obtenerDataTable = async() => {
+    setLoading(true)
     const resp = await obtenerCordinadoresService()
     setDataTable(resp.data)
+    setLoading(false)
   }
   useEffect(() => {
     setLoading(true)
@@ -61,20 +51,53 @@ const CordinadoresPage = () => {
       title: 'Usuario',
       dataIndex: 'USUARIO',
       key: 'USUARIO',
+      align: 'center',
     },
     {
       title: 'DNI',
       dataIndex: 'DNI',
       key: 'DNI',
+      align: 'center',
     },
     {
       title: 'Sede',
       dataIndex: 'SEDE',
+      align: 'center',
       key: 'SEDE',
     },
-
+    {
+      title: 'Estado',
+      align: 'center',
+      dataIndex: 'ESTADO',
+      key: 'ESTADO',
+      render: (data, col) => {
+        return  (data === 1) ? <Tag color="success">Habilitado</Tag> : <Tag color="error">Desabilitado</Tag>
+      }
+    },
+    {
+      title: 'Accion',
+      align: 'center',
+      dataIndex: 'ACCION',
+      key: 'ACCION',
+      render: (data, col) => (
+        
+        <>
+          <Button onClick={() => { habilitarCordinador(col.DNI) }} type="link" icon={<CheckOutlined />}></Button>
+          <Button onClick={() => { desabilitarCordinador(col.DNI) }} style={{ color: 'red' }} type="link" icon={<StopOutlined />}></Button>
+        </>
+      )
+    }
   ];
   
+  const habilitarCordinador = async(params) => {
+    await modificarEstadoCordinador({dni: params, estado:1})
+    await obtenerDataTable()
+  }
+  const desabilitarCordinador = async(params) => {
+    await modificarEstadoCordinador({dni: params, estado:0})
+    await obtenerDataTable()
+  }
+
   const crearCordinador = async(params) => {
     try {
       params.ROL = 3
@@ -114,12 +137,12 @@ const CordinadoresPage = () => {
       
       {loading ? <SpinnerComponent /> : ''}
       <div className="contentDashboard">
-        <h1 className="titlePageDashboard">Usuarios</h1>
+        <h1 className="titlePageDashboard">Cordinador</h1>
         <Breadcrumb className="bradcrumpPadding">
           <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-          <Breadcrumb.Item>Usuarios</Breadcrumb.Item>
+          <Breadcrumb.Item>Cordinador</Breadcrumb.Item>
         </Breadcrumb>
-        <Card type="inner" title="Crear usuario">
+        <Card type="inner" title="Crear cordinador">
           <Form
             layout="vertical"
             form={formCordinador}
@@ -156,7 +179,7 @@ const CordinadoresPage = () => {
                 <Button icon={<SearchOutlined />} onClick={buscarCordinador}> Buscar</Button>
           </Form>
         </Card>
-        <Card type="inner" title="Lista de vacantes">
+        <Card type="inner" title="Lista de cordinadores">
           <Table dataSource={dataTable} columns={columnsTable} size="small" />
         </Card>
       </div>
