@@ -63,7 +63,7 @@ const obtenerIngresanteParaConstanciaPorDNIService = async (params) => {
 }
 const generarConstanciasBloqueService = async(params) => {
     try {
-        const ruta = getRutaReporte(`generar-constancia-bloque?id_proceso=${params.proceso}`)
+        const ruta = getRutaReporte(`generar-constancia-bloque?id_proceso=${params.proceso}&tipo_documento=${params.tipo_documento}`)
         const resp = await axios.get(ruta)
         const pdfData = resp.data;
         const blob = new Blob([pdfData], { type: 'application/pdf' });
