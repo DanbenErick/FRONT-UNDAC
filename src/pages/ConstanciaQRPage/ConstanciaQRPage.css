@@ -1,0 +1,48 @@
+.container-constancia-ingreso {
+    background-image: url('../../../public/MARCAAGUA.png');
+    background-size: cover; /* La imagen de fondo cubrirá todo el tamaño del cuerpo */
+    background-position: center;
+}
+
+.container-constancia-ingreso h1 {
+    text-align: center;
+    font-weight: bold;
+    padding: 0;
+    text-transform: uppercase;
+}
+.container-constancia-ingreso .containerImageConstancia  {
+    display: flex;
+    justify-content: center;
+}
+.container-constancia-ingreso .containerImageConstancia img {
+    width: 90%;
+    max-width: 100%;
+}
+.container-constancia-ingreso .tableConstanciaIngreso {
+    width: 90%;
+    margin-top: 0;
+    /* background: #000; */
+}
+.container-constancia-ingreso .tableConstanciaIngreso tr td:nth-child(1) {
+    font-weight: bold;
+}
+.container-constancia-ingreso .tableContainerContancia {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+}
+.container-constancia-ingreso .tableContainerContancia td {
+    
+    border-bottom: solid rgba(0,0,0,.3) 1px;
+}
+.headerConstancia {
+    padding: 20px;
+    /* padding-op: 20px; */
+    display: flex;
+    align-items: center;
+}
+.logoUndacAdmisionConstancia {
+    width: 60px ;
+    height: 60px;
+}

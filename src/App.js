@@ -39,6 +39,7 @@ import Resultados2Page, { ResultadoDEPORTISTASCALIFICADOSPage, ResultadoPERSONAS
 import CordinadoresPage from './pages/Cordinadores/CordinadoresPage';
 import InscripcionPostgrado from './pages/DashboardEstudiantes/PagesDashboardEstudiantes/InscripcionPostgrado';
 import ConstanciaPage from './pages/Constancias/ConstaciaPage';
+import ConstanciaQRPage from './pages/ConstanciaQRPage/ConstanciaQRPage';
 
 const App = () => {
   return (
@@ -133,6 +134,8 @@ const App = () => {
               <Route path='/res-PERSONAS' Component={ResultadoPERSONASCONDISCAPACIDADPage} />
               <Route path='/res-DEPORTISTAS' Component={ResultadoDEPORTISTASCALIFICADOSPage} />
               <Route path='/res-PUEBLOS' Component={ResultadoPUEBLOSORIGINARIOSPage} />
+              
+              <Route path='/constacias-ingreso' Component={ConstanciaQRPage} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Router>
