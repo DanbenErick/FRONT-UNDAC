@@ -118,7 +118,12 @@ const ConstanciaPage = () => {
     setDataTable(resp.data)
   }
   const generarConstanciasBloque = async({ ID_PROCESO, TIPO_DOCUMENTO }) => {
-    await generarConstanciasBloqueService({ proceso: ID_PROCESO, tipo_documento: TIPO_DOCUMENTO })
+    setLoading(true)
+    const resp = await generarConstanciasBloqueService({ proceso: ID_PROCESO, tipo_documento: TIPO_DOCUMENTO })
+    if(resp.ok) {
+      message.success('Se genero correctamente las constancias')
+    }
+    setLoading(false)
     
   }
   return (
@@ -151,7 +156,7 @@ const ConstanciaPage = () => {
                 <Input maxLength={8} />
               </Form.Item>
               <Form.Item label="Codigo de Matricula" name="TIPO_DOCUMENTO">
-              <Radio.Group defaultValue="a" buttonStyle="solid">
+              <Radio.Group defaultValue="ORIGINAL" buttonStyle="solid">
                 <Radio.Button value="ORIGINAL">Original</Radio.Button>
                 <Radio.Button value="CARGO">Cargo</Radio.Button>
               </Radio.Group>
