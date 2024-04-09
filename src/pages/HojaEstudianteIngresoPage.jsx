@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
                 <Text style={styles.text}><Text style={styles.textBold}>APELLIDO PATERNO:</Text> {dataStudent.AP_PATERNO}</Text>
                 <Text style={styles.text}><Text style={styles.textBold}>APELLIDO MATERNO:</Text> {dataStudent.AP_MATERNO}</Text>
                 <Text style={styles.text}><Text style={styles.textBold}>NOMBRES:</Text> {dataStudent.NOMBRES}</Text>
-                <Text style={styles.text}><Text style={styles.textBold}>CARRERA:</Text> {dataStudent.ESCUELA_COMPLETA}</Text>
+                <Text style={styles.text}><Text style={styles.textBold}>MENCION:</Text> {dataStudent.ESCUELA_COMPLETA}</Text>
                 {/* <Text style={styles.text}>MODALIDAD: {dataStudent .MODALIDAD_ESTUDIANTE}</Text> */}
                 <Text style={styles.text}><Text style={styles.textBold}>AREA:</Text> {dataStudent.AREA}</Text>
                 <Text style={styles.text}><Text style={styles.textBold}>SEDE EXAMEN:</Text> {dataStudent.SEDE_EXAMEN}</Text>

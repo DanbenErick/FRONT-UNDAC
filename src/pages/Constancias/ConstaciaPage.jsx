@@ -1,19 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import SpinnerComponent from '../../components/Spinner';
-import {
-  message,
-  Popconfirm,
-  Form,
-  Breadcrumb,
-  Button,
-  Card,
-  Table,
-  Input,
-  Select,
-  Tooltip,
-  Radio,
-  
-} from 'antd';
+import { message, Popconfirm, Form, Breadcrumb, Button, Card, Table, Input, Select, Tooltip, Radio } from 'antd';
 import { CheckOutlined, SaveFilled, SearchOutlined } from '@ant-design/icons';
 
 import '../../assets/styles/VacantesPage.css';

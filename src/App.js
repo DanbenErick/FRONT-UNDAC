@@ -40,6 +40,7 @@ import CordinadoresPage from './pages/Cordinadores/CordinadoresPage';
 import InscripcionPostgrado from './pages/DashboardEstudiantes/PagesDashboardEstudiantes/InscripcionPostgrado';
 import ConstanciaPage from './pages/Constancias/ConstaciaPage';
 import ConstanciaQRPage from './pages/ConstanciaQRPage/ConstanciaQRPage';
+import InformeChartGeneralPage from './pages/InformeChartGeneralPage/InformeChartGeneralPage';
 
 const App = () => {
   return (
@@ -136,6 +137,8 @@ const App = () => {
               <Route path='/res-PUEBLOS' Component={ResultadoPUEBLOSORIGINARIOSPage} />
               
               <Route path='/constacias-ingreso' Component={ConstanciaQRPage} />
+              <Route path='/informe-general' Component={InformeChartGeneralPage } />
+
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Router>
