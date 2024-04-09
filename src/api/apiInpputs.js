@@ -1,7 +1,9 @@
 import axios from './axiosConfig';
 
 const API_HOST = process.env.REACT_APP_API_URL;
+const API_REPORTE = process.env.REACT_APP_API_URL_REPORTES
 const getRuta = (params) => `${API_HOST}/input-controls/${params}`;
+const getRutaReporte = (params) => `${API_REPORTE}/${params}`;
 
 const buscarAulaPorTurnoForm = async (params) => {
   try {
@@ -193,6 +195,20 @@ const obtenerCarrerasPorModalidadesForm = async(params) => {
   }
 }
 
+const generarReporteCordinadorService = async(params) => {
+  try {
+    const ruta = getRutaReporte(`generar-reporte-cordinador?id_proceso=${params.ID_PROCESO}&dni=${params.DNI}`)
+    const resp = await axios.get(ruta)
+    const pdfData = resp.data;
+    const blob = new Blob([pdfData], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const newTab = window.open(url, '_blank');
+    return {ok: true, message: 'Se creo correctamente el pdf'}
+  }catch(error) {
+    console.error('Ocurrio un error', error)
+  }
+}
+
 export {
   obtenerCarrerasPorModalidadesForm,
   obtenerModalidadesForm,
@@ -214,5 +230,6 @@ export {
   obtenerDatosResultadosEstudinateTable,
   obtenerSedesForm,
   obtenerMencionesForm,
-  validarCordinadorService
+  validarCordinadorService,
+  generarReporteCordinadorService
 };
