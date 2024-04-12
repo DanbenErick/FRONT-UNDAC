@@ -139,7 +139,7 @@ const App = () => {
               
               <Route path='/constacias-ingreso' Component={ConstanciaQRPage} />
               <Route path='/informe-general' Component={InformeChartGeneralPage } />
-              <Route path='/reporte-cordinador' Component={ReporteCordinadorPage } />
+              <Route path='/' Component={ReporteCordinadorPage } />
 
               <Route path="*" element={<NotFound />} />
             </Routes>
