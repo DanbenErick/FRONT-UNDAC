@@ -50,6 +50,7 @@ const App = () => {
         <div className="App">
           <Router>
             <Routes>
+              {/* #region  */}
               <Route path="/login-estudiante" element={<ProtectedLoginRegister><LoginEstudiantePage /></ProtectedLoginRegister>} />
               <Route
                 path="/login"
@@ -79,8 +80,8 @@ const App = () => {
                 path="/inscripcion"
                 element={
                   <EstudianteProvider>
-                    {/* <h1>Inscripciones cerradas</h1> */}
-                    <InscripcionEstudiantePage />
+                    <h1>Inscripciones cerradas</h1>
+                    {/* <InscripcionEstudiantePage /> */}
                   </EstudianteProvider>
                 }
               />
@@ -139,7 +140,7 @@ const App = () => {
               
               <Route path='/constacias-ingreso' Component={ConstanciaQRPage} />
               <Route path='/informe-general' Component={InformeChartGeneralPage } />
-              <Route path='/' Component={ReporteCordinadorPage } />
+              <Route path='/reporte-cordinador' Component={ReporteCordinadorPage } />
 
               <Route path="*" element={<NotFound />} />
             </Routes>
