@@ -7,6 +7,7 @@ const ReporteDirectorPage = () => {
   const [selectProcesos, setSelectProcesos] = useState([])
   const [statusModal, setStatusModal] = useState(false)
   const [dataEstudiante, setDataEstudiante] = useState({})
+  const [foto, setFoto] = useState('')
   const [formReporte] = Form.useForm()
   const getInputs = async() => {
     const { data } = await obtenerProcesosForm()
@@ -27,6 +28,7 @@ const ReporteDirectorPage = () => {
       if(resp.status === 200 && resp.data.length) {
         setStatusModal(true)
         setDataEstudiante(resp.data[0])
+        setFoto(`${process.env.REACT_APP_API_URL}/${dataEstudiante.DNI}/${dataEstudiante.DNI}.jpeg`)
         console.log(resp.data)
       }else {
         message.error('No se encontraron datos del dni mencionado')
@@ -79,7 +81,7 @@ const ReporteDirectorPage = () => {
           <h1>{dataEstudiante.NOMBRE_PROCESO}</h1>
           <h1>{dataEstudiante.EST_OPCION}</h1>
           <div className="containerImageModalReporteDirector">
-            <Image src={`${process.env.REACT_APP_API_URL}/${dataEstudiante.DNI}/${dataEstudiante.DNI}.jpeg`} />
+            <Image src={foto} />
           </div>
           <ul>
             <li><b>Nombre Completo:</b> {dataEstudiante.NOMBRE_COMPLETO}</li>
