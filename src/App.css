@@ -38,7 +38,7 @@
 }
   
 * {
-  font-family: 'Noto Sans';
+  font-family: 'Noto Sans', 'Aptos', sans-serif;
 }
 .App {
   min-height: 100vh;

@@ -43,11 +43,13 @@ const ResultadosAdmPage = () => {
     // Enviar el archivo al servidor usando Axios
     const formValues = formProceso.getFieldsValue()
     const resp = await procesarMultiPService(formData, formValues)
-    if(resp && resp.data && resp.data.ok) {
-      message.success(resp.data.message)
-    }else {
-      message.error(resp.data.message)
-    }
+    message.success(resp.data.message)
+    // if(resp && resp.data && resp.data.ok) {
+    //   message.success(resp.data.message)
+    //   message.success(resp.data.message)
+    // }else {
+    //   message.sucess(resp.data.message)
+    // }
     setLoading(false)
     console.log("Cargando archivo")
   }

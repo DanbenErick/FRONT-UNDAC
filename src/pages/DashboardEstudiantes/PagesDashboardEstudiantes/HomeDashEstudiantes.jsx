@@ -19,7 +19,7 @@ const HomeDashEstudinte = () => {
   const verificarStates = async () => {
     const ultimoProcesoActivo = await obtenerTodosLosProcesosActivosForm()
     console.log(ultimoProcesoActivo)
-    const resp_inscrito = await verificarEstudianteInscritoService({ DNI: localStorage.getItem('dni'), TIPO_PROCESO: ultimoProcesoActivo.data[0].TIPO_PROCESO })
+    const resp_inscrito = await verificarEstudianteInscritoService({ DNI: localStorage.getItem('dni'), TIPO_PROCESO: ultimoProcesoActivo.data[ultimoProcesoActivo.data.length - 1].TIPO_PROCESO })
     const resp_datos_co = await verificarDatosComplementariosEstudiante({ DNI: localStorage.getItem('dni') })
     const resp_test_pic = await verificarTestpsicologicoEstudianteService({ DNI: localStorage.getItem('dni') })
     const resp_pago = await verificarPagoEstudianteService({ DNI: localStorage.getItem('dni') })
@@ -29,7 +29,6 @@ const HomeDashEstudinte = () => {
     if (resp_pago.data.ok) { setStatusPago(true); carnetContador += 1 }
 
   }
-  let i = 0
   useEffect(() => {
     verificarStates()
     if (statusDatosApoderado && statusInscripcion && statusTestpsicologico && statusPago) {

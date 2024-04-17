@@ -42,6 +42,7 @@ import ConstanciaPage from './pages/Constancias/ConstaciaPage';
 import ConstanciaQRPage from './pages/ConstanciaQRPage/ConstanciaQRPage';
 import InformeChartGeneralPage from './pages/InformeChartGeneralPage/InformeChartGeneralPage';
 import ReporteCordinadorPage from './pages/ReporteCordinador/ReporteCordinadorPage';
+import ReporteDirectorPage from './pages/ReporteDirector/ReporteDirectorPage';
 
 const App = () => {
   return (
@@ -141,6 +142,7 @@ const App = () => {
               <Route path='/constacias-ingreso' Component={ConstanciaQRPage} />
               <Route path='/informe-general' Component={InformeChartGeneralPage } />
               <Route path='/reporte-cordinador' Component={ReporteCordinadorPage } />
+              <Route path='/reporte-director' Component={ReporteDirectorPage } />
 
               <Route path="*" element={<NotFound />} />
             </Routes>
