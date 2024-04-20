@@ -14,6 +14,7 @@ const ResultadosAdmPage = () => {
   const [selectProcesos, setSelectProcesos] = useState([])
   const [nameProceso, setNameProceso] = useState('')
   const [formProceso] = Form.useForm()
+  const [tipoProcesoSeleccionado, setTipoProcesoSeleccionado] = useState('')
 
   const cargarArchivoSolapasCSV = async () => {
 
@@ -61,8 +62,10 @@ const ResultadosAdmPage = () => {
     getSelects()
   },[])
   const onChageSelectProcesos = async(valor) => {
+    
     const [procesoSeleccionado] = selectProcesos.filter(proceso => proceso.value == valor)
-    console.log(procesoSeleccionado)
+    setTipoProcesoSeleccionado(procesoSeleccionado.TIPO_PROCESO)
+    // console.log(procesoSeleccionado)
     setNameProceso(procesoSeleccionado.label)
     setStateProceso(false)
   }
@@ -90,45 +93,85 @@ const ResultadosAdmPage = () => {
           <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
           <Breadcrumb.Item>Resultados</Breadcrumb.Item>
         </Breadcrumb>
-        <Card type="inner" title="Crear proceso">
+        <Card type="inner" title="Panel Resultados">
 
-          <Form
-            layout="vertical"
-            onFinish={cargarArchivoSolapasCSV}
-            form={formProceso}         
-          >
+          <Form layout="vertical" onFinish={cargarArchivoSolapasCSV} form={formProceso}>
             <Form.Item label="Procesos" name="ID_PROCESO">
-              <Select
-                options={selectProcesos}
-                onChange={onChageSelectProcesos}
-              />
+              <Select options={selectProcesos} onChange={onChageSelectProcesos}/>
             </Form.Item>
             {
               !stateProceso
-              ?
-              <h2>Selecciona solapa y hojas de respuesta del proceso: {nameProceso}</h2>
-              :
-              ''
+              ? <h2>Selecciona solapa y hojas de respuesta del proceso: {nameProceso}</h2>
+              :''
             }
             <Form.Item>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <input type="file" onChange={(event) => setFileSolapa(event.target.files[0])} />
-              <Button htmlType='submit' type="primary" disabled={stateProceso}>Procesar Solapa {nameProceso}</Button>
-            </div>
-            </Form.Item>
-            
-          </Form>
-          <Form
-            onFinish={cargarArchivoMultiPCSV}
-          >
-            <Form.Item>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <input type="file" onChange={(event) => setFileMultiP(event.target.files[0])} />
-                <Button type="primary" htmlType='submit' disabled={stateProceso}>Procesar Respuestas {nameProceso}</Button>
+                <input type="file" onChange={(event) => setFileSolapa(event.target.files[0])} />
+                <Button style={{ background: '#131313' }} htmlType='submit' type="primary" disabled={stateProceso}>Procesar Solapa {nameProceso}</Button>
               </div>
             </Form.Item>
           </Form>
-          <Button type="primary" disabled={stateProceso} onClick={obtenerPDFResultados}>Obtener PDF {nameProceso}</Button>
+
+
+          {
+            (tipoProcesoSeleccionado === 'O')
+            ?
+            (
+              <Form onFinish={cargarArchivoMultiPCSV}>
+                <Form.Item>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <input type="file" onChange={(event) => setFileMultiP(event.target.files[0])} />
+                    <Button style={{ background: '#131313' }} type="primary" htmlType='submit' disabled={stateProceso}>Procesar Respuestas {nameProceso}</Button>
+                  </div>
+                </Form.Item>
+              </Form>
+            )
+            : ''
+          }
+          {
+            (tipoProcesoSeleccionado === 'C')
+            ?
+            (
+              <Form onFinish={cargarArchivoMultiPCSV}>
+                <Form.Item>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '10px' }}>
+                    <input type="file" onChange={(event) => setFileMultiP(event.target.files[0])} />
+                    <Button type="primary" style={{ background: '#131313' }} htmlType='submit' disabled={stateProceso}>Procesar primer examen</Button>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <input type="file" onChange={(event) => setFileMultiP(event.target.files[0])} />
+                    <Button type="primary" style={{ background: '#131313' }} htmlType='submit' disabled={stateProceso}>Procesar examen final</Button>
+                  </div>
+                </Form.Item>
+              </Form>
+            )
+            : ''
+          }
+
+          
+
+
+
+
+          {
+            (tipoProcesoSeleccionado === 'O')
+            ?
+              <Button type="primary" disabled={stateProceso} onClick={obtenerPDFResultados}>Obtener PDF {nameProceso}</Button>
+            : ''
+          }
+          
+          {
+              (tipoProcesoSeleccionado === 'C') 
+              ?
+                (
+                  <>
+                    <Button type="primary" style={{ marginRight: '10px', background: '#131313' }} disabled={stateProceso} onClick={obtenerPDFResultados}>Obtener Primer Resultado {nameProceso}</Button>
+                    <Button type="primary" style={{ background: '#131313' }} disabled={stateProceso} onClick={obtenerPDFResultados}>Obtener Resultado Final {nameProceso}</Button>
+                  </>
+                )
+              : ''
+              
+            }
         </Card>
       </div>
       </>

@@ -54,6 +54,15 @@ const connectServerSocketIO = async() => {
     console.error('Error ', error)
   }
 }
+const actualizarProcesoservice = async(param) => {
+  try {
+    const ruta = getRuta('actualizar-proceso')
+    const resp = await axios.put(ruta, param);
+    return resp;
+  }catch(error) {
+    console.error('Ocurrio un error', error)
+  }
+}
 const obtenerProcesosFull = async () => {
   try {
     const ruta = getRuta('obtener-procesos')
@@ -85,6 +94,15 @@ const obtenerInscritosNombresService = async(params) => {
   try {
     const ruta = getRuta('obtener-inscritos-datos-estudiante')
     const resp = axios.post(ruta,params)
+    return resp
+  }catch(error) {
+    console.error('Ocurrio un error', error)
+  }
+}
+const abrirProcesoServiceApi = async(params) => {
+  try {
+    const ruta = getRuta('abrir-proceso')
+    const resp = await axios.post(ruta, params);
     return resp
   }catch(error) {
     console.error('Ocurrio un error', error)
@@ -127,4 +145,5 @@ const obtenerInscritosPorModalidadService = async (params) => {
   }
 }
 
-export { procesarPadronPorExcel, connectServerSocketIO, obtenerProcesosFull, crearProceso, cerrarProceso, obtenerInscritosPorSedeService, obtenerInscritosPorCarreraService, obtenerInscritosPorModalidadService, obtenerInscritosPorAreaService, obtenerInscritosNombresService, obtenerReportePDFPadron};
+
+export { actualizarProcesoservice, abrirProcesoServiceApi, procesarPadronPorExcel, connectServerSocketIO, obtenerProcesosFull, crearProceso, cerrarProceso, obtenerInscritosPorSedeService, obtenerInscritosPorCarreraService, obtenerInscritosPorModalidadService, obtenerInscritosPorAreaService, obtenerInscritosNombresService, obtenerReportePDFPadron};

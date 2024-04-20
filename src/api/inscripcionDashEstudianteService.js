@@ -3,6 +3,15 @@ const API_HOST = process.env.REACT_APP_API_URL;
 const API_GENERAL = process.env.REACT_APP_API_GENERAL;
 const getRuta = (params) => `${API_HOST}${API_GENERAL}/estudiantes/${params}`;
 
+const obtenerProcesosActivosService = async() => {
+  try {
+    const ruta = getRuta('obtener-procesos-home')
+    const resp = await axios.get(ruta)
+    return resp
+  }catch(error) {
+    console.error('Ocurrio un error', error)
+  }
+}
 const inscribirEstudianteService  = async (params) => {
   try {
     const ruta = getRuta('inscribir-estudiante')
@@ -63,7 +72,15 @@ const obtenerDatosEstudianteCarnetService = async(params) => {
     console.error('Ocurrio un error', error)
   }
 }
-
+const validarRequisitosParaInscripcionService = async(params) => {
+  try {
+    const ruta = getRuta('validar-requisitos-para-inscripcion')
+    const resp = await axios.post(ruta, params)
+    return resp
+  }catch(error) {
+    console.error('Ocurrio un error', error)
+  }
+}
 const verificarPagoEstudianteService = async(params) => {
   try {
     const ruta = getRuta('verificar-pago-requisitos')
@@ -113,6 +130,8 @@ const verificarRegistroComplementarioEstudianteService = async(params) => {
 }
 
 export { 
+  validarRequisitosParaInscripcionService,
+  obtenerProcesosActivosService,
   inscribirEstudianteService,
   subirFotoEstudianteService,
   subirDocumentacionEstudianteService,

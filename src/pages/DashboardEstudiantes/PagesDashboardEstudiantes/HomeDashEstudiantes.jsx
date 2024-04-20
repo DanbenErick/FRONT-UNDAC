@@ -1,85 +1,91 @@
 import React, { useEffect, useState } from "react";
 import "remixicon/fonts/remixicon.css";
-import { verificarDatosComplementariosEstudiante, verificarEstudianteInscritoService, verificarPagoEstudianteService, verificarTestpsicologicoEstudianteService } from "../../../api/inscripcionDashEstudianteService";
+import { obtenerProcesosActivosService, validarRequisitosParaInscripcionService, verificarDatosComplementariosEstudiante, verificarEstudianteInscritoService, verificarPagoEstudianteService, verificarTestpsicologicoEstudianteService } from "../../../api/inscripcionDashEstudianteService";
 import { Button } from "antd";
-import { obtenerTodosLosProcesosActivosForm } from "../../../api/apiInpputs";
+import SpinnerComponent from '../../../components/Spinner'
 
+import './HomeDashEstudiantes.css'
 const HomeDashEstudinte = () => {
 
 
 
-
-
-  const [statusDatosApoderado, setStatusDatosApoderado] = useState(false)
-  const [statusInscripcion, setStatusInscripcion] = useState(false)
-  const [statusTestpsicologico, setStatusTestpsicologico] = useState(false)
-  const [statusPago, setStatusPago] = useState(false)
-  const [statusCarnet, setStatusCarnet] = useState(false)
-  let carnetContador = 0
-  const verificarStates = async () => {
-    const ultimoProcesoActivo = await obtenerTodosLosProcesosActivosForm()
-    console.log(ultimoProcesoActivo)
-    const resp_inscrito = await verificarEstudianteInscritoService({ DNI: localStorage.getItem('dni'), TIPO_PROCESO: ultimoProcesoActivo.data[ultimoProcesoActivo.data.length - 1].TIPO_PROCESO })
-    const resp_datos_co = await verificarDatosComplementariosEstudiante({ DNI: localStorage.getItem('dni') })
-    const resp_test_pic = await verificarTestpsicologicoEstudianteService({ DNI: localStorage.getItem('dni') })
-    const resp_pago = await verificarPagoEstudianteService({ DNI: localStorage.getItem('dni') })
-    if (resp_inscrito.data.ok) { setStatusInscripcion(true); carnetContador += 1 }
-    if (resp_datos_co.data.ok) { setStatusDatosApoderado(true); carnetContador += 1 }
-    if (resp_test_pic.data.ok) { setStatusTestpsicologico(true); carnetContador += 1 }
-    if (resp_pago.data.ok) { setStatusPago(true); carnetContador += 1 }
-
+  const [loading, setLoading] = useState(true)
+  const [procesosActivos, setProcesosActivos] = useState([])
+  const [statusProcesos, setStatusProcesos] = useState([])
+  
+  
+  const verificarStates =  async () => {
+    
+    let ultimoProcesoActivo = await obtenerProcesosActivosService()
+    ultimoProcesoActivo = ultimoProcesoActivo.data
+    setProcesosActivos(ultimoProcesoActivo)
+    let data_object = []
+    for(let i = 0; i < ultimoProcesoActivo.length; i++) {
+      debugger
+      console.log("procesos Activos", ultimoProcesoActivo)
+      const {data} = await validarRequisitosParaInscripcionService({ DNI: localStorage.getItem('dni'), TIPO_PROCESO: ultimoProcesoActivo[i].TIPO_PROCESO , PROCESO: ultimoProcesoActivo[i].ID})
+      data_object.push({
+        proceso: ultimoProcesoActivo[i].ID,
+        inscrito: data.inscrito,
+        datos_complementarios: data.datos_complementarios,
+        test_psicologico: data.test_psicologico,
+        pago: data.pago,
+        carnet: data.carnet
+      })
+      
+    }
+    setStatusProcesos(data_object)
   }
   useEffect(() => {
-    verificarStates()
-    if (statusDatosApoderado && statusInscripcion && statusTestpsicologico && statusPago) {
-      console.log('ingreso')
-      setStatusCarnet(true)
-    }
-    console.log(statusCarnet)
-  }, [statusDatosApoderado, statusInscripcion, statusTestpsicologico, statusPago, statusCarnet])
+    setLoading(true)
+      verificarStates()
+    setLoading(false)
+    
+  }, [])
   return (
     <>
+      {loading ? <SpinnerComponent /> : ''}
       <h1>Bienvenido {localStorage.getItem('nombre')}</h1>
       <div className="gridHomePageDashboardEstudiante">
         <div className="containerEnlaces">
           <h4>Contenido</h4>
           <ul>
             <li>
-              <a href="https://gooogle.com" rel="noopener noreferrer" target="_blank">
+              <a href="https://www.facebook.com/admisionundac/" rel="noopener noreferrer" target="_blank">
                 Reglamento del proceso de admision
                 <i className="ri-arrow-right-line"></i>
               </a>
             </li>
             <li>
-              <a href="https://gooogle.com" rel="noopener noreferrer" target="_blank">
+              <a href="https://www.facebook.com/admisionundac/" rel="noopener noreferrer" target="_blank">
                 Guia de Inscripcion - Pregrado
                 <i className="ri-arrow-right-line"></i>
               </a>
             </li>
             <li>
-              <a href="https://gooogle.com" rel="noopener noreferrer" target="_blank">
+              <a href="https://www.facebook.com/admisionundac/" rel="noopener noreferrer" target="_blank">
                 Guia de Inscripcion - Segunda Especilidad
                 <i className="ri-arrow-right-line"></i>
               </a>
             </li>
             <li>
-              <a href="https://gooogle.com" rel="noopener noreferrer" target="_blank">
+              <a href="https://www.facebook.com/admisionundac/" rel="noopener noreferrer" target="_blank">
                 Catalogo de Pregrado<i className="ri-arrow-right-line"></i>
               </a>
             </li>
             <li>
-              <a href="https://gooogle.com" rel="noopener noreferrer" target="_blank">
+              <a href="https://www.facebook.com/admisionundac/" rel="noopener noreferrer" target="_blank">
                 Temario<i className="ri-arrow-right-line"></i>
               </a>
             </li>
             <li>
-              <a href="https://gooogle.com" rel="noopener noreferrer" target="_blank">
+              <a href="https://www.facebook.com/admisionundac/" rel="noopener noreferrer" target="_blank">
                 Vacantes Segunda Especialidad
                 <i className="ri-arrow-right-line"></i>
               </a>
             </li>
             <li>
-              <a href="https://gooogle.com" rel="noopener noreferrer" target="_blank">
+              <a href="https://www.facebook.com/admisionundac/" rel="noopener noreferrer" target="_blank">
                 Temario segunda especialidad
                 <i className="ri-arrow-right-line"></i>
               </a>
@@ -94,45 +100,79 @@ const HomeDashEstudinte = () => {
           />
           {/* </div> */}
         </div>
-        <div className="containerEnlaces">
-          <h4>Requisitos</h4>
-          <div>
-          </div>
-          <ul>
-            <li style={{ borderLeft: 'solid 2px green' }}>
-              <i className="ri-check-line" style={{ fontWeight: 'bold', color: 'green' }}></i>Registro
-            </li>
-            <li style={{ borderLeft: statusDatosApoderado ? 'solid 2px green' : 'solid 2px red' }}>
-              <i className={statusDatosApoderado ? "ri-check-line" : 'ri-close-line'} style={{ fontWeight: 'bold', color: statusDatosApoderado ? 'green' : 'red' }}></i>Datos del Apoderado
-            </li>
-            <li style={{ borderLeft: statusInscripcion ? 'solid 2px green' : 'solid 2px red' }}>
-              <i className={statusInscripcion ? "ri-check-line" : 'ri-close-line'} style={{ fontWeight: 'bold', color: statusInscripcion ? 'green' : 'red' }}></i>Inscripcion
-            </li>
-            <li style={{ borderLeft: statusInscripcion ? 'solid 2px green' : 'solid 2px red' }}>
-              <i className={statusInscripcion ? "ri-check-line" : 'ri-close-line'} style={{ fontWeight: 'bold', color: statusInscripcion ? 'green' : 'red' }}></i>Foto
-            </li>
-            <li style={{ borderLeft: statusPago ? 'solid 2px green' : 'solid 2px red' }}>
-              <i className={statusPago ? "ri-check-line" : 'ri-close-line'} style={{ fontWeight: 'bold', color: statusPago ? 'green' : 'red' }}></i>Voucher de pago
-            </li>
-            <li style={{ borderLeft: statusInscripcion ? 'solid 2px green' : 'solid 2px red' }}>
-              <i className={statusInscripcion ? "ri-check-line" : 'ri-close-line'} style={{ fontWeight: 'bold', color: statusInscripcion ? 'green' : 'red' }}></i>Documentacion (DNI, CERT. EST.)
-            </li>
-            <li style={{ borderLeft: statusTestpsicologico ? 'solid 2px green' : 'solid 2px red' }}>
-              <i className={statusTestpsicologico ? "ri-check-line" : 'ri-close-line'} style={{ fontWeight: 'bold', color: statusTestpsicologico ? 'green' : 'red' }}></i>Test psicologico
-            </li>
-          </ul>
-          {
-            statusCarnet
-              ?
-              <a href="/generar-pdf" target="_blank" style={{ display: 'flex', gap: '5px', textDecoration: 'none', padding: '10px 30px' }}>
-                <Button block type="primary" style={{ boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px' }}><i class="ri-refund-line" style={{ fontSize: '14px' }}></i>Ver mi carnet</Button>
-                {/* <a href="https://wa.me/5192070271?text=UNIVERSIDAD DANIEL ALCIDES CARRION" target="_blank"><Button block type="primary" style={{ backgroundColor: '#25D366' }}><i class="ri-whatsapp-fill"></i> Enviar Whatsapp</Button></a> */}
-              </a>
-              :
-              ''
-          }
-        </div>
       </div>
+      <div className="containerEstodosProcesos">
+        {
+          procesosActivos.length > 0
+          ? 
+          
+          procesosActivos.map(e => {
+            return (
+              // <div className="containerItemResultado">
+              //   <div className="cotainerItemResultadoImg">
+              //     <img src={process.env.PUBLIC_URL + '/logo.jpg'} alt="" />
+              //   </div>
+              //   <div className="cotainerItemResultadoText">
+              //     <p>{e.label}</p>
+              //   </div>
+              // </div>
+              <div className="containerEnlaces" key={e.ID}>
+                <h4>Requisitos {e.NOMBRE}</h4>
+                  {
+                    statusProcesos.map(element => {
+                      // console.log("Comparacion ", element.proceso, e.ID)
+                      if(element.proceso === e.ID) {
+                        
+                        return (
+                          <>
+                          <ul>
+                            <li style={{ borderLeft: 'solid 2px green' }}>
+                              <i className="ri-check-line" style={{ fontWeight: 'bold', color: 'green' }}></i>Registro
+                            </li>
+                            <li style={{ borderLeft: element.datos_complementarios ? 'solid 2px green' : 'solid 2px red' }}>
+                              <i className={element.datos_complementarios ? "ri-check-line" : 'ri-close-line'} style={{ fontWeight: 'bold', color: element.datos_complementarios ? 'green' : 'red' }}></i>Datos del Apoderado
+                            </li>
+                            <li style={{ borderLeft: element.inscrito ? 'solid 2px green' : 'solid 2px red' }}>
+                              <i className={element.inscrito ? "ri-check-line" : 'ri-close-line'} style={{ fontWeight: 'bold', color: element.inscrito ? 'green' : 'red' }}></i>Inscripcion
+                            </li>
+                            <li style={{ borderLeft: element.inscrito ? 'solid 2px green' : 'solid 2px red' }}>
+                              <i className={element.inscrito ? "ri-check-line" : 'ri-close-line'} style={{ fontWeight: 'bold', color: element.inscrito ? 'green' : 'red' }}></i>Foto
+                            </li>
+                            <li style={{ borderLeft: element.pago ? 'solid 2px green' : 'solid 2px red' }}>
+                              <i className={element.pago ? "ri-check-line" : 'ri-close-line'} style={{ fontWeight: 'bold', color: element.pago ? 'green' : 'red' }}></i>Voucher de pago
+                            </li>
+                            <li style={{ borderLeft: element.inscrito ? 'solid 2px green' : 'solid 2px red' }}>
+                              <i className={element.inscrito ? "ri-check-line" : 'ri-close-line'} style={{ fontWeight: 'bold', color: element.inscrito ? 'green' : 'red' }}></i>Documentacion (DNI, CERT. EST.)
+                            </li>
+                            <li style={{ borderLeft: element.test_psicologico ? 'solid 2px green' : 'solid 2px red' }}>
+                              <i className={element.test_psicologico ? "ri-check-line" : 'ri-close-line'} style={{ fontWeight: 'bold', color: element.test_psicologico ? 'green' : 'red' }}></i>Test psicologico
+                            </li>
+                            </ul>
+                            {element.carnet
+                            ?
+                            <a href={`/generar-pdf?proceso=${e.ID}`} target="_blank" style={{ display: 'flex', gap: '5px', textDecoration: 'none', padding: '10px 30px' }}>
+                              <Button block type="primary" style={{ boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px' }}><i class="ri-refund-line" style={{ fontSize: '14px' }}></i>Ver mi carnet</Button>
+                              {/* <a href="https://wa.me/5192070271?text=UNIVERSIDAD DANIEL ALCIDES CARRION" target="_blank"><Button block type="primary" style={{ backgroundColor: '#25D366' }}><i class="ri-whatsapp-fill"></i> Enviar Whatsapp</Button></a> */}
+                            </a>
+                            :
+                            ''}
+                          </>
+                        )
+                      }
+                    })
+                  }
+                
+                {
+                  
+                }
+              </div>
+            )
+          })
+          :
+          ''
+        }
+      </div>
+      
     </>
   );
 };

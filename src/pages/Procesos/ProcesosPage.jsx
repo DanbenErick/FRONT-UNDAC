@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Breadcrumb, Button, Modal, Select, Table, Tabs, Tooltip } from 'antd';
+import { Breadcrumb, Button, Drawer, Modal, Select, Table, Tabs, Tooltip } from 'antd';
 import { Tag, Popconfirm, Card, Form, Input, Radio, DatePicker } from 'antd';
 import * as XLSX from 'xlsx';
 import SpinnerCompoent from '../../components/Spinner';
@@ -7,12 +7,13 @@ import {
   crearProceso,
   cerrarProceso,
   procesarPadronPorExcel,
+  actualizarProcesoservice,
 } from '../../api/apiProcesos';
 import '../../assets/styles/DashboardAdmin.css';
 import moment from 'moment';
-import { getInscritosPorProcesoAreasService, getInscritosPorProcesoCarrerasService, getInscritosPorProcesoModalidadesService, getInscritosPorProcesoSedeService, getInscritosPorProcesoService, getProcesosService, obtenerEstudiantesParaCSVService, obtenerReportePDFPadronService } from '../../services/ProcesosService';
+import { abrirProcesoService, getInscritosPorProcesoAreasService, getInscritosPorProcesoCarrerasService, getInscritosPorProcesoModalidadesService, getInscritosPorProcesoSedeService, getInscritosPorProcesoService, getProcesosService, obtenerEstudiantesParaCSVService, obtenerReportePDFPadronService } from '../../services/ProcesosService';
 import { message } from 'antd/es';
-import { CloseCircleOutlined, EyeOutlined, FileExcelFilled, FormOutlined, SnippetsOutlined } from '@ant-design/icons';
+import { CloseCircleOutlined, EyeOutlined, FileExcelFilled, FormOutlined, SettingOutlined, SnippetsOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import { obtenerProcesosForm, obtenerSedesForm } from '../../api/apiInpputs';
 import { ignore } from 'antd/es/theme/useToken';
 
@@ -38,6 +39,7 @@ const convertirACsv = (data) => {
   document.body.appendChild(downloadLink);
 }
 let ID_MODALIDAD_LOCAL = 0
+let procesoActualizar = null
 export default function ProcesosPage() {
   const [messageApi, contextHolder] = message.useMessage();
   const [loading, setLoading] = useState(true);
@@ -51,6 +53,7 @@ export default function ProcesosPage() {
 
   const [statusPadronModal, setStatusPadronModal] = useState(false)
   const [formPadronEstudiantes] = Form.useForm()
+  const [formPanelProceso] = Form.useForm()
 
   const initialValues = {
     NOMBRE: '',
@@ -77,6 +80,17 @@ export default function ProcesosPage() {
     convertirACsv(resp.data)
     
   }
+  const abrirProceso = async(params) => {
+    setLoading(true)
+    const resp = await abrirProcesoService(params)
+    if(resp.data.ok) {
+      message.success(resp.data.message)
+      await refreshTableProcesos()
+    }else {
+      message.error(resp.data.message)
+    }
+    setLoading(false)
+  }
   const obtenerInscritosPorProcesoSede = async (params) => {
     setStatusModal(true)
     const resp = await getInscritosPorProcesoSedeService(params)
@@ -100,6 +114,22 @@ export default function ProcesosPage() {
     const resp = await getInscritosPorProcesoModalidadesService(params)
     setColumnsInscritosTable(columnsInscritosModalidad)
     setDataInscritos(resp.data)
+  }
+  const abrirPanelProceso = async(params) => {
+    
+    procesoActualizar = params.ID_PROCESO
+    const procesos = await getProcesosService()
+    console.log("Params recibidos", params, procesos)
+    const procesoSeleccionado = procesos.data.filter(proceso => proceso.ID === params.ID_PROCESO)
+    formPanelProceso.setFieldsValue({
+      NOMBRE: procesoSeleccionado[0].NOMBRE,
+      FECHA_REGISTRO: procesoSeleccionado[0].FECHA_REGISTRO,
+      TIPO_PROCESO: procesoSeleccionado[0].TIPO_PROCESO,
+      IMAGEN_PROCESO: procesoSeleccionado[0].IMAGEN_PROCESO,
+    })
+    console.log("Proceso seleccionado", procesoSeleccionado)
+
+    setPanelProceso(true)
   }
   
   const generarPadronEstudiantes = async() => {
@@ -177,6 +207,11 @@ export default function ProcesosPage() {
       key: 'NOMBRE',
     },
     {
+      title: 'Imagen',
+      dataIndex: 'IMAGEN_PROCESO',
+      key: 'IMAGEN_PROCESO',
+    },
+    {
       title: 'Fecha Registro',
       dataIndex: 'FECHA_REGISTRO',
       key: 'FECHA_REGISTRO',
@@ -214,6 +249,9 @@ export default function ProcesosPage() {
         if (column.ESTADO === 1) {
           return (
             <>
+            <Tooltip title="Editar proceso">
+              <Button onClick={() => {abrirPanelProceso({ID_PROCESO: column.ID});  ID_MODALIDAD_LOCAL = column.ID}} type="link" success icon={<SettingOutlined />}></Button>
+            </Tooltip>
             <Tooltip title="Generar CSV de estudiantes">
               <Button onClick={() => {generarCSVEstudiantes({ID_PROCESO: column.ID});  ID_MODALIDAD_LOCAL = column.ID}} type="link" icon={<SnippetsOutlined />} success ></Button>
             </Tooltip>
@@ -234,9 +272,17 @@ export default function ProcesosPage() {
           );
         }
         return (
-          <Tooltip title="Reporte">
-            <Button onClick={() => {obtenerInscritosPorProcesoSede({ID_PROCESO: column.ID});  ID_MODALIDAD_LOCAL = column.ID}} type="link" success icon={<FormOutlined />}></Button>
-          </Tooltip>
+          <>
+            <Tooltip title="Editar proceso">
+              <Button onClick={() => {abrirPanelProceso({ID_PROCESO: column.ID});  ID_MODALIDAD_LOCAL = column.ID}} type="link" success icon={<SettingOutlined />}></Button>
+            </Tooltip>
+            <Tooltip title="Reporte">
+              <Button onClick={() => {obtenerInscritosPorProcesoSede({ID_PROCESO: column.ID});  ID_MODALIDAD_LOCAL = column.ID}} type="link" success icon={<FormOutlined />}></Button>
+            </Tooltip>
+            <Tooltip title="Abrir proceso">
+              <Button style={{ color: 'green' }} onClick={() => {abrirProceso({ID_PROCESO: column.ID});  ID_MODALIDAD_LOCAL = column.ID}} type="link" success icon={<ThunderboltOutlined />}></Button>
+            </Tooltip>
+          </>
         )
         
       },
@@ -245,10 +291,10 @@ export default function ProcesosPage() {
   
   const onChangeTabs = async(params) => {
     setLoading(true)
-    if(params == 'sedes') await obtenerInscritosPorProcesoSede({ID_PROCESO: ID_MODALIDAD_LOCAL})
-    if(params == 'modalidades') await obtenerInscritosPorProcesoModalidad({ID_PROCESO: ID_MODALIDAD_LOCAL})
-    if(params == 'carreras') await obtenerInscritosPorProcesoCarrera({ID_PROCESO: ID_MODALIDAD_LOCAL})
-    if(params == 'areas') await obtenerInscritosPorProcesoArea({ID_PROCESO: ID_MODALIDAD_LOCAL})
+    if(params === 'sedes')       await obtenerInscritosPorProcesoSede({ID_PROCESO: ID_MODALIDAD_LOCAL})
+    if(params === 'modalidades') await obtenerInscritosPorProcesoModalidad({ID_PROCESO: ID_MODALIDAD_LOCAL})
+    if(params === 'carreras')    await obtenerInscritosPorProcesoCarrera({ID_PROCESO: ID_MODALIDAD_LOCAL})
+    if(params === 'areas')       await obtenerInscritosPorProcesoArea({ID_PROCESO: ID_MODALIDAD_LOCAL})
     
     setLoading(false)
   }
@@ -297,6 +343,7 @@ export default function ProcesosPage() {
 
   }
   const [jsonData, setJsonData] = useState([]);
+  const [panelProceso, setPanelProceso] = useState(false);
   const [fileExcel, setFileExcel] = useState(null)
   const procesarExcel = async() => {
 
@@ -353,6 +400,19 @@ export default function ProcesosPage() {
     setStatusPadronModal(true)
     getInputs()
   }
+  const guardarCambiosPanel = async(params) => {
+    console.log(params)
+    params.FECHA_REGISTRO = moment(params.FECHA_REGISTRO).format('YYYY-MM-DD',)
+    const resp = await actualizarProcesoservice({ ...params, ID_PROCESO: procesoActualizar })
+    if(resp.data.ok) {
+      message.success('Proceso actualizado correctamente')
+      await refreshTableProcesos()
+      setPanelProceso(false)
+    }else {
+      message.error('No se actualizo el proceso correctamente')
+
+    }
+  }
   const itemsTabs = [
     {
       key: 'sedes',
@@ -375,12 +435,13 @@ export default function ProcesosPage() {
       children: <Table dataSource={dataInscritos} columns={columnsInscritosTable} size='large' />,
     },
   ];
+  const hiddenPanelProceso = async() => {
+    setPanelProceso(false)
+  }
   return (
     <div>
       {contextHolder}
       {loading ? <SpinnerCompoent /> : ''}
-      {/* TODO: Asi funciona el spinnigs */}
-      {/* <Spin spinning={loading} /> */}
       <div className="contentDashboard">
         <h1 className="titlePageDashboard">Procesos</h1>
         <Breadcrumb className="bradcrumpPadding">
@@ -428,12 +489,20 @@ export default function ProcesosPage() {
                     {label: 'ORDINARIO', value: 'O'},
                     {label: 'MODALIDADES', value: 'M'},
                     {label: 'PRIMERA SELECCION', value: 'P'},
-                    {label: 'POSTGRADO', value: 'V'},
+                    {label: 'POSGRADO', value: 'V'},
                   ]}
                 />
                   
               </Form.Item>
-
+              <Form.Item
+                label="Imagen del proceso"
+                name="IMAGEN_PROCESO"
+                rules={[{ required: true, message: 'El imagen es requerido' }]}
+              >
+                <Input
+                  placeholder='imagen-proceso.jpeg'
+                />
+              </Form.Item>
               <Form.Item
                 label="Estado del proceso"
                 name="ESTADO"
@@ -466,6 +535,7 @@ export default function ProcesosPage() {
           <Table dataSource={dataTable} columns={columns} size="small" />
         </Card>
       </div>
+      
       <Modal title="Padron de Estudiantes" open={statusPadronModal} onOk={() => {formPadronEstudiantes.submit()}} onCancel={() => setStatusPadronModal(false)}>
       <input type="file" onChange={handleFileChangeExcel} accept=".xlsx, .xls" />
         <Button type='primary' onClick={procesarExcel}>Procesar con excel</Button>
@@ -527,6 +597,43 @@ export default function ProcesosPage() {
         />
         {/* <Table dataSource={dataInscritos} columns={columnsInscritosTable} size='large' /> */}
       </Modal>
+      <Drawer
+        title="Modificar proceso"
+        placement='right'
+        onClose={hiddenPanelProceso}
+        open={panelProceso}
+      >
+        <Form
+          layout='vertical'
+          form={formPanelProceso}
+          onFinish={guardarCambiosPanel}
+        >
+          <Form.Item label="Nombre proceso" name="NOMBRE" rules={[{ required: true, message: 'El estado es requerido' }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item label="Fecha de Inicio" name="FECHA_REGISTRO" rules={[{ required: true, message: 'El estado es requerido' }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item label="Tipo de proceso" name="TIPO_PROCESO" rules={[{ required: true, message: 'El estado es requerido' }]}>
+            <Select
+              options={[
+                {label: 'CEPRE', value: 'C'},
+                {label: 'ORDINARIO', value: 'O'},
+                {label: 'MODALIDADES', value: 'M'},
+                {label: 'PRIMERA SELECCION', value: 'P'},
+                {label: 'POSGRADO', value: 'V'},
+              ]}
+            />
+          </Form.Item>
+          <Form.Item label="Imagen de proceso" name="IMAGEN_PROCESO" rules={[{ required: true, message: 'El estado es requerido' }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item >
+            <Button type="primary" block htmlType='submit'>Guardar cambios</Button>
+          </Form.Item>
+        </Form>
+        
+      </Drawer>
     </div>
   );
 }

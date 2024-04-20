@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import qrcode from 'qrcode';
 import { Page, Text, View, Document, StyleSheet, PDFViewer, Image, Font } from '@react-pdf/renderer';
 import { obtenerDatosEstudianteCarnetService } from '../api/inscripcionDashEstudianteService';
 import LatoRegular from  '../assets/fuentes/Lato/Lato-Regular.ttf'
 import LatoBold from  '../assets/fuentes/Lato/Lato-Bold.ttf'
 import LatoLigth from  '../assets/fuentes/Lato/Lato-Light.ttf'
+import { useLocation } from 'react-router-dom';
+import { obtenerProcesosForm } from '../api/apiInpputs';
 
 
 const contenido = 'https://front-undac.vercel.app/consultar-estudiante-resumen/'+ localStorage.getItem('uuid');
@@ -89,8 +91,15 @@ const styles = StyleSheet.create({
   
   // Componente para renderizar el PDF
   const HojaEstudianteIngresoPage = () =>{
+    const location = useLocation();
+    const [imagenProceso, setImagenProceso] = useState('')
+    const queryParams = new URLSearchParams(location.search);
     const obtenerDatosEstudiante = async(params) => {
-      
+      const respProcesos = await obtenerProcesosForm();
+      const procesoSeleccionado = respProcesos.data.filter(proceso => proceso.value == queryParams.get('proceso'));
+      setImagenProceso(procesoSeleccionado[0].IMAGEN_PROCESO)
+      console.log("Proceso seleccionado", procesoSeleccionado)
+      // alert("Proceso" + queryParams.get('proceso'))
       const resp = await obtenerDatosEstudianteCarnetService(params)
       setDataStudent(resp.data[0])
       console.log("DATOS ESTUDIANTE", dataStudent)
@@ -111,14 +120,14 @@ const styles = StyleSheet.create({
         <Document>
           <Page size="A4" style={styles.page}>
             <View style={styles.section}>
-            <Image src="design-postgrado.jpeg" style={styles.imagenFondo} />
+            <Image src={imagenProceso} style={styles.imagenFondo} />
             <Image src={`${process.env.REACT_APP_API_URL}/${dataStudent.DNI}/${dataStudent.DNI}.jpeg`}  style={styles.fotoPerfil} />
             
               <View style={styles.containerText}>
                 <Text style={styles.text}><Text style={styles.textBold}>APELLIDO PATERNO:</Text> {dataStudent.AP_PATERNO}</Text>
                 <Text style={styles.text}><Text style={styles.textBold}>APELLIDO MATERNO:</Text> {dataStudent.AP_MATERNO}</Text>
                 <Text style={styles.text}><Text style={styles.textBold}>NOMBRES:</Text> {dataStudent.NOMBRES}</Text>
-                <Text style={styles.text}><Text style={styles.textBold}>MENCION:</Text> {dataStudent.ESCUELA_COMPLETA}</Text>
+                <Text style={styles.text}><Text style={styles.textBold}>PROGRAMA:</Text> {dataStudent.ESCUELA_COMPLETA}</Text>
                 {/* <Text style={styles.text}>MODALIDAD: {dataStudent .MODALIDAD_ESTUDIANTE}</Text> */}
                 <Text style={styles.text}><Text style={styles.textBold}>AREA:</Text> {dataStudent.AREA}</Text>
                 <Text style={styles.text}><Text style={styles.textBold}>SEDE EXAMEN:</Text> {dataStudent.SEDE_EXAMEN}</Text>

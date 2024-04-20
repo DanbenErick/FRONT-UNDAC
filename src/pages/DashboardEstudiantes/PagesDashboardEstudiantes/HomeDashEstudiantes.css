@@ -1,0 +1,37 @@
+.containerEstodosProcesos {
+  padding-top: 10px;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, 350px);
+  font-size: 12px;
+}
+
+.containerEstodosProcesos .containerEnlaces h4 {
+  padding: 0 10px;
+}
+.containerEstodosProcesos .containerEnlaces {
+  border-radius: 10px;
+  background: white;
+  border: solid #d1d6db 2px;
+}
+.containerEstodosProcesos .containerEnlaces ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.containerEstodosProcesos .containerEnlaces ul li {
+  padding: 10px;
+}
+.containerEstodosProcesos .containerEnlaces ul li a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #131313;
+  text-decoration: none;
+}
+.containerEstodosProcesos .containerEnlaces ul li:hover {
+  border-left: solid 2px #1677ff;
+}
+.containerEstodosProcesos .containerEnlaces ul li:hover a {
+  color: #1677ff;
+}

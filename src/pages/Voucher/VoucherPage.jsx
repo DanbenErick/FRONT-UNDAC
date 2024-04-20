@@ -67,6 +67,7 @@ const VoucherPage = () => {
     setDataTable(resp.data);
   };
   const guardarCarrera = async (params) => {
+    debugger
     params.ESTADO = 1;
     delete params.age
     delete params.caj
@@ -215,8 +216,11 @@ const VoucherPage = () => {
                 okText="Si"
                 cancelText="No"
               >
-                <Button type="primary" disabled={stateDisabledGuardar} icon={<SaveFilled />}>
-                  Guardar Cambios
+                {/* <Button type="primary" disabled={stateDisabledGuardar} icon={<SaveFilled />}>
+                  Guardar Pago
+                </Button> */}
+                <Button type="primary"  icon={<SaveFilled />}>
+                  Guardar Pago
                 </Button>
               </Popconfirm>
               <Button  icon={<ReloadOutlined />} onClick={comprobarVoucher} type="primary" style={{ background: '#3C887E' }}>
