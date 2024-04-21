@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
   
   // Componente para renderizar el PDF
   const HojaEstudianteIngresoPage = () =>{
+    const [dataStudent, setDataStudent] = React.useState(null)
     const location = useLocation();
     const [imagenProceso, setImagenProceso] = useState('')
     const queryParams = new URLSearchParams(location.search);
@@ -100,19 +101,26 @@ const styles = StyleSheet.create({
       setImagenProceso(procesoSeleccionado[0].IMAGEN_PROCESO)
       console.log("Proceso seleccionado", procesoSeleccionado)
       // alert("Proceso" + queryParams.get('proceso'))
-      const resp = await obtenerDatosEstudianteCarnetService({...params, PROCESO: procesoSeleccionado.ID})
+      const resp = await obtenerDatosEstudianteCarnetService({...params, PROCESO: procesoSeleccionado[0].value})
+      if(resp.data) {
+        alert("Hay datos")
+      }else {
+        alert("no hay datos")
+      }
+      console.log(resp.data[0])
       setDataStudent(resp.data[0])
-      console.log("DATOS ESTUDIANTE", dataStudent)
+      
       qrcode.toDataURL(contenido)
         .then(dataURL => setQrDataURL(dataURL))
         .catch(err => console.error(err));
-      console.log(resp)
     }
-    const [dataStudent, setDataStudent] = React.useState(null)
+    
     const [qrDataURL, setQrDataURL] = React.useState('');
     React.useEffect(() => {
       obtenerDatosEstudiante({UUID: localStorage.getItem('uuid')})
-      }, []);
+      console.log('Imgaen', imagenProceso)
+      console.log("dataStudent ",dataStudent)
+    }, []);
       return (
         dataStudent != null ?
         <div style={styles.pdfViewer}>
