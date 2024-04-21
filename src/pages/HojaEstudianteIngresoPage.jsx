@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
       setImagenProceso(procesoSeleccionado[0].IMAGEN_PROCESO)
       console.log("Proceso seleccionado", procesoSeleccionado)
       // alert("Proceso" + queryParams.get('proceso'))
-      const resp = await obtenerDatosEstudianteCarnetService(params)
+      const resp = await obtenerDatosEstudianteCarnetService({...params, PROCESO: procesoSeleccionado.ID})
       setDataStudent(resp.data[0])
       console.log("DATOS ESTUDIANTE", dataStudent)
       qrcode.toDataURL(contenido)
