@@ -102,11 +102,7 @@ const styles = StyleSheet.create({
       console.log("Proceso seleccionado", procesoSeleccionado)
       // alert("Proceso" + queryParams.get('proceso'))
       const resp = await obtenerDatosEstudianteCarnetService({...params, PROCESO: procesoSeleccionado[0].value})
-      if(resp.data) {
-        alert("Hay datos")
-      }else {
-        alert("no hay datos")
-      }
+      
       console.log(resp.data[0])
       setDataStudent(resp.data[0])
       

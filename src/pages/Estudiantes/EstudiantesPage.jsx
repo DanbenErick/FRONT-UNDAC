@@ -194,9 +194,9 @@ const EstudiantesPage = () => {
             >
               <Button type="link" info icon={<UploadOutlined />}></Button>
             </Popconfirm>
-            <a href="/generar-pdf" target="_blank" onClick={() => localStorage.setItem('uuid', column.UUID)}>
+            {/* <a href="/generar-pdf" target="_blank" onClick={() => localStorage.setItem('uuid', column.UUID)}>
               <Button type="link" info icon={<CreditCardOutlined />}></Button>
-            </a>
+            </a> */}
           </>
         );
       },

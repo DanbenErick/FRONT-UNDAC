@@ -5,7 +5,7 @@ import { Card } from 'antd';
 import { Form } from 'antd';
 import { Input } from 'antd';
 import {formatOnlyYear} from '../../util/Util'
-import { EditFilled, SaveFilled, SearchOutlined } from '@ant-design/icons';
+import { CreditCardOutlined, EditFilled, SaveFilled, SearchOutlined } from '@ant-design/icons';
 import {
   buscarInscritoService,
   guardarInscripcionService,
@@ -59,6 +59,7 @@ const InscritoPage = () => {
       dataIndex: 'DNI',
       key: '2',
       render: (data, column) => {
+        console.log('DATA', data, column)
         return (
           <Tooltip title={column.NOMBRE_COMPLETO}>
             <span>{data}</span>
@@ -100,16 +101,21 @@ const InscritoPage = () => {
       key: '8',
       render: (_, column) => {
         return (
-          <Popconfirm
-            title="Carerra"
-            description="Quieres editar este carrera?"
-            onConfirm={() => showPanelEditInscritos({ ID: column.ID })}
-            onCancel={() => ''}
-            okText="Si"
-            cancelText="No"
-          >
-            <Button type="link" info icon={<EditFilled />}></Button>
-          </Popconfirm>
+          <>
+            <Popconfirm
+              title="Carerra"
+              description="Quieres editar este carrera?"
+              onConfirm={() => showPanelEditInscritos({ ID: column.ID })}
+              onCancel={() => ''}
+              okText="Si"
+              cancelText="No"
+            >
+              <Button type="link" info icon={<EditFilled />}></Button>
+            </Popconfirm>
+            <a href={`/generar-pdf?proceso=${column.ID_PROCESO}`} target="_blank" onClick={() => localStorage.setItem('uuid', column.UUID)}>
+              <Button type="link" info icon={<CreditCardOutlined />}></Button>
+            </a>
+          </>
         );
       },
     },
