@@ -21,7 +21,7 @@ const HomeDashEstudinte = () => {
     setProcesosActivos(ultimoProcesoActivo)
     let data_object = []
     for(let i = 0; i < ultimoProcesoActivo.length; i++) {
-      debugger
+      
       console.log("procesos Activos", ultimoProcesoActivo)
       const {data} = await validarRequisitosParaInscripcionService({ DNI: localStorage.getItem('dni'), TIPO_PROCESO: ultimoProcesoActivo[i].TIPO_PROCESO , PROCESO: ultimoProcesoActivo[i].ID})
       data_object.push({

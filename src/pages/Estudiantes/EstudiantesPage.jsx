@@ -50,6 +50,8 @@ const EstudiantesPage = () => {
   
   const [modalFotosyArchivo, setModalFotosyArchivo] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  const [refreshFoto, setRefreshFoto] = useState(false)
 
   const [optionsDistritos, setOptionsDistritos] = useState([])
 
@@ -319,6 +321,7 @@ const EstudiantesPage = () => {
     formData.append('fotoEstudiante', selectedFile, newFileName);
     const resp = await editarFotoEstudianteService(formData);
     if(resp.status === 200 && resp.data.ok) {
+      setRefreshFoto(!refreshFoto)
       message.success(resp.data.message);
       setKeyFoto(prevKey => prevKey + 1)
       // handleCancelFoto()
@@ -762,7 +765,7 @@ const EstudiantesPage = () => {
         <div style={{ width: '100%', objectFit: 'cover', marginBottom: '10px' }}>
           <Image
             key={keyFoto}
-            src={`${process.env.REACT_APP_API_URL}/${stateDNI}/${stateDNI}.jpeg`}
+            src={`${process.env.REACT_APP_API_URL}/${stateDNI}/${stateDNI}.jpeg?refresh=${refreshFoto}`}
           />
         </div>
         <Form layout='vertical'>

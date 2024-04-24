@@ -67,7 +67,7 @@ const VoucherPage = () => {
     setDataTable(resp.data);
   };
   const guardarCarrera = async (params) => {
-    debugger
+    
     params.ESTADO = 1;
     delete params.age
     delete params.caj

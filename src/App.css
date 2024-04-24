@@ -96,6 +96,19 @@
 input {
   max-width: 100% !important;
 }
+
+.inputFileCustom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 15px;
+  margin-bottom: 5px;
+  border-radius: 10px;
+  border: solid 2px #21734680;
+}
+.inputFileHidden {
+  display: none;
+}
 @media (max-width: 768px) {
   .containerGridDashboardPage {
     display: grid;

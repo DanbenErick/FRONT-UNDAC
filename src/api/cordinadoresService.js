@@ -28,6 +28,7 @@ const modificarEstadoCordinador = async (params) => {
     try {
         const ruta = getRuta(`modificar-estado-cordinador?dni=${params.dni}&estado=${params.estado}`)
         const resp = await axios.get(ruta)
+        return resp
     } catch (error) {
         console.error('Ocurrio un error')
         throw error
@@ -74,6 +75,15 @@ const generarConstanciasBloqueService = async(params) => {
         console.error('Ocurrio un error', error)
     }
 }
+const procesarCodigosMatriculaService = async(params) => {
+    try {
+        const ruta = getRuta('procesar-codigos-matricula')
+        const resp = await axios.post(ruta, params)
+        return resp
+    }catch(error) {
+        console.error('Ocurrio un error', error)
+    }
+}
 const generarConstanciaEstudiante = async(params) => {
     try {
         const ruta = getRutaReporte(`generar-constancia-estudiante?dni=${params.dni}&id_proceso=${params.proceso}&tipo_documento=${params.tipo_documento}`)
@@ -88,4 +98,4 @@ const generarConstanciaEstudiante = async(params) => {
     }
 }
 
-export { generarConstanciasBloqueService, generarConstanciaEstudiante, obtenerCordinadoresService, registrarCordinadorService, buscarCordinadorService, modificarEstadoCordinador, obtenerIngresantesService, obtenerIngresanteParaConstanciaPorDNIService }
+export { procesarCodigosMatriculaService, generarConstanciasBloqueService, generarConstanciaEstudiante, obtenerCordinadoresService, registrarCordinadorService, buscarCordinadorService, modificarEstadoCordinador, obtenerIngresantesService, obtenerIngresanteParaConstanciaPorDNIService }

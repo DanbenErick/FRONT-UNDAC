@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import SpinnerComponent from '../../components/Spinner';
-import { message, Popconfirm, Form, Breadcrumb, Button, Card, Table, Input, Select, Tooltip, Radio } from 'antd';
-import { CheckOutlined, SaveFilled, SearchOutlined } from '@ant-design/icons';
-
-import '../../assets/styles/VacantesPage.css';
-
-import { generarConstanciaEstudiante, generarConstanciasBloqueService, obtenerIngresanteParaConstanciaPorDNIService, obtenerIngresantesService } from '../../api/cordinadoresService';
+import { message, Popconfirm, Form, Breadcrumb, Button, Card, Table, Input, Select, Tooltip, Radio, Modal } from 'antd';
+import { CheckOutlined, FileExcelOutlined, SaveFilled, SearchOutlined } from '@ant-design/icons';
+import { generarConstanciaEstudiante, generarConstanciasBloqueService, obtenerIngresanteParaConstanciaPorDNIService, obtenerIngresantesService, procesarCodigosMatriculaService } from '../../api/cordinadoresService';
 import { obtenerProcesosForm } from '../../api/apiInpputs';
-
+import * as XLSX from 'xlsx';
+import '../../assets/styles/VacantesPage.css';
 
 
 const cancel = (e) => {
@@ -15,11 +13,17 @@ const cancel = (e) => {
 };
 
 const ConstanciaPage = () => {
+  const [formModalFileExcel] = Form.useForm()
+  const fileExcelCodigoMatricula = useRef()
+  const [messageFileExcel, setMessageFileExcel] = useState('Ningun archivo seleccionado')
+  const [modalConstancia, setModalConstancia] = useState(false)
   const [formCordinador] = Form.useForm();
   const [loading, setLoading] = useState(true);
   const [dataTable, setDataTable] = useState([]);
   const [inputProcesos, setInputProcesos] = useState([]);
-  
+  const [cantidadCodigosMatricula, setCantidadCodigosMatricula] = useState('')
+  const [erroresDNICodigoMatricula, setErroresDNICodigoMatricula] = useState([])
+
   const obtenerDataTable = async() => {
     setLoading(true)
     const resp = await obtenerIngresantesService()
@@ -99,6 +103,63 @@ const ConstanciaPage = () => {
       console.error('Error ', error);
     }
   };
+  const buttonClickSelectFileExcel  = async() => {
+    fileExcelCodigoMatricula.current.click()
+  }
+  const handleFileExcel = async(event) => {
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+      const fileNameParts = selectedFile.name.split('.');
+      const fileExtension = fileNameParts[fileNameParts.length - 1].toLowerCase();
+      if (fileExtension !== 'xlsx') {
+        message.info('Formato no soportado. Por favor, seleccione un archivo de tipo Excel (xlsx).')
+        // Limpiar el input de tipo archivo
+        event.target.value = null;
+      } else {
+        console.log('Archivo seleccionado:', selectedFile);
+        console.log(event.target.files[0].name)
+        const nombreArchivo = event.target.files[0].name
+        if(nombreArchivo.length > 25) {
+          setMessageFileExcel(nombreArchivo.substring(0, 20) + '...')
+        }else {
+          setMessageFileExcel(nombreArchivo)
+        }
+        // Aquí puedes realizar cualquier acción adicional con el archivo seleccionado
+      }
+    }
+  }
+  const procesarExcelConstancia = async() => {
+    setLoading(true)
+    const selectedFile = fileExcelCodigoMatricula.current.files[0];
+    if (!selectedFile) {
+      message.info('Por favor, seleccione un archivo antes de procesarlo.')
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      const data = new Uint8Array(event.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const firstSheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheetName];
+      const jsonData = XLSX.utils.sheet_to_json(worksheet);
+      setCantidadCodigosMatricula(jsonData.length)
+      setDataTableExcel(jsonData)
+      const dataForm = formModalFileExcel.getFieldsValue()
+      const resp = await procesarCodigosMatriculaService({dataExcel: [...jsonData], proceso: dataForm.ID_PROCESO})
+      if(resp && resp.status === 200 && resp.data.ok) {
+        message.success('Se establecio los codigo de los alumnos')
+        setCantidadCodigosMatricula(`${resp.data.correctas} / ${jsonData.length}`)
+        setErroresDNICodigoMatricula(resp.data.errores)
+      }
+      setLoading(false)
+    };
+    reader.readAsArrayBuffer(selectedFile);
+  }
+  const columnsTableExcel = [
+    {title: 'DNI', dataIndex: 'DNI', key: 'DNI'},
+    {title: 'COD MATRI', dataIndex: 'CODIGO_MATRICULA', key: 'CODIGO_MATRICULA'},
+  ]
+  const [dataTableExcel, setDataTableExcel] = useState([])
   const buscarEstudiante = async() => {
     const form = formCordinador.getFieldsValue()
     const resp = await obtenerIngresanteParaConstanciaPorDNIService({dni: form.DNI, proceso: form.ID_PROCESO})
@@ -112,6 +173,12 @@ const ConstanciaPage = () => {
     }
     setLoading(false)
     
+  }
+  const openModalConstancia = () => {
+    setModalConstancia(true)
+  }
+  const closeModalConstancia = () => {
+    setModalConstancia(false)
   }
   return (
     <div>
@@ -159,13 +226,69 @@ const ConstanciaPage = () => {
                 >
                   <Button type="primary" style={{ marginRight: '5px' }} icon={<SaveFilled />}>Generar constancias</Button>
                 </Popconfirm>
-                <Button icon={<SearchOutlined />} onClick={buscarEstudiante}> Buscar</Button>
+                <Button style={{ background: '#305496', marginRight: '5px' }} type="primary" icon={<FileExcelOutlined />} onClick={() => openModalConstancia()}> Codigo de Matricula</Button>
+                <Button style={{ border: 'solid 1px #305496' }} icon={<SearchOutlined />} onClick={buscarEstudiante}> Buscar</Button>
           </Form>
         </Card>
         <Card type="inner" title="Lista de constancias">
           <Table dataSource={dataTable} columns={columnsTable} size="small" />
         </Card>
       </div>
+
+      <Modal
+      centered
+      width={520}
+      onCancel={closeModalConstancia}
+      type='info'
+        open={modalConstancia}
+        okButtonProps={{
+          style: { display: 'none'}
+        }}
+        cancelButtonProps={{
+          style: { display: 'none'}
+        }}
+      >
+        <h2>Codigo de Matricula</h2>
+        <h3>Archivo</h3>
+        <a href="/formatos/FORMATO_CODIGO_MATRICULA_DARASOFT_2025.xlsx" download="FORMATO_CODIGO_MATRICULA_DARASOFT_2025.xlsx">
+          <Button block type="primary" style={{ background: '#217346', marginBottom: '10px' }} icon={<FileExcelOutlined />}>Descargar formato</Button>
+        </a>
+        <input type="file" ref={fileExcelCodigoMatricula} accept='.xlsx' onChange={handleFileExcel} className='inputFileHidden' />
+
+        <h3>Procesar Excel</h3>
+        <Form layout='vertical' form={formModalFileExcel} onFinish={procesarExcelConstancia}>
+          <Form.Item name="ID_PROCESO" label="Proceso" rules={[{ required: true }]}>
+          <Select
+            showSearch
+            placeholder="Selecciona un proceso"
+            options={inputProcesos}
+          />
+          </Form.Item>
+        </Form>
+        <div className='inputFileCustom' onClick={buttonClickSelectFileExcel}>
+          <p>{messageFileExcel}</p>
+          <Button>Seleccionar archivo</Button>
+        </div>
+
+        {
+          cantidadCodigosMatricula !== ''
+          ?
+          (
+            <>
+              <p>Cantidad de registros es: <b>{cantidadCodigosMatricula}</b></p>
+              <p>Ocurrio un error con estos DNI: <b>{JSON.stringify(erroresDNICodigoMatricula)}</b></p>
+              <Table columns={columnsTableExcel} dataSource={dataTableExcel} pagination={{pageSize: 2}} />
+            </>
+          )
+          : ''
+        }
+        
+
+        <Button style={{ background: '#217346' }} type="primary" block icon={<FileExcelOutlined />}  onClick={() => formModalFileExcel.submit()} >Procesar Excel</Button>
+        
+
+
+      </Modal>
     </div>
   );
 };

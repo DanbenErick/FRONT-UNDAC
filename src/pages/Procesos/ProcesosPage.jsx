@@ -13,9 +13,9 @@ import '../../assets/styles/DashboardAdmin.css';
 import moment from 'moment';
 import { abrirProcesoService, getInscritosPorProcesoAreasService, getInscritosPorProcesoCarrerasService, getInscritosPorProcesoModalidadesService, getInscritosPorProcesoSedeService, getInscritosPorProcesoService, getProcesosService, obtenerEstudiantesParaCSVService, obtenerReportePDFPadronService } from '../../services/ProcesosService';
 import { message } from 'antd/es';
-import { CloseCircleOutlined, EyeOutlined, FileExcelFilled, FormOutlined, SettingOutlined, SnippetsOutlined, ThunderboltOutlined } from '@ant-design/icons';
+import { CloseCircleOutlined, FormOutlined, SettingOutlined, SnippetsOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import { obtenerProcesosForm, obtenerSedesForm } from '../../api/apiInpputs';
-import { ignore } from 'antd/es/theme/useToken';
+
 
 const convertirACsv = (data) => {
   let csvContent = "data:text/csv;charset=utf-8,";
