@@ -8,13 +8,15 @@ import {
   cerrarProceso,
   procesarPadronPorExcel,
   actualizarProcesoservice,
+  generarReporteService,
 } from '../../api/apiProcesos';
 import '../../assets/styles/DashboardAdmin.css';
 import moment from 'moment';
 import { abrirProcesoService, getInscritosPorProcesoAreasService, getInscritosPorProcesoCarrerasService, getInscritosPorProcesoModalidadesService, getInscritosPorProcesoSedeService, getInscritosPorProcesoService, getProcesosService, obtenerEstudiantesParaCSVService, obtenerReportePDFPadronService } from '../../services/ProcesosService';
 import { message } from 'antd/es';
 import { CloseCircleOutlined, FormOutlined, SettingOutlined, SnippetsOutlined, ThunderboltOutlined } from '@ant-design/icons';
-import { obtenerProcesosForm, obtenerSedesForm } from '../../api/apiInpputs';
+import { obtenerCarrerasCodigoForm, obtenerProcesosForm, obtenerSedesForm } from '../../api/apiInpputs';
+import { utilGenerarExcel } from '../../util/Util';
 
 
 const convertirACsv = (data) => {
@@ -41,6 +43,7 @@ const convertirACsv = (data) => {
 let ID_MODALIDAD_LOCAL = 0
 let procesoActualizar = null
 export default function ProcesosPage() {
+  const [modalReportes, setModalReportes] = useState(false)
   const [messageApi, contextHolder] = message.useMessage();
   const [loading, setLoading] = useState(true);
   const [dataTable, setDataTable] = useState([]);
@@ -49,7 +52,10 @@ export default function ProcesosPage() {
   const [columnsInscritosTable, setColumnsInscritosTable] = useState([])
 
   const [selectProcesos, setSelectProcesos] = useState([])
+  const [selectCarreras, setSelectCarreras] = useState([])
   const [optionsSedes, setOptionsSedes] = useState([])
+
+  const [formModalReporte] = Form.useForm()
 
   const [statusPadronModal, setStatusPadronModal] = useState(false)
   const [formPadronEstudiantes] = Form.useForm()
@@ -338,6 +344,8 @@ export default function ProcesosPage() {
   const getInputs = async(params) => {
     const resp = await obtenerProcesosForm()
     const resp_2 = await obtenerSedesForm({ TIPO_PROCESO: 'O' })
+    const resp_carreras = await obtenerCarrerasCodigoForm()
+    setSelectCarreras(resp_carreras.data)
     setSelectProcesos(resp.data)
     setOptionsSedes(resp_2.data)
 
@@ -438,6 +446,12 @@ export default function ProcesosPage() {
   const hiddenPanelProceso = async() => {
     setPanelProceso(false)
   }
+  const generarReporteModal = async(params) => {
+    console.log(params)
+    const resp = await generarReporteService(params)
+    utilGenerarExcel(resp.data)
+    
+  }
   return (
     <div>
       {contextHolder}
@@ -526,7 +540,8 @@ export default function ProcesosPage() {
                 >
                   <Button type="primary">Guardar Cambios</Button>
                 </Popconfirm>
-                <Button onClick={showModalPadron} type="link" icon={<SnippetsOutlined />} success >Generar padron</Button>
+                <Button onClick={showModalPadron} type="primary" style={{ background: '#131313', marginLeft: '5px' }} icon={<SnippetsOutlined />} success >Generar padron</Button>
+                <Button onClick={() => setModalReportes(true)} type="primary" style={{ background: '#131313', marginLeft: '5px' }} icon={<SnippetsOutlined />} success >Reportes</Button>
               </Form.Item>
             </div>
           </Form>
@@ -634,6 +649,32 @@ export default function ProcesosPage() {
         </Form>
         
       </Drawer>
+      <Modal
+        open={modalReportes}
+        onCancel={() =>  setModalReportes(false)}
+      >
+        <h1>Reporte</h1>
+        <Form
+         layout='vertical'
+         form={formModalReporte}
+         onFinish={generarReporteModal}
+        >
+          <Form.Item label="Proceso" name="ID_PROCESO" rules={[{ required: true }]}>
+            <Select
+              options={selectProcesos}
+            />
+          </Form.Item>
+          <Form.Item label="Carrera" name="COD_CARRERA">
+            <Select
+              options={selectCarreras}
+            />
+          </Form.Item>
+          <Form.Item>
+            <Button block type='primary' htmlType='submit'>Generar Reporte</Button>
+          </Form.Item>
+          
+        </Form>
+      </Modal>
     </div>
   );
 }

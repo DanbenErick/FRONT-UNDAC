@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import SpinnerComponent from '../../components/Spinner';
 import { message, Popconfirm, Form, Breadcrumb, Button, Card, Table, Input, Select, Tooltip, Radio, Modal } from 'antd';
-import { CheckOutlined, FileExcelOutlined, SaveFilled, SearchOutlined } from '@ant-design/icons';
+import { CheckOutlined, FileExcelOutlined, FilePdfOutlined, SaveFilled, SearchOutlined, SettingOutlined } from '@ant-design/icons';
 import { generarConstanciaEstudiante, generarConstanciasBloqueService, obtenerIngresanteParaConstanciaPorDNIService, obtenerIngresantesService, procesarCodigosMatriculaService } from '../../api/cordinadoresService';
 import { obtenerProcesosForm } from '../../api/apiInpputs';
 import * as XLSX from 'xlsx';
@@ -80,7 +80,7 @@ const ConstanciaPage = () => {
       render: (data, col) => (
         
         <>
-          <Button onClick={() => { obtenerConstancia({dni: col.DNI, proceso: col.PROCESO, tipo_documento: formCordinador.getFieldValue('TIPO_DOCUMENTO')}) }} type="link" icon={<CheckOutlined />}></Button>
+          <Button style={{ color: 'red  ' }} onClick={() => { obtenerConstancia({dni: col.DNI, proceso: col.PROCESO, tipo_documento: formCordinador.getFieldValue('TIPO_DOCUMENTO')}) }} type="link" icon={<FilePdfOutlined />}></Button>
         </>
       )
     }
@@ -284,7 +284,7 @@ const ConstanciaPage = () => {
         }
         
 
-        <Button style={{ background: '#217346' }} type="primary" block icon={<FileExcelOutlined />}  onClick={() => formModalFileExcel.submit()} >Procesar Excel</Button>
+        <Button style={{ background: '#217346' }} type="primary" block icon={<SettingOutlined />}  onClick={() => formModalFileExcel.submit()} >Procesar Excel</Button>
         
 
 

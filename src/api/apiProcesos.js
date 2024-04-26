@@ -144,6 +144,14 @@ const obtenerInscritosPorModalidadService = async (params) => {
     console.error(`Error:`, error);
   }
 }
+const generarReporteService = async(params) => {
+  try {
+    const ruta = getRuta('generar-reporte')
+    const resp = await axios.post(ruta, params);
+    return resp;
+  }catch (error) {
+    console.error(`Error:`, error);
+  }
+}
 
-
-export { actualizarProcesoservice, abrirProcesoServiceApi, procesarPadronPorExcel, connectServerSocketIO, obtenerProcesosFull, crearProceso, cerrarProceso, obtenerInscritosPorSedeService, obtenerInscritosPorCarreraService, obtenerInscritosPorModalidadService, obtenerInscritosPorAreaService, obtenerInscritosNombresService, obtenerReportePDFPadron};
+export { generarReporteService, actualizarProcesoservice, abrirProcesoServiceApi, procesarPadronPorExcel, connectServerSocketIO, obtenerProcesosFull, crearProceso, cerrarProceso, obtenerInscritosPorSedeService, obtenerInscritosPorCarreraService, obtenerInscritosPorModalidadService, obtenerInscritosPorAreaService, obtenerInscritosNombresService, obtenerReportePDFPadron};
