@@ -49,6 +49,9 @@ const InscripcionDashboardEstudiante = () => {
   const [optionsDistrito, setOptionsDistrito] = useState();
   
 
+  const filterOption = (input, option) =>
+  (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
+
   const fileInputDocRef = useRef(null);
   const fileInputImgRef = useRef(null);
 
@@ -282,11 +285,13 @@ const InscripcionDashboardEstudiante = () => {
                   label="Programa de Estudio"
                   name="COD_CARRERA"
                   rules={[{ required: true }]}
+                  
                 >
                   <Select
                     showSearch
                     placeholder="Selecciona un proceso"
                     options={selectCarreras}
+                    filterOption={filterOption}
                   />
                 </Form.Item>
                 <Form.Item
@@ -433,34 +438,44 @@ const InscripcionDashboardEstudiante = () => {
                         <DatePicker style={{ width: '100%' }} />
                       </Form.Item>
                       <Form.Item
+                        
                         className="FormItem"
                         label="Departamento"
                         name="DEPARTAMENTO"
                         rules={[{ required: true }]}
+                        
                       >
                         <Select
+                          showSearch
+                          filterOption={filterOption}
                           options={optionsDepartamento}
                           onChange={buscarProvincia}
                         />
                       </Form.Item>
                       <Form.Item
                         className="FormItem"
-                        label="PROVINCIA"
+                        label="Provincia"
                         name="PROVINCIA"
                         rules={[{ required: true }]}
                       >
                         <Select
+                          showSearch
+                          filterOption={filterOption}
                           onChange={buscarDistrito}
                           options={optionsProvincia}
                         />
                       </Form.Item>
                       <Form.Item
                         className="FormItem"
-                        label="DISTRITO"
+                        label="Distrito"
                         name="DISTRITO"
                         rules={[{ required: true }]}
                       >
-                        <Select options={optionsDistrito} />
+                        <Select 
+                          showSearch
+                          filterOption={filterOption}
+                          options={optionsDistrito}
+                        />
                       </Form.Item>
                       <Form.Item
                         className="FormItem"
