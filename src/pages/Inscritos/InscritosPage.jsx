@@ -48,6 +48,9 @@ const InscritoPage = () => {
   const [formModificarInscritos] = Form.useForm();
   const [formInscribirEstudiante] = Form.useForm();
 
+  const filterOption = (input, option) =>
+  (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
+
   const columnsTable = [
     {
       title: 'Proceso',
@@ -240,7 +243,7 @@ const InscritoPage = () => {
           <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
           <Breadcrumb.Item>Inscritos</Breadcrumb.Item>
         </Breadcrumb>
-        <Card type="inner" title="Crear estudiantes">
+        <Card type="inner" title="Panel inscripcion">
           <Form layout="vertical" form={formInscritos}>
             <div className="vacantesPageContainerFormCrearVacante">
               <Form.Item label="Proceso" name="PROCESO">
@@ -248,6 +251,7 @@ const InscritoPage = () => {
                   showSearch
                   placeholder="Selecciona una proceso"
                   options={selectProcesos}
+                  filterOption={filterOption}
                 />
               </Form.Item>
               <Form.Item label="Carrera" name="COD_CARRERA">
@@ -255,6 +259,7 @@ const InscritoPage = () => {
                   showSearch
                   placeholder="Selecciona una carrera"
                   options={selectCarrerasCodigo}
+                  filterOption={filterOption}
                 />
               </Form.Item>
               <Form.Item label="DNI" name="DNI">
@@ -265,11 +270,11 @@ const InscritoPage = () => {
               </Form.Item>
             </div>
             <Form.Item className="filaBotones">
-              <Button type="primary" icon={<SaveFilled />}>
+              {/* <Button type="primary" icon={<SaveFilled />}>
                 Guardar Cambios
-              </Button>
+              </Button> */}
+              <Button type="primary" icon={<SaveFilled />} onClick={onShowPanelInscritos}>Inscribir</Button>
               <Button icon={<SearchOutlined />} onClick={buscarInscrito}>Buscar</Button>
-              <Button icon={<SaveFilled />} onClick={onShowPanelInscritos}>Inscribir</Button>
             </Form.Item>
           </Form>
         </Card>
@@ -316,7 +321,7 @@ const InscritoPage = () => {
         <Drawer
         title='Inscribir estudiante'
         placement="right"
-        size={'large'}
+        size={'medium'}
         onClose={onClosePanelInscrito}
         open={panelInscribir}
         extra={
@@ -327,21 +332,23 @@ const InscritoPage = () => {
           </Space>
         }
       >
-        <Form layout='vertical' form={formInscribirEstudiante} className="formProcesosDashAdmin" onFinish={guardarInscripcion}>
+        <Form layout='vertical' form={formInscribirEstudiante} className="" onFinish={guardarInscripcion}>
           <Form.Item label="Proceso" rules={[{ required: true }]} name="PROCESO">
             <Select
               showSearch
               placeholder="Selecciona una proceso"
               options={selectProcesosActivos}
               onChange={changeProcesos}
+              filterOption={filterOption}
             />
           </Form.Item>
           <Form.Item label="DNI" name="DNI" rules={[{ required: true }]}>
             <Input maxLength={8} />
           </Form.Item>
-          <Form.Item label="Carrera" name="COD_CARRERA">
+          <Form.Item label="Carrera" name="COD_CARRERA" rules={[{ required: true }]}>
             <Select
               showSearch
+              filterOption={filterOption}
               placeholder="Selecciona una carrera"
               options={selectCarrerasCodigo}
             />

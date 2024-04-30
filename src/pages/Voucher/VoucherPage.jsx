@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import SpinnerComponent from '../../components/Spinner';
-import { Breadcrumb, Button, Table, message } from 'antd';
+import { Breadcrumb, Button, Drawer, Table, message } from 'antd';
 import { Card } from 'antd';
 import { Form } from 'antd';
 import { Popconfirm } from 'antd';
-import { ReloadOutlined, SaveFilled, SearchOutlined } from '@ant-design/icons';
+import { FormOutlined, ReloadOutlined, SaveFilled, SearchOutlined } from '@ant-design/icons';
 import { Input } from 'antd';
 import { obtenerProcesosForm } from '../../api/apiInpputs';
 import { Select } from 'antd';
@@ -14,6 +14,7 @@ import {
   buscarVoucherService,
   comprobarComprobantePagoService,
   crearVoucherService,
+  modificarPagoService,
   obtenerVouchersService,
 } from '../../api/voucherService';
 import moment from 'moment';
@@ -25,6 +26,8 @@ const VoucherPage = () => {
   const [inputProcesos, setInputProcesos] = useState();
   const [stateDisabledGuardar, setStateDisabledGuardar] = useState(true);
   const [dataTable, setDataTable] = useState();
+  const [statePanelVoucher, setStatePanelVoucher] = useState(false)
+  const [formPanelVoucher] = Form.useForm()
   const columnsTable = [
     {
       title: 'Proceso',
@@ -50,14 +53,42 @@ const VoucherPage = () => {
       title: 'Fecha',
       dataIndex: 'FECHA_PAGO',
       key: 'FECHA_PAGO',
-      render: (data) => formatDateUtil(data) 
+      render: (data) => moment(data).format('YYYY-MM-DD') 
     },
     {
       title: 'Monto',
       dataIndex: 'MONTO',
       key: 'MONTO',
     },
+    {
+      title: 'Action',
+      key: 'action',
+
+      render: (_, column) => {
+        // if (column.ESTADO === 1) {
+        return (
+          <Button type="link" info icon={<FormOutlined />} onClick={() => { showPanelEditarVoucher(column) }}></Button>
+        );
+
+        // }
+        // return ""
+      },
+    },
   ];
+  const showPanelEditarVoucher = async (params) => {
+    params.FECHA_PAGO = moment(params.FECHA_PAGO).format('YYYY-MM-DD');
+    delete params.FECHA_PAGO;
+    setStatePanelVoucher(true)
+    formPanelVoucher.setFieldsValue(params)
+  }
+  const modificarPago = async(params) => {
+    const resp = await modificarPagoService(params);
+    console.log(resp)
+    if (!resp.data) {
+      message.error('Ocurrio un error');
+      return;
+    }
+  }
   const obtenerInputs = async () => {
     const resp = await obtenerProcesosForm();
     setInputProcesos(resp.data);
@@ -66,12 +97,19 @@ const VoucherPage = () => {
     const resp = await obtenerVouchersService();
     setDataTable(resp.data);
   };
-  const guardarCarrera = async (params) => {
+  const guardarPago = async (params) => {
     
+    console.log(params)
     params.ESTADO = 1;
-    delete params.age
-    delete params.caj
-    params.FECHA_PAGO = moment(params.FECHA_PAGO).format('YYYY/MM/DD');
+    // // delete params.age
+    // // delete params.caj
+    delete params.NOMBRE_COMPLETO
+    const fechaFormateada = new Date(params.FECHA_PAGO);
+    const fechaFormateadaString = fechaFormateada.toISOString().substring(0, 10); // Obtener la fecha en formato YYYY-MM-DD
+    params.FECHA_PAGO = fechaFormateadaString;
+
+    
+    params.FECHA_PAGO = moment(params.FECHA_PAGO).format('YYYY-MM-DD');
     const resp = await crearVoucherService(params);
     if (!resp.data) {
       message.error('Ocurrio un error');
@@ -113,7 +151,7 @@ const VoucherPage = () => {
       age: params.age,
       caj: params.caj,
       secuencia: params.CODIGO,
-      payment_date: formatDateUtil(params.FECHA_PAGO)
+      payment_date: moment(params.FECHA_PAGO).format('YYYY-MM-DD')
     }
     const resp = await comprobarComprobantePagoService(data)
     if(resp.data.state) {
@@ -142,7 +180,7 @@ const VoucherPage = () => {
           <Breadcrumb.Item>Voucher</Breadcrumb.Item>
         </Breadcrumb>
         <Card type="inner" title="Crear voucher">
-          <Form layout="vertical" form={formVoucher} onFinish={guardarCarrera}>
+          <Form layout="vertical" form={formVoucher} onFinish={guardarPago}>
             <div className="vacantesPageContainerFormCrearVacante">
               <Form.Item label="Proceso" name="ID_PROCESO">
                 <Select
@@ -169,7 +207,7 @@ const VoucherPage = () => {
                 />
               </Form.Item>
               <Form.Item
-                label="Fecha"
+                label="Fecha de Pago"
                 name="FECHA_PAGO"
                 rules={[{ required: true }]}
               >
@@ -193,15 +231,15 @@ const VoucherPage = () => {
                 <Input disabled={true} />
               </Form.Item>
               <Form.Item
-                label="Age"
-                name="age"
+                label="Caja"
+                name="caj"
                 rules={[{ required: true }]}
               >
                 <Input maxLength={4} />
               </Form.Item>
               <Form.Item
-                label="Caja"
-                name="caj"
+                label="Age"
+                name="age"
                 rules={[{ required: true }]}
               >
                 <Input maxLength={4} />
@@ -236,38 +274,80 @@ const VoucherPage = () => {
           <Table dataSource={dataTable} columns={columnsTable} size="small" />
         </Card>
 
-        {/* <Drawer title="Modificar carrera" placement="right" onClose={hiddenPanelEditCarrera} open={panelEditarCarrera}>
-                    <Form layout='vertical' form={formModificarCarreras} onFinish={modificarCarrera}>
-                        <Form.Item label="Facultad" name="FACULTAD">
-                                <Select
-                                    showSearch
-                                    placeholder="Selecciona un proceso"
-                                    options={selectFacultad}
-                                    // onChange={"verificarEstadoProceso"}
-                                    rules={[{ required: true, message: 'El estado es requerido' }]}
-                                />
-                        </Form.Item>
-                        <Form.Item label="Carrera" name="ESCUELA">
-                            <Input rules={[{ required: true, message: 'El estado es requerido' }]}/>
-                        </Form.Item>
-                        
-                        <Form.Item label="Codigo" name="CODIGO_ESCUELA">
-                            <Input rules={[{ required: true, message: 'El estado es requerido' }]}/>
-                        </Form.Item>
-                        <Form.Item label="Area" name="AREA">
-                            <Input rules={[{ required: true, message: 'El estado es requerido' }]}/>
-                        </Form.Item>
-                        <Form.Item label="Sede" name="SEDE_FACULTAD">
-                            <Input rules={[{ required: true, message: 'El estado es requerido' }]}/>
-                        </Form.Item>
-                        <Form.Item >
-                            <Button type="primary" block htmlType='submit'>Guardar cambios</Button>
-                        </Form.Item>
-                        <Form.Item name="ID">
-                            <Input type='hidden'/>
-                        </Form.Item>
-                    </Form>
-                </Drawer> */}
+        <Drawer 
+        extra={
+          
+            
+            <Button type="primary" onClick={() => {formPanelVoucher.submit()}}>Guardar</Button>
+          
+        }
+        title="Modificar carrera" placement="right" onClose={() => { setStatePanelVoucher(false) }} open={statePanelVoucher}>
+            <Form layout='vertical' form={formPanelVoucher} onFinish={modificarPago}>
+                <Form.Item label="Identificador" name="ID" rules={[{ required: true }]}>
+                <Input
+                    placeholder="Ingresa el codigo del voucher"
+                    maxLength={7}
+                    disabled={true}
+                  />
+                </Form.Item>
+                <Form.Item label="Proceso" name="ID_PROCESO" rules={[{ required: true }]}>
+                  <Select
+                    showSearch
+                    placeholder="Selecciona un proceso"
+                    options={inputProcesos}
+                  />
+                </Form.Item>
+                <Form.Item label="DNI" name="DNI" rules={[{ required: true }]}>
+                <Input
+                  placeholder="Ingresa el codigo del voucher"
+                  onChange={buscarEstudiante}
+                  maxLength={8}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label="Codigo"
+                  name="CODIGO"
+                  rules={[{ required: true }]}
+                >
+                  <Input
+                    placeholder="Ingresa el codigo del voucher"
+                    maxLength={7}
+                  />
+                </Form.Item>
+                {/* <Form.Item
+                  label="Fecha de Pago"
+                  name="FECHA_PAGO"
+                  rules={[{ required: true }]}
+                >
+                  <DatePicker
+                    placeholder="Fecha del voucher"
+                    style={{ width: '100%' }}
+                  />
+                </Form.Item> */}
+                <Form.Item
+                  label="Monto"
+                  name="MONTO"
+                  rules={[{ required: true }]}
+                >
+                  <Input placeholder="Ingresa la monto" />
+                </Form.Item>
+                <Form.Item
+                  label="Caja"
+                  name="CAJ"
+                  rules={[{ required: true }]}
+                >
+                  <Input maxLength={4} />
+                </Form.Item>
+                <Form.Item
+                  label="Age"
+                  name="AGE "
+                  rules={[{ required: true }]}
+                >
+                  <Input maxLength={4} />
+                </Form.Item>
+                
+            </Form>
+        </Drawer>
       </div>
     </div>
   );

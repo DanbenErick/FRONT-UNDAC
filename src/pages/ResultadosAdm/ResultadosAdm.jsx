@@ -114,7 +114,7 @@ const ResultadosAdmPage = () => {
 
 
           {
-            (tipoProcesoSeleccionado === 'O')
+            (tipoProcesoSeleccionado === 'O' || tipoProcesoSeleccionado === 'V')
             ?
             (
               <Form onFinish={cargarArchivoMultiPCSV}>
@@ -154,7 +154,7 @@ const ResultadosAdmPage = () => {
 
 
           {
-            (tipoProcesoSeleccionado === 'O')
+            (tipoProcesoSeleccionado === 'O' || tipoProcesoSeleccionado === 'V')
             ?
               <Button type="primary" disabled={stateProceso} onClick={obtenerPDFResultados}>Obtener PDF {nameProceso}</Button>
             : ''

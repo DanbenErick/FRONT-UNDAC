@@ -50,9 +50,19 @@ const buscarVoucherService = async (params) => {
     message.error('Ocurrio un error');
   }
 };
+const modificarPagoService = async(params) => {
+  try {
+    const resp = await axios.post(getRuta('modificar-pago'), params);
+    return resp;
+  }catch (error) {
+    console.error('Ocurrio un error', error);
+    message.error('Ocurrio un error');
+  }
+}
 
 
 export {
+  modificarPagoService,
   obtenerVouchersService,
   buscarEstudianteVoucherService,
   crearVoucherService,
