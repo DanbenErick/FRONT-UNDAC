@@ -2,6 +2,10 @@ import axios from './axiosConfig'
 const API_HOST = process.env.REACT_APP_API_URL;
 const API_ADMINISTRADOR = process.env.REACT_APP_API_ADMINISTRADOR;
 const getRuta = (ruta) => `${API_HOST}${API_ADMINISTRADOR}/aulas/${ruta}`;
+
+const API_REPORTE = process.env.REACT_APP_API_URL_REPORTES
+const getRutaReporte = (params) => `${API_REPORTE}/${params}`;
+
 const obtenerAulasService = async() => {
   try {
     const ruta = getRuta('obtener-aulas')
@@ -40,8 +44,8 @@ const abrirAulaService = async(params) => {
 }
 const generarPDFEstudiantesAulaService = async(params) => {
   try {
-    const ruta = getRuta('generar-pdf')
-    const resp = await axios.post(ruta, params, { responseType: 'blob' })
+    const ruta = getRutaReporte(`generar-reporte-aula?proceso=${params.ID_PROCESO}&aula=${params.ID_AULA}`)
+    const resp = await axios.get(ruta, params, { responseType: 'blob' })
 
     // Verificar si la respuesta indica un error
     if (resp.data.error) {

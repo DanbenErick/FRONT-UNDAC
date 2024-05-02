@@ -35,6 +35,7 @@ const AulasPage = () => {
   };
   const generarReporteEstudiantesPorAula = async (params) => {
     try {
+      console.log(params)
       const resp = await generarPDFEstudiantesAulaService(params);
       // if (resp.data.ok) {
         message.success(resp.data.message);
@@ -154,7 +155,7 @@ const AulasPage = () => {
             title="Aula"
             description="Quieres generar un pdf de este aula?"
             onConfirm={() => {
-              generarReporteEstudiantesPorAula({ ID_AULA: column.ID, NOMBRE_PROCESO: column.NOMBRE_PROCESO, NOMBRE_AULA: column.NOMBRE_AULA, TURNO: column.TURNO });
+              generarReporteEstudiantesPorAula(column);
             }}
             onCancel={() => ''}
             okText="Si"

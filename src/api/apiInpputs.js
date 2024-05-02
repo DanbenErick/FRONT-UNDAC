@@ -2,8 +2,8 @@ import axios from './axiosConfig';
 
 const API_HOST = process.env.REACT_APP_API_URL;
 const API_REPORTE = process.env.REACT_APP_API_URL_REPORTES
-const getRuta = (params) => `${API_HOST}/input-controls/${params}`;
 const getRutaReporte = (params) => `${API_REPORTE}/${params}`;
+const getRuta = (params) => `${API_HOST}/input-controls/${params}`;
 
 const buscarAulaPorTurnoForm = async (params) => {
   try {

@@ -52,8 +52,17 @@ const obtenerCarrerasPorProcesoInput = async () => {
     console.error('ERROR: ', error);
   }
 };
+const modificarVacanteService = async(params) => {
+  try {
+    const resp = await axios.put(`${process.env.REACT_APP_API_URL}${process.env.REACT_APP_API_ADMINISTRADOR}/vacantes/modificar-vacante`, params)
+    return resp
+  }catch (error) {
+    console.error('ERROR: ', error);
+  }
+}
 
 export {
+  modificarVacanteService,
   obtenerVacantesProcesoActivo,
   obtenerVacantesPorId,
   crearVacante,

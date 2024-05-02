@@ -12,30 +12,28 @@ export const formatOnlyYear = (date) => {
   return `${yyyy}`;
 };
 
-export const utilGenerarExcel = (datos) => {
-  // Datos de ejemplo
-  // const datos = [
-  //   { proceso: 'Proceso1', ap_paterno: 'Gómez', ap_materno: 'Pérez', nombres: 'Juan', celular: '123456789', correo: 'juan@example.com', ESCUELA_completa: 'Escuela1' },
-  //   { proceso: 'Proceso2', ap_paterno: 'López', ap_materno: 'García', nombres: 'María', celular: '987654321', correo: 'maria@example.com', ESCUELA_completa: 'Escuela2' }
-  // ];
-
-  // Crear una hoja de trabajo
-  const sheet = XLSX.utils.json_to_sheet(datos);
+export const utilGenerarExcel = (datos, ancho_cols) => {
   
-  sheet['!cols'] = [
-    { wch: 30 },
-    { wch: 20 },
-    { wch: 25 },
-    { wch: 25 },
-    { wch: 25 },
-    { wch: 25 },
-    { wch: 40 },
-    { wch: 90 }
-  ];
+  const sheet = XLSX.utils.json_to_sheet(datos);
+  sheet['!cols'] = []
+  ancho_cols.forEach(e => {
+    sheet['!cols'].push({ wch: e })
+  })
+
+  // sheet['!cols'] = [
+  //   { wch: 30 },
+  //   { wch: 20 },
+  //   { wch: 25 },
+  //   { wch: 25 },
+  //   { wch: 25 },
+  //   { wch: 25 },
+  //   { wch: 40 },
+  //   { wch: 90 }
+  // ];
 
   // Crear un libro de trabajo y agregar la hoja
   const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, sheet, 'Datos');
+  XLSX.utils.book_append_sheet(workbook, sheet, 'INFORMACION :)');
 
   
 

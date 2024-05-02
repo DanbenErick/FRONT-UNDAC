@@ -9,6 +9,7 @@ import {
   procesarPadronPorExcel,
   actualizarProcesoservice,
   generarReporteService,
+  generarReporteIngresantesService,
 } from '../../api/apiProcesos';
 import '../../assets/styles/DashboardAdmin.css';
 import moment from 'moment';
@@ -408,6 +409,11 @@ export default function ProcesosPage() {
     setStatusPadronModal(true)
     getInputs()
   }
+  const showModalReporte = (params) => {
+    //TODO: Show modal reporte
+    setModalReportes  (true)
+    getInputs()
+  }
   const guardarCambiosPanel = async(params) => {
     console.log(params)
     params.FECHA_REGISTRO = moment(params.FECHA_REGISTRO).format('YYYY-MM-DD',)
@@ -449,8 +455,16 @@ export default function ProcesosPage() {
   const generarReporteModal = async(params) => {
     console.log(params)
     const resp = await generarReporteService(params)
-    utilGenerarExcel(resp.data)
-    
+    const colsWidth = [30,20,25,25,25,25,40,90]
+    utilGenerarExcel(resp.data, colsWidth)
+  }
+  const generarReporteIngresantes = async() => {
+    const params = formModalReporte.getFieldsValue()
+
+    console.log(params)
+    const resp = await generarReporteIngresantesService(params)
+    const colsWidth = [10,25,35,15,15,15,30,10,10,10,55,20,20,15,15,50,50,15]
+    utilGenerarExcel(resp.data, colsWidth)
   }
   return (
     <div>
@@ -541,7 +555,7 @@ export default function ProcesosPage() {
                   <Button type="primary">Guardar Cambios</Button>
                 </Popconfirm>
                 <Button onClick={showModalPadron} type="primary" style={{ background: '#131313', marginLeft: '5px' }} icon={<SnippetsOutlined />} success >Generar padron</Button>
-                <Button onClick={() => setModalReportes(true)} type="primary" style={{ background: '#131313', marginLeft: '5px' }} icon={<SnippetsOutlined />} success >Reportes</Button>
+                <Button onClick={showModalReporte} type="primary" style={{ background: '#131313', marginLeft: '5px' }} icon={<SnippetsOutlined />} success >Reportes</Button>
               </Form.Item>
             </div>
           </Form>
@@ -551,7 +565,12 @@ export default function ProcesosPage() {
         </Card>
       </div>
       
-      <Modal title="Padron de Estudiantes" open={statusPadronModal} onOk={() => {formPadronEstudiantes.submit()}} onCancel={() => setStatusPadronModal(false)}>
+      <Modal 
+      
+      cancelButtonProps={{
+        style: { display: 'none'}
+      }}
+      title="Padron de Estudiantes" open={statusPadronModal} onOk={() => {formPadronEstudiantes.submit()}} onCancel={() => setStatusPadronModal(false)}>
       <input type="file" onChange={handleFileChangeExcel} accept=".xlsx, .xls" />
         <Button type='primary' onClick={procesarExcel}>Procesar con excel</Button>
         <Form layout='vertical' form={formPadronEstudiantes} onFinish={generarPadronEstudiantes}>
@@ -597,7 +616,14 @@ export default function ProcesosPage() {
           </div>
         </Form>
       </Modal>
-      <Modal title="Informcion del Proceso" open={statusModal} onOk={() => setStatusModal(false)} onCancel={() => setStatusModal(false)}>
+      <Modal
+      okButtonProps={{
+        style: { display: 'none'}
+      }}
+      cancelButtonProps={{
+        style: { display: 'none'}
+      }}
+      title="Informcion del Proceso" open={statusModal} onOk={() => setStatusModal(false)} onCancel={() => setStatusModal(false)}>
         <Tooltip placement="left" title='Exportar excel'>
           <Button type="success" style={{ background: '#006400', color: 'white' }}><i class="ri-file-excel-2-fill"></i></Button>
         </Tooltip>
@@ -652,6 +678,12 @@ export default function ProcesosPage() {
       <Modal
         open={modalReportes}
         onCancel={() =>  setModalReportes(false)}
+        okButtonProps={{
+          style: { display: 'none'}
+        }}
+        cancelButtonProps={{
+          style: { display: 'none'}
+        }}
       >
         <h1>Reporte</h1>
         <Form
@@ -670,7 +702,8 @@ export default function ProcesosPage() {
             />
           </Form.Item>
           <Form.Item>
-            <Button block type='primary' htmlType='submit'>Generar Reporte</Button>
+            <Button style={{ marginRight: '5px', background: '#001529' }} type='primary' htmlType='submit'>Generar Inscritos</Button>
+            <Button style={{ background: '#001529' }} type='primary' onClick={generarReporteIngresantes} >Generar Ingresantes</Button>
           </Form.Item>
           
         </Form>

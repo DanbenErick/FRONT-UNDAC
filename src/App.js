@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import LoginPage from './pages/Login/LoginPage';
@@ -43,8 +43,20 @@ import ConstanciaQRPage from './pages/ConstanciaQRPage/ConstanciaQRPage';
 import InformeChartGeneralPage from './pages/InformeChartGeneralPage/InformeChartGeneralPage';
 import ReporteCordinadorPage from './pages/ReporteCordinador/ReporteCordinadorPage';
 import ReporteDirectorPage from './pages/ReporteDirector/ReporteDirectorPage';
+import InscripcionesCerradasPage from './pages/InscripcionesCerradasPage/InscripcionesCerradasPage';
+import { obtenerTodosLosProcesosActivosForm } from './api/apiInpputs';
 
 const App = () => {
+  const [stateinscripciones, setStateInscripciones] = React.useState(true)
+  const obtenerProcesoActivo = async() => {
+    const resp = await obtenerTodosLosProcesosActivosForm()
+    if(resp && resp.status == 200 && resp.data.length == 0) {
+      setStateInscripciones(false)
+    }
+  }
+  useEffect(() => {
+    obtenerProcesoActivo()
+  })
   return (
     <AuthProvider>
       <ConfigProvider locale={esES}>
@@ -81,8 +93,15 @@ const App = () => {
                 path="/inscripcion"
                 element={
                   <EstudianteProvider>
-                    {/* <h1>Inscripciones cerradas</h1> */}
-                    <InscripcionEstudiantePage />
+                    {
+                      stateinscripciones
+                      ?
+                      <InscripcionEstudiantePage />
+                      :
+                      <InscripcionesCerradasPage />
+                    }
+                    
+                    
                   </EstudianteProvider>
                 }
               />

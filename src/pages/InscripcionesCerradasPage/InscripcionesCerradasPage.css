@@ -1,0 +1,36 @@
+.containerPageInscripcionesCerradas {
+  margin: 0;
+  padding: 0;
+  background: url('../../../public/fondo.png');
+  width: 100;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.containerPageInscripcionesCerradas::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: rgba(0,0,0,.4);
+  width: 100%;
+  height: 100vh;
+}
+.containerBoxInscripcionesCerradas {
+  z-index: 1000;
+  background: #fff;
+  width: 300px;
+  padding: 40px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
+}
+.containerPageInscripcionesCerradas h1 {
+  padding: 0;
+  margin: 0;
+  text-align: center;
+}

@@ -10,9 +10,14 @@ import {
   Button,
   Card,
   Table,
+  Drawer,
+  Input,
 } from 'antd';
 import { SaveFilled, SearchOutlined } from '@ant-design/icons';
-import { obtenerModalidadesForm, obtenerProcesosForm } from '../../api/apiInpputs';
+import {
+  obtenerModalidadesForm,
+  obtenerProcesosForm,
+} from '../../api/apiInpputs';
 import '../../assets/styles/VacantesPage.css';
 import {
   crearVacante,
@@ -20,6 +25,7 @@ import {
   verificarDisponibilidadProceso,
   obtenerCarrerasPorProcesoInput,
   obtenerVacantesPorId,
+  modificarVacanteService,
 } from '../../api/apiVacantes';
 
 const onSearch = (value) => {
@@ -36,6 +42,7 @@ const cancel = (e) => {
 
 const VacantesPage = () => {
   const [formVacante] = Form.useForm();
+  const [formDrawerEditarVacante] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
   const [loading, setLoading] = useState(true);
   const [inputProcesos, setInputProcesos] = useState([]);
@@ -43,10 +50,21 @@ const VacantesPage = () => {
   const [botonDisabled, setBotonDisabled] = useState(true);
   const [dataTable, setDataTable] = useState([]);
   const [selectModalidades, setSelectModalidades] = useState([]);
+
+  const [stateDrawerEditarVacante, setStateDrawerEditarVacante] =
+    useState(false);
   const initialValues = {
     ID_PROCESO: '',
     ID_CARRERA: '',
     CANTIDAD: '',
+  };
+  const showDrawerEditarVacante = async (params) => {
+    console.log(params);
+    setStateDrawerEditarVacante(true);
+    formDrawerEditarVacante.setFieldsValue(params);
+  };
+  const closeDrawerEditarVacante = async (params) => {
+    setStateDrawerEditarVacante(false);
   };
   const refreshDataVacatesProcesoActivo = async () => {
     setLoading(true);
@@ -77,14 +95,14 @@ const VacantesPage = () => {
       console.error('Error', error);
     }
   };
-  const getModalidades = async()  => {
+  const getModalidades = async () => {
     try {
-      const resp = await obtenerModalidadesForm()
+      const resp = await obtenerModalidadesForm();
       setSelectModalidades(resp.data);
-    }catch(error) {
+    } catch (error) {
       console.error('Error', error);
     }
-  }
+  };
   useEffect(() => {
     getProcesosInputs();
     refreshCarrerasInput();
@@ -116,7 +134,40 @@ const VacantesPage = () => {
       dataIndex: 'CANTIDAD',
       key: 'CANTIDAD',
     },
+    {
+      title: 'Action',
+      key: 'action',
+
+      render: (_, column) => {
+        // if (column.ESTADO === 1) {
+        return (
+          <Button
+            type="link"
+            info
+            onClick={() => {
+              showDrawerEditarVacante(column);
+            }}
+          >
+            Editar
+          </Button>
+        );
+
+        // }
+        // return ""
+      },
+    },
   ];
+  const guardarCambiosVacante = async (params) => {
+    const resp = await modificarVacanteService(params);
+    if(resp && resp.status === 200 && resp.data.ok) {
+      message.success(resp.data.message)
+      await refreshDataVacatesProcesoActivo()
+      closeDrawerEditarVacante()
+    }else {
+      message.error(resp.data.message)
+    }
+    console.log(resp)
+  };
   const verificarEstadoProceso = async (data) => {
     const resp = await verificarDisponibilidadProceso(data);
 
@@ -129,8 +180,6 @@ const VacantesPage = () => {
   };
   const guardarDatos = async (values) => {
     setLoading(true);
-    
-    
 
     const resp = await crearVacante(values);
 
@@ -153,94 +202,129 @@ const VacantesPage = () => {
     messageApi.open({ type, content });
   };
   return (
-    <div>
-      {contextHolder}
-      {loading ? <SpinnerComponent /> : ''}
-      <div className="contentDashboard">
-        <h1 className="titlePageDashboard">Vacantes</h1>
-        <Breadcrumb className="bradcrumpPadding">
-          <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-          <Breadcrumb.Item>Vacantes</Breadcrumb.Item>
-        </Breadcrumb>
-        <Card type="inner" title="Crear vacantes">
-          <Form
-            layout="vertical"
-            form={formVacante}
-            initialValues={initialValues}
-            onFinish={guardarDatos}
-          >
-            <div className="vacantesPageContainerFormCrearVacante">
-              <Form.Item label="Proceso" name="ID_PROCESO">
-                <Select
-                  showSearch
-                  placeholder="Selecciona un proceso"
-                  options={inputProcesos}
-                  onChange={verificarEstadoProceso}
-                  onSearch={onSearch}
-                  filterOption={filterOption}
-                />
-              </Form.Item>
-              <Form.Item label="Modalidad" name="ID_MODALIDAD">
-                <Select
-                  showSearch
-                  placeholder="Selecciona una carrera"
-                  optionFilterProp="children"
-                  onSearch={onSearch}
-                  filterOption={filterOption}
-                  options={selectModalidades}
-                />
-              </Form.Item>
-              <Form.Item label="Carrera" name="ID_CARRERA">
-                <Select
-                  showSearch
-                  placeholder="Selecciona una carrera"
-                  optionFilterProp="children"
-                  onSearch={onSearch}
-                  filterOption={filterOption}
-                  options={inputCarrera}
-                />
-              </Form.Item>
-              <Form.Item label="Cantidad de vacantes" name="CANTIDAD">
-                <InputNumber
-                  min={1}
-                  max={80}
-                  style={{ width: '100%' }}
-                  placeholder="Cuantas vacantes habra?"
-                />
-              </Form.Item>
-
-              <Form.Item className="filaBotones">
-                <Popconfirm
-                  title="Proceso"
-                  description="Estas seguro de guardar el proceso?"
-                  onConfirm={() => formVacante.submit()}
-                  onCancel={cancel}
-                  okText="Si"
-                  cancelText="No"
-                >
-                  <Button
-                    type="primary"
-                    disabled={botonDisabled}
-                    icon={<SaveFilled />}
-                  >
-                    Guardar Cambios
-                  </Button>
-                </Popconfirm>
-                <Button
-                  icon={<SearchOutlined />}
-                  onClick={buscarVacantesPorProceso}
-                >
-                  Buscar
-                </Button>
-              </Form.Item>
-            </div>
-          </Form>
-        </Card>
-        <Card type="inner" title="Lista de vacantes">
-          <Table dataSource={dataTable} columns={columnsTable} size="small" />
-        </Card>
+    <>
+      <div>
+        {contextHolder}
+        {loading ? <SpinnerComponent /> : ''}
+        <div className="contentDashboard">
+          <h1 className="titlePageDashboard">Vacantes</h1>
+          <Breadcrumb className="bradcrumpPadding">
+            <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
+            <Breadcrumb.Item>Vacantes</Breadcrumb.Item>
+          </Breadcrumb>
+          <Card type="inner" title="Crear vacantes">
+            <Form
+              layout="vertical"
+              form={formVacante}
+              initialValues={initialValues}
+              onFinish={guardarDatos}
+            >
+              <div className="vacantesPageContainerFormCrearVacante">
+                <Form.Item label="Proceso" name="ID_PROCESO" rules={[{ required: true }]}>
+                  <Select
+                    showSearch
+                    placeholder="Selecciona un proceso"
+                    options={inputProcesos}
+                    onChange={verificarEstadoProceso}
+                    onSearch={onSearch}
+                    filterOption={filterOption}
+                  />
+                </Form.Item>
+                <Form.Item label="Modalidad" name="ID_MODALIDAD">
+                  <Select
+                    showSearch
+                    placeholder="Selecciona una carrera"
+                    optionFilterProp="children"
+                    onSearch={onSearch}
+                    filterOption={filterOption}
+                    options={selectModalidades}
+                  />
+                </Form.Item>
+                <Form.Item label="Carrera" name="ID_CARRERA" rules={[{ required: true }]}>
+                  <Select
+                    showSearch
+                    placeholder="Selecciona una carrera"
+                    optionFilterProp="children"
+                    onSearch={onSearch}
+                    filterOption={filterOption}
+                    options={inputCarrera}
+                  />
+                </Form.Item>
+                <Form.Item label="Cantidad de vacantes" name="CANTIDAD" rules={[{ required: true }]}>
+                  <InputNumber
+                    min={1}
+                    max={80}
+                    style={{ width: '100%' }}
+                    placeholder="Cuantas vacantes habra?"
+                  />
+                </Form.Item>
+              </div>
+            </Form>
+            <Button type="primary" onClick={() => formVacante.submit()} disabled={botonDisabled} icon={<SaveFilled />}>Guardar Cambios</Button>
+            <Button icon={<SearchOutlined />} onClick={buscarVacantesPorProceso}> Buscar</Button>
+          </Card>
+          <Card type="inner" title="Lista de vacantes">
+            <Table dataSource={dataTable} columns={columnsTable} size="small" />
+          </Card>
+        </div>
       </div>
-    </div>
+      <Drawer
+        title="Editar vacante"
+        open={stateDrawerEditarVacante}
+        onClose={closeDrawerEditarVacante}
+      >
+        <Form
+          layout="vertical"
+          form={formDrawerEditarVacante}
+          onFinish={guardarCambiosVacante}
+        >
+          <Form.Item label="Identidicador" name="ID" rules={[{ required: true }]}>
+            <Input disabled={true} />
+          </Form.Item>
+          <Form.Item label="Proceso" name="ID_PROCESO" rules={[{ required: true }]}>
+            <Select
+              showSearch
+              placeholder="Selecciona un proceso"
+              options={inputProcesos}
+              onChange={verificarEstadoProceso}
+              onSearch={onSearch}
+              filterOption={filterOption}
+            />
+          </Form.Item>
+          <Form.Item label="Modalidad" name="ID_MODALIDAD">
+            <Select
+              showSearch
+              placeholder="Selecciona una carrera"
+              optionFilterProp="children"
+              onSearch={onSearch}
+              filterOption={filterOption}
+              options={selectModalidades}
+            />
+          </Form.Item>
+          <Form.Item label="Carrera" name="ID_CARRERA" rules={[{ required: true }]}>
+            <Select
+              showSearch
+              placeholder="Selecciona una carrera"
+              optionFilterProp="children"
+              onSearch={onSearch}
+              filterOption={filterOption}
+              options={inputCarrera}
+            />
+          </Form.Item>
+          <Form.Item label="Cantidad de vacantes" name="CANTIDAD" rules={[{ required: true }]}>
+            <InputNumber
+              min={1}
+              max={80}
+              style={{ width: '100%' }}
+              placeholder="Cuantas vacantes habra?"
+            />
+          </Form.Item>
+          <Button block type="primary" htmlType="submit">
+            Guardar cambios
+          </Button>
+        </Form>
+      </Drawer>
+    </>
   );
 };
 

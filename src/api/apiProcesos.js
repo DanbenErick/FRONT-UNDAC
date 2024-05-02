@@ -153,5 +153,14 @@ const generarReporteService = async(params) => {
     console.error(`Error:`, error);
   }
 }
+const generarReporteIngresantesService = async(params) => {
+  try {
+    const ruta = getRuta('obtener-reporte-ingresantes-por-proceso?PROCESO='+params.ID_PROCESO)
+    const resp = await axios.get(ruta);
+    return resp;
+  }catch (error) {
+    console.error(`Error:`, error);
+  }
+}
 
-export { generarReporteService, actualizarProcesoservice, abrirProcesoServiceApi, procesarPadronPorExcel, connectServerSocketIO, obtenerProcesosFull, crearProceso, cerrarProceso, obtenerInscritosPorSedeService, obtenerInscritosPorCarreraService, obtenerInscritosPorModalidadService, obtenerInscritosPorAreaService, obtenerInscritosNombresService, obtenerReportePDFPadron};
+export { generarReporteIngresantesService, generarReporteService, actualizarProcesoservice, abrirProcesoServiceApi, procesarPadronPorExcel, connectServerSocketIO, obtenerProcesosFull, crearProceso, cerrarProceso, obtenerInscritosPorSedeService, obtenerInscritosPorCarreraService, obtenerInscritosPorModalidadService, obtenerInscritosPorAreaService, obtenerInscritosNombresService, obtenerReportePDFPadron};
