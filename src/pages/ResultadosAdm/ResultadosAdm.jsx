@@ -1,9 +1,10 @@
-import { Breadcrumb, Button, Card, Select, message } from 'antd';
+import { Breadcrumb, Button, Card, Input, Select, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Form } from 'antd'
 import { obtenerPDFResultadosService, procesarMultiPService, procesarSolapasService } from '../../api/resultadosService';
 import SpinnerComponent from '../../components/Spinner';
 import { obtenerProcesosForm } from '../../api/apiInpputs';
+import { FilePdfOutlined, SettingOutlined } from '@ant-design/icons';
 const ResultadosAdmPage = () => {
 
   
@@ -65,9 +66,14 @@ const ResultadosAdmPage = () => {
     
     const [procesoSeleccionado] = selectProcesos.filter(proceso => proceso.value == valor)
     setTipoProcesoSeleccionado(procesoSeleccionado.TIPO_PROCESO)
-    // console.log(procesoSeleccionado)
-    setNameProceso(procesoSeleccionado.label)
-    setStateProceso(false)
+    if(procesoSeleccionado.TIPO_PROCESO !== 'G'){
+      console.log(procesoSeleccionado)
+      setNameProceso(procesoSeleccionado.label)
+      setStateProceso(false)
+    }else {
+      message.info('No es un proceso valido para procesar')
+      setStateProceso(true)
+    }
   }
   const obtenerPDFResultados = async(data) => {
     setLoading(true)
@@ -96,23 +102,32 @@ const ResultadosAdmPage = () => {
         <Card type="inner" title="Panel Resultados">
 
           <Form layout="vertical" onFinish={cargarArchivoSolapasCSV} form={formProceso}>
-            <Form.Item label="Procesos" name="ID_PROCESO">
+            <Form.Item label="Procesos" name="ID_PROCESO" rules={[{ required: true }]}>
               <Select options={selectProcesos} onChange={onChageSelectProcesos}/>
             </Form.Item>
+            <Form.Item label="Comision" name="RESPONSABLE" rules={[{ required: true }]}>
+              <Input />
+            </Form.Item>
+            <Card type="inner" title="Panel Solapa">
             {
               !stateProceso
-              ? <h2>Selecciona solapa y hojas de respuesta del proceso: {nameProceso}</h2>
+              ? (
+                <>
+                  {/* <h2>PROCESANDO: {nameProceso}</h2> */}
+                  <Form.Item>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <input type="file" onChange={(event) => setFileSolapa(event.target.files[0])} />
+                      <Button style={{ background: '#003459' }} icon={<SettingOutlined />} htmlType='submit' type="primary" disabled={stateProceso}>Procesar SP</Button>
+                    </div>
+                  </Form.Item>
+                </>
+              )
               :''
             }
-            <Form.Item>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <input type="file" onChange={(event) => setFileSolapa(event.target.files[0])} />
-                <Button style={{ background: '#131313' }} htmlType='submit' type="primary" disabled={stateProceso}>Procesar Solapa {nameProceso}</Button>
-              </div>
-            </Form.Item>
+            </Card>
           </Form>
 
-
+          <Card type="inner" title="Panel Respuestas">
           {
             (tipoProcesoSeleccionado === 'O' || tipoProcesoSeleccionado === 'V')
             ?
@@ -121,7 +136,7 @@ const ResultadosAdmPage = () => {
                 <Form.Item>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <input type="file" onChange={(event) => setFileMultiP(event.target.files[0])} />
-                    <Button style={{ background: '#131313' }} type="primary" htmlType='submit' disabled={stateProceso}>Procesar Respuestas {nameProceso}</Button>
+                    <Button style={{ background: '#003459' }} icon={<SettingOutlined />} type="primary" htmlType='submit' disabled={stateProceso}>Procesar</Button>
                   </div>
                 </Form.Item>
               </Form>
@@ -136,42 +151,43 @@ const ResultadosAdmPage = () => {
                 <Form.Item>
                   <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '10px' }}>
                     <input type="file" onChange={(event) => setFileMultiP(event.target.files[0])} />
-                    <Button type="primary" style={{ background: '#131313' }} htmlType='submit' disabled={stateProceso}>Procesar primer examen</Button>
+                    <Button type="primary" icon={<SettingOutlined />} style={{ background: '#003459' }} htmlType='submit' disabled={stateProceso}>Procesar PE</Button>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <input type="file" onChange={(event) => setFileMultiP(event.target.files[0])} />
-                    <Button type="primary" style={{ background: '#131313' }} htmlType='submit' disabled={stateProceso}>Procesar examen final</Button>
+                    <Button type="primary" icon={<SettingOutlined />} style={{ background: '#003459' }} htmlType='submit' disabled={stateProceso}>Procesar UE</Button>
                   </div>
                 </Form.Item>
               </Form>
             )
             : ''
           }
-
+          </Card>
           
 
 
-
-
+          <Card type="inner" title="Panel de Publicacion">
+          {/* Botones de Ordinario, Posgrado */}
           {
             (tipoProcesoSeleccionado === 'O' || tipoProcesoSeleccionado === 'V')
             ?
-              <Button type="primary" disabled={stateProceso} onClick={obtenerPDFResultados}>Obtener PDF {nameProceso}</Button>
+              <Button type="primary" block disabled={stateProceso} onClick={obtenerPDFResultados}>Publicar Resultado</Button>
             : ''
           }
-          
+          {/* Botones de cepre */}
           {
               (tipoProcesoSeleccionado === 'C') 
               ?
                 (
-                  <>
-                    <Button type="primary" style={{ marginRight: '10px', background: '#131313' }} disabled={stateProceso} onClick={obtenerPDFResultados}>Obtener Primer Resultado {nameProceso}</Button>
-                    <Button type="primary" style={{ background: '#131313' }} disabled={stateProceso} onClick={obtenerPDFResultados}>Obtener Resultado Final {nameProceso}</Button>
-                  </>
+                  <div style={{ display: 'flex' }}>
+                    <Button type="primary" icon={<FilePdfOutlined />} block style={{ marginRight: '10px', background: '#151E3F' }} disabled={stateProceso} onClick={obtenerPDFResultados}>Obtener Primer Resultado {nameProceso}</Button>
+                    <Button type="primary" icon={<FilePdfOutlined />} block style={{ background: '#151E3F' }} disabled={stateProceso} onClick={obtenerPDFResultados}>Obtener Resultado Final {nameProceso}</Button>
+                  </div>
                 )
               : ''
               
             }
+            </Card>
         </Card>
       </div>
       </>

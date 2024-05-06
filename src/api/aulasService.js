@@ -58,7 +58,7 @@ const generarPDFEstudiantesAulaService = async(params) => {
     window.open(url, '_blank');
 
     // Liberar recursos después de abrir el enlace
-    window.URL.revokeObjectURL(url);
+    // window.URL.revokeObjectURL(url);
 
     return {ok: true, message: 'Se genero correctamente el reporte'}
   }catch(error) {

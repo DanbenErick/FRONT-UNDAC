@@ -433,11 +433,11 @@ export default function ProcesosPage() {
       label: 'Sedes',
       children: <Table dataSource={dataInscritos} columns={columnsInscritosTable} size='large' />,
     },
-    {
-      key: 'modalidades',
-      label: 'Modalidad',
-      children: <Table dataSource={dataInscritos} columns={columnsInscritosTable} size='large' />,
-    },
+    // {
+    //   key: 'modalidades',
+    //   label: 'Modalidad',
+    //   children: <Table dataSource={dataInscritos} columns={columnsInscritosTable} size='large' />,
+    // },
     {
       key: 'carreras',
       label: 'Carrera',
