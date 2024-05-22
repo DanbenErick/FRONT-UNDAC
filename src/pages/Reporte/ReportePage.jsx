@@ -96,6 +96,7 @@ const ReportePage = () => {
                 {value: 'RI', label: 'Reporte de inscritos'},
                 {value: 'RPC', label: 'Reporte por Carreras'},
                 {value: 'RPS', label: 'Reporte por Sede'},
+                {value: '', label: 'Mas reportes proximamente'}
               ]}
             />
           </Form.Item>
