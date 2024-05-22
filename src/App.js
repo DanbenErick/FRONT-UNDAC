@@ -45,6 +45,7 @@ import ReporteCordinadorPage from './pages/ReporteCordinador/ReporteCordinadorPa
 import ReporteDirectorPage from './pages/ReporteDirector/ReporteDirectorPage';
 import InscripcionesCerradasPage from './pages/InscripcionesCerradasPage/InscripcionesCerradasPage';
 import { obtenerTodosLosProcesosActivosForm } from './api/apiInpputs';
+import ReportePage from './pages/Reporte/ReportePage';
 
 const App = () => {
   const [stateinscripciones, setStateInscripciones] = React.useState(true)
@@ -162,6 +163,7 @@ const App = () => {
               <Route path='/informe-general' Component={InformeChartGeneralPage } />
               <Route path='/reporte-cordinador' Component={ReporteCordinadorPage } />
               <Route path='/reporte-director' Component={ReporteDirectorPage } />
+              <Route path='/reporte' Component={ReportePage} />
 
               <Route path="*" element={<NotFound />} />
             </Routes>

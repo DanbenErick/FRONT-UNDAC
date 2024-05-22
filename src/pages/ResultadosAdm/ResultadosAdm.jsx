@@ -1,7 +1,7 @@
 import { Breadcrumb, Button, Card, Input, Select, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Form } from 'antd'
-import { obtenerPDFResultadosService, procesarMultiPService, procesarSolapasService } from '../../api/resultadosService';
+import { obtenerPDFResultadosService, obtenerPDFResultadosServiceEF, obtenerPDFResultadosServicePE, procesarMultiPEFService, procesarMultiPPEService, procesarMultiPService, procesarSolapasEFService, procesarSolapasService } from '../../api/resultadosService';
 import SpinnerComponent from '../../components/Spinner';
 import { obtenerProcesosForm } from '../../api/apiInpputs';
 import { FilePdfOutlined, SettingOutlined } from '@ant-design/icons';
@@ -10,6 +10,7 @@ const ResultadosAdmPage = () => {
   
   const [loading, setLoading] = useState(false)
   const [fileSolapa, setFileSolapa] = useState(null);
+  const [fileSolapaEF, setFileSolapaEF] = useState(null);
   const [fileMultiP, setFileMultiP] = useState(null);
   const [stateProceso, setStateProceso] = useState(true)
   const [selectProcesos, setSelectProcesos] = useState([])
@@ -18,16 +19,29 @@ const ResultadosAdmPage = () => {
   const [tipoProcesoSeleccionado, setTipoProcesoSeleccionado] = useState('')
 
   const cargarArchivoSolapasCSV = async () => {
-
-    
     setLoading(true)
     // Crear un objeto FormData a partir del archivo
     const formData = new FormData();
     formData.append('solapa', fileSolapa);
-
     // Enviar el archivo al servidor usando Axios
     const formValues = formProceso.getFieldsValue()
     const resp = await procesarSolapasService(formData, formValues)
+    if(resp && resp.data && resp.data.ok) {
+      message.success(resp.data.message)
+    }else {
+      message.error(resp.data.message)
+    }
+    setLoading(false)
+    console.log("Cargando archivo")
+  }
+  const cargarArchivoSolapasCSVEF = async () => {
+    setLoading(true)
+    // Crear un objeto FormData a partir del archivo
+    const formData = new FormData();
+    formData.append('solapa', fileSolapaEF);
+    // Enviar el archivo al servidor usando Axios
+    const formValues = formProceso.getFieldsValue()
+    const resp = await procesarSolapasEFService(formData, formValues)
     if(resp && resp.data && resp.data.ok) {
       message.success(resp.data.message)
     }else {
@@ -55,6 +69,45 @@ const ResultadosAdmPage = () => {
     setLoading(false)
     console.log("Cargando archivo")
   }
+  const procesarMultiPPE = async() => {
+    setLoading(true)
+    // Crear un objeto FormData a partir del archivo
+    const formData = new FormData();
+    formData.append('multip', fileMultiP);
+
+    // Enviar el archivo al servidor usando Axios
+    const formValues = formProceso.getFieldsValue()
+    const resp = await procesarMultiPPEService(formData, formValues)
+    message.success(resp.data.message)
+    // if(resp && resp.data && resp.data.ok) {
+    //   message.success(resp.data.message)
+    //   message.success(resp.data.message)
+    // }else {
+    //   message.sucess(resp.data.message)
+    // }
+    setLoading(false)
+    console.log("Cargando archivo")
+  }
+  const procesarMultiPEF = async() => {
+    setLoading(true)
+    // Crear un objeto FormData a partir del archivo
+    const formData = new FormData();
+    formData.append('multip', fileMultiP);
+
+    // Enviar el archivo al servidor usando Axios
+    const formValues = formProceso.getFieldsValue()
+    const resp = await procesarMultiPEFService(formData, formValues)
+    message.success(resp.data.message)
+    // if(resp && resp.data && resp.data.ok) {
+    //   message.success(resp.data.message)
+    //   message.success(resp.data.message)
+    // }else {
+    //   message.sucess(resp.data.message)
+    // }
+    setLoading(false)
+    console.log("Cargando archivo")
+  }
+  
   const getSelects = async() => {
     const resp = await obtenerProcesosForm()
     setSelectProcesos(resp.data)
@@ -78,7 +131,6 @@ const ResultadosAdmPage = () => {
   const obtenerPDFResultados = async(data) => {
     setLoading(true)
     const params = formProceso.getFieldsValue()
-    
     const resp = await obtenerPDFResultadosService(params)
     console.log(resp)
     if(resp && resp.ok) {
@@ -86,9 +138,31 @@ const ResultadosAdmPage = () => {
     }else { 
       message.error('Ocurrio un error')
     }
-    // alert("Generando padron")
     setLoading(false)
-    
+  }
+  const obtenerPDFResultadosPE = async(data) => {
+    setLoading(true)
+    const params = formProceso.getFieldsValue()
+    const resp = await obtenerPDFResultadosServicePE(params)
+    console.log(resp)
+    if(resp && resp.ok) {
+      message.success('Todo correcto')
+    }else { 
+      message.error('Ocurrio un error')
+    }
+    setLoading(false)
+  }
+  const obtenerPDFResultadosEF = async(data) => {
+    setLoading(true)
+    const params = formProceso.getFieldsValue()
+    const resp = await obtenerPDFResultadosServiceEF(params)
+    console.log(resp)
+    if(resp && resp.ok) {
+      message.success('Todo correcto')
+    }else { 
+      message.error('Ocurrio un error')
+    }
+    setLoading(false)
   }
   return (
     <>
@@ -117,8 +191,18 @@ const ResultadosAdmPage = () => {
                   <Form.Item>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                       <input type="file" onChange={(event) => setFileSolapa(event.target.files[0])} />
-                      <Button style={{ background: '#003459' }} icon={<SettingOutlined />} htmlType='submit' type="primary" disabled={stateProceso}>Procesar SP</Button>
+                      <Button style={{ background: '#003459' }} icon={<SettingOutlined />} htmlType='submit' type="primary" disabled={stateProceso}>Procesar SP PE</Button>
                     </div>
+                    {
+                      (tipoProcesoSeleccionado === 'C') 
+                      &&
+                      (
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <input type="file" onChange={(event) => setFileSolapaEF(event.target.files[0])} />
+                          <Button style={{ background: '#003459' }} icon={<SettingOutlined />} onClick={cargarArchivoSolapasCSVEF} type="primary" disabled={stateProceso}>Procesar SP EF</Button>
+                        </div>
+                      )
+                    }
                   </Form.Item>
                 </>
               )
@@ -151,11 +235,11 @@ const ResultadosAdmPage = () => {
                 <Form.Item>
                   <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '10px' }}>
                     <input type="file" onChange={(event) => setFileMultiP(event.target.files[0])} />
-                    <Button type="primary" icon={<SettingOutlined />} style={{ background: '#003459' }} htmlType='submit' disabled={stateProceso}>Procesar PE</Button>
+                    <Button type="primary" icon={<SettingOutlined />} style={{ background: '#003459' }} onClick={procesarMultiPPE} disabled={stateProceso}>Procesar PE</Button>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <input type="file" onChange={(event) => setFileMultiP(event.target.files[0])} />
-                    <Button type="primary" icon={<SettingOutlined />} style={{ background: '#003459' }} htmlType='submit' disabled={stateProceso}>Procesar UE</Button>
+                    <Button type="primary" icon={<SettingOutlined />} style={{ background: '#003459' }} onClick={procesarMultiPEF} disabled={stateProceso}>Procesar UE</Button>
                   </div>
                 </Form.Item>
               </Form>
@@ -180,8 +264,8 @@ const ResultadosAdmPage = () => {
               ?
                 (
                   <div style={{ display: 'flex' }}>
-                    <Button type="primary" icon={<FilePdfOutlined />} block style={{ marginRight: '10px', background: '#151E3F' }} disabled={stateProceso} onClick={obtenerPDFResultados}>Obtener Primer Resultado {nameProceso}</Button>
-                    <Button type="primary" icon={<FilePdfOutlined />} block style={{ background: '#151E3F' }} disabled={stateProceso} onClick={obtenerPDFResultados}>Obtener Resultado Final {nameProceso}</Button>
+                    <Button type="primary" icon={<FilePdfOutlined />} block style={{ marginRight: '10px', background: '#151E3F' }} disabled={stateProceso} onClick={obtenerPDFResultadosPE}>Obtener Primer Resultado {nameProceso}</Button>
+                    <Button type="primary" icon={<FilePdfOutlined />} block style={{ background: '#151E3F' }} disabled={stateProceso} onClick={obtenerPDFResultadosEF}>Obtener Resultado Final {nameProceso}</Button>
                   </div>
                 )
               : ''
