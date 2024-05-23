@@ -46,7 +46,14 @@ const DatosPersonalIncripcion = (props) => {
     setEstudiante(params);
     props.setCurrent(props.current + 1);
   };
-  const buscarDNI = async() => {
+  const containsNonNumeric = (value) => {
+      // Expresión regular para detectar cualquier carácter que no sea un dígito
+      const regex = /\D/;
+      return regex.test(value);
+  }
+  const buscarDNI = async(params) => {
+    console.log(formDatosPersonales.getFieldValue('DNI'))
+    console.log(containsNonNumeric(formDatosPersonales.getFieldValue('DNI')))
     if(formDatosPersonales.getFieldValue('DNI').length === 8) {
       const resp = await consultarDatosEstudiantePorDNI({dni: formDatosPersonales.getFieldValue('DNI')})
       if(resp.data.estado) {
@@ -56,14 +63,24 @@ const DatosPersonalIncripcion = (props) => {
       }
     }
   }
+  const validateDNI = (rule, value) => {
+    console.log(value.length)
+    if ( value.length !== 0 && !/^\d+$/.test(value)) {
+      return Promise.reject('DNI inválido');
+    }
+    if (value.length !== 0 && value.length !== 8) {
+      return Promise.reject('El DNI debe tener 8 dígitos');
+    }
+    return Promise.resolve();
+  };
   return (
     <>
     {contextHolder}
-      <Form layout="vertical" form={formDatosPersonales} onFinish={guardarDatosPersonales}>
+      <Form layout="vertical" form={formDatosPersonales} onFinish={guardarDatosPersonales} initialValues={{ TIPO_DOC: 'DNI' }}>
         <Form.Item label="Tipo" name="TIPO_DOC" rules={[{ required: true }]}>
           <Select options={[{ value: 'DNI', label: 'DNI' }, { value: 'CE', label: 'Carnet de Extrangeria' }]} />
         </Form.Item>
-        <Form.Item label="DNI" name="DNI" rules={[{ required: true }]}>
+        <Form.Item label="DNI" name="DNI" rules={[{ required: true }, { validator: validateDNI }]}>
           <Input maxLength="8" placeholder="Ingresa tu numero de DNI" style={{ width: '100%' }} onChange={buscarDNI} />
         </Form.Item>
         <Form.Item label="Apellidos Paterno" name="AP_PATERNO" rules={[{ required: true }]}>

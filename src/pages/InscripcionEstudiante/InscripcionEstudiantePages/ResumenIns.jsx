@@ -15,6 +15,9 @@ const ResumenIns = (props) => {
   return (
     <>
       <div className="ResumenStepIns">
+        <div className="containerh3ValidaDatos">
+          <h3 className='h3ValidaDatos' style={{ textAlign: 'center' }}>Valida tus datos</h3>
+        </div>
         <Form
           layout="vertical"
           className="FormResumenStepIns"

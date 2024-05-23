@@ -1,0 +1,49 @@
+.fondoRegistrarPostulanteCoordinador {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #EDDDD4;
+  padding: 50px 0;
+  
+  
+}
+.containerFormRegistrarPostulanteCoordinador {
+  width: 70%;
+  background: #fff;
+  padding: 40px;
+  border-radius: 30px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px; 
+  /* box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px; */
+}
+.containerFormRegistrarPostulanteCoordinador h1 {
+  text-align: center;
+  padding-bottom: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.gridRegistrarPostulantesCordinador {
+  display: grid;
+  grid-template-columns: 1fr 1fr  ;
+  gap: 10px
+}
+
+.containerFormRegistrarPostulanteCoordinador h1::after {
+  content: '';
+  display: block;
+  width: 120px;
+  height: 5px;
+  border-radius: 20px;
+  background: #13131380;
+  margin-left: 10px;
+}
+.containerFormRegistrarPostulanteCoordinador h1::before {
+  content: '';
+  display: block;
+  width: 120px;
+  height: 5px;
+  border-radius: 20px;
+  background: #13131380;
+  margin-right: 10px;
+}

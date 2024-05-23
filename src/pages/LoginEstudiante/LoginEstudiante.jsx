@@ -46,7 +46,7 @@ const LoginEstudiantePage = () => {
                 alt=""
               />
             </div>
-            <h1>Estudiante</h1>
+            <h1>Postulante</h1>
             <Form.Item
               label="Usuario o DNI"
               name="USUARIO"
@@ -75,7 +75,9 @@ const LoginEstudiantePage = () => {
               </Button>
 
               <p>
-                ¿No tienes cuenta? <Link to="/inscripcion">Registrarse</Link>
+                ¿No tienes cuenta? Registrarse
+                <div><Link to="/inscripcion">(Soy Postulante)</Link></div>
+                <div><Link to="/inscripcion-cordinador">(Soy Coordinador)</Link></div>
               </p>
             </Form.Item>
           </Form>

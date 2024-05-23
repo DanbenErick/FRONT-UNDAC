@@ -1,3 +1,32 @@
+.containerh3ValidaDatos {
+  width: 100%;
+  display: flex;
+}
+.h3ValidaDatos {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+.h3ValidaDatos::after {
+  content: '';
+  display: block;
+  width: 120px;
+  height: 2.4px;
+  border-radius: 20px;
+  background: #13131380;
+  margin-left: 10px;
+}
+.h3ValidaDatos::before {
+  content: '';
+  display: block;
+  width: 120px;
+  height: 2.4px;
+  border-radius: 20px;
+  background: #13131380;
+  margin-right: 10px;
+}
 .buttoYaTengoCuenta {
   
   position: fixed;

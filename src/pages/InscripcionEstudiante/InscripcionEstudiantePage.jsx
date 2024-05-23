@@ -31,10 +31,10 @@ const InscripcionEstudiantePage = () => {
       title: <b>Confirmacion</b>,
       content: <ResumenIns current={current} setCurrent={setCurrent} />,
     },
-    {
-      title: <b>Cordinador</b>,
-      content: <ValidacionIns current={current} setCurrent={setCurrent} />,
-    },
+    // {
+    //   title: <b>Coordinador</b>,
+    //   content: <ValidacionIns current={current} setCurrent={setCurrent} />,
+    // },
     {
       title: <b>Clave</b>,
       content: <ConfirmacionIns current={current} setCurrent={setCurrent} />,

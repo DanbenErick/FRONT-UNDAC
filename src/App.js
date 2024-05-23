@@ -46,6 +46,7 @@ import ReporteDirectorPage from './pages/ReporteDirector/ReporteDirectorPage';
 import InscripcionesCerradasPage from './pages/InscripcionesCerradasPage/InscripcionesCerradasPage';
 import { obtenerTodosLosProcesosActivosForm } from './api/apiInpputs';
 import ReportePage from './pages/Reporte/ReportePage';
+import RegistrarPostulanteCordinadorPage from './pages/InscripcionEstudiante/RegistrarPostulanteCordinadorPage';
 
 const App = () => {
   const [stateinscripciones, setStateInscripciones] = React.useState(true)
@@ -98,6 +99,22 @@ const App = () => {
                       stateinscripciones
                       ?
                       <InscripcionEstudiantePage />
+                      :
+                      <InscripcionesCerradasPage />
+                    }
+                    
+                    
+                  </EstudianteProvider>
+                }
+              />
+              <Route
+                path="/inscripcion-cordinador"
+                element={
+                  <EstudianteProvider>
+                    {
+                      stateinscripciones
+                      ?
+                      <RegistrarPostulanteCordinadorPage />
                       :
                       <InscripcionesCerradasPage />
                     }

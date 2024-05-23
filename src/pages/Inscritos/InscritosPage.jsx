@@ -56,6 +56,15 @@ const InscritoPage = () => {
       title: 'Proceso',
       dataIndex: 'NOMBRE_PROCESO',
       key: '1',
+      render: (data, column) => {
+        console.log('DATA', data, column)
+        let messages = `${column.TURNO === 'M' ? 'MAÑANA' : 'TARDE' || ''} ${' - ' + column.AULA_ASIGNADA || ''}  ${' - ' + column.CORDINADOR || ''}`
+        return (
+          <Tooltip title={messages}>
+            <span>{data}</span>
+          </Tooltip>
+        )
+      }
     },
     {
       title: 'DNI',
@@ -115,7 +124,7 @@ const InscritoPage = () => {
             >
               <Button type="link" info icon={<EditFilled />}></Button>
             </Popconfirm>
-            <a href={`/generar-pdf?proceso=${column.ID_PROCESO}`} target="_blank" onClick={() => localStorage.setItem('uuid', column.UUID)}>
+            <a href={`/generar-pdf?proceso=${column.ID_PROCESO}`} target="_blank" onClick={() => localStorage.setItem('uuid', column.UUID)} rel="noreferrer">
               <Button type="link" info icon={<CreditCardOutlined />}></Button>
             </a>
           </>
@@ -124,26 +133,32 @@ const InscritoPage = () => {
     },
   ];
   const hiddenPanelEditInscritos = () => setPanelEditarInscritos(false);
+
   const showPanelEditInscritos = (params) => {
     const data = dataTable.find((inscrito) => inscrito.ID === params.ID);
     formModificarInscritos.setFieldsValue(data);
     setPanelEditarInscritos(true);
   };
+
   const getDataInputs = async () => {
     const resp_carreras = await obtenerCarrerasForm();
     const resp_procesos = await obtenerProcesosForm();
     const resp_carreras_codigo = await obtenerCarrerasCodigoForm();
     const resp_modalidades = await obtenerModalidadesForm()
+    
+
     setSelectCarreras(resp_carreras.data);
     setSelectCarrerasCodigo(resp_carreras_codigo.data);
     setSelectProcesos(resp_procesos.data);
     setSelectModalidades(resp_modalidades.data);
   };
+  
   const refreshTable = async () => {
     const resp = await obtenerInscritosService();
     setDataTable(resp.data);
   };
   const modificarInscrito = async (params) => {
+    delete params.TURNO
     const resp = await modificarInscritoService(params);
     if (resp.data.ok) {
       message.success(resp.data.message);
@@ -309,8 +324,22 @@ const InscritoPage = () => {
             <Form.Item label="Termino secundaria" name="YEAR_CONCLU">
               <Input placeholder="Ingresa el año" />
             </Form.Item>
+            <Form.Item label="Turno" name="TURNO">
+              <Select
+                options={[
+                  {label: 'Mañana', value: 'M'},
+                  {label: 'Tarde', value: 'T'},
+                ]}
+                onChange={changeTurno}
+              />
+            </Form.Item>
+            <Form.Item label="Aula" name="ID_AULA">
+              <Select
+                options={selectAulas}
+              />
+            </Form.Item>
             <Form.Item>
-              <Button htmlType="submit">Guardar</Button>
+              <Button htmlType="submit" block type='primary'>Guardar</Button>
             </Form.Item>
             <Form.Item name="ID">
               <Input type="hidden" />

@@ -226,7 +226,7 @@ const InscripcionDashboardEstudiante = () => {
               <div className="cardDashEstudiante">
                 <div className="cardDashEstudianteHeader">
                   <p>
-                    <i className="ri-group-2-fill"></i> Apoderado
+                    <i className="ri-group-2-fill"></i> Apoderado del postulante
                   </p>
                 </div>
                 <div className="cardDashEstudianteBody">
