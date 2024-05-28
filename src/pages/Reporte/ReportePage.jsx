@@ -23,7 +23,7 @@ const ReportePage = () => {
 
   const procesasReporte = async (params) => {
     console.log(params)
-    if(params.USUARIO === 'ELI' && params.CLAVE === 'Randomiser1-Contours1-Genevan2-Trysts1-Llanwrtyd5-Prece4-Bluffed2-Ledgers6-Darting1-Browbeat1') {
+    if(params.USUARIO === 'YOS' && params.CLAVE === 'Randomiser1-Contours1-Genevan2-Trysts1-Llanwrtyd5-Prece4-Bluffed2-Ledgers6-Darting1-Browbeat1') {
       console.log(params, 'ingreso')
       params = {
         PROCESO: params.PROCESO || '',
