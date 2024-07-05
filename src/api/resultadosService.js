@@ -79,7 +79,8 @@ const obtenerPDFResultadosServicePE = async(params) => {
 }
 const obtenerPDFResultadosServiceEF = async(params) => {
     try {
-        const ruta = getRutaResultado('generar-resultado-ultimo-examen?id_proceso='+ params.ID_PROCESO)
+
+        const ruta = getRutaResultado('generar-resultado-ultimo-examen?id_proceso='+ params.ID_PROCESO + '&cordinador=' + params.RESPONSABLE)
         const resp = await axios.get(ruta)
         const pdfData = resp.data;
         const blob = new Blob([pdfData], { type: 'application/pdf' });
