@@ -11,6 +11,7 @@ const InscripcionOdinarioPage = () => {
   const [formDatosComplementariosEstudiante] = Form.useForm();
   const [selectProcesos, setSelectProcesos] = useState();
   const [selectCarreras, setSelectCarreras] = useState();
+  const [disabledCarreraPorSede, setDisabledCarreraPorSede] = useState(false)
   const [selectAulas, setSelectAulas] = useState();
   const [selectDiscapacidades, setSelectDiscapacidades] = useState();
   const [selectRazasEtnicas, setSelectRazasEtnicas] = useState();
@@ -110,11 +111,11 @@ const InscripcionOdinarioPage = () => {
   const guardarDatosComplementarios = async (params) => {
     params.DNI = localStorage.getItem('dni');
     params.RUTA_FOTO = params.DNI + '.jpg';
-    params.LUGAR_NACIMIENTO = '010101';
-    params.CELULAR = '999999999';
-    params.FECHA_NACIMIENTO = moment(params.FECHA_NACIMIENTO).format(
-      'YYYY-MM-DD',
-    );
+    // params.LUGAR_NACIMIENTO = '010101';
+    // params.CELULAR = '999999999';
+    // params.FECHA_NACIMIENTO = moment(params.FECHA_NACIMIENTO).format(
+    //   'YYYY-MM-DD',
+    // );
     
     params.YEAR_CONCLU = new Date(params.YEAR_CONCLU)
     params.YEAR_CONCLU = params.YEAR_CONCLU.getFullYear();
@@ -185,6 +186,16 @@ const InscripcionOdinarioPage = () => {
   const buscarAulaPorTurno = async(e) => {
     const resp = await buscarAulaPorTurnoForm({TURNO: e})
     setSelectAulas(resp.data)
+  }
+  const changeSedeCarrera = async(e) => {
+    const selectCarreraChange = selectCarreras.filter(carrera => carrera.value === e)
+    setDisabledCarreraPorSede(false)
+    if(selectCarreraChange[0].value === '133001' || selectCarreraChange[0].value === '117001' || selectCarreraChange[0].value === '134001' || selectCarreraChange[0].value === '118001' || selectCarreraChange[0].value == '120001') {
+      formDatosComplementariosEstudiante.setFieldValue('SEDE_EXAM', 'CERRO DE PASCO')
+      setDisabledCarreraPorSede(true)
+    }
+    // console.log(selectCarreraChange)
+    
   }
   return verificarRegistroEstudiante ? (
     <Alert
@@ -283,6 +294,7 @@ const InscripcionOdinarioPage = () => {
                     placeholder="Selecciona un proceso"
                     options={selectCarreras}
                     filterOption={filterOption}
+                    onChange={changeSedeCarrera}
                   />
                 </Form.Item>
                 <Form.Item
@@ -321,6 +333,7 @@ const InscripcionOdinarioPage = () => {
                   <Select
                     options={selectSedesExamen}
                     filterOption={filterOption}
+                    disabled={disabledCarreraPorSede}
                   />
                 </Form.Item>
                 
@@ -333,7 +346,7 @@ const InscripcionOdinarioPage = () => {
                     onChange={handleFileImgChange}
                   />
                 </Form.Item>
-                {/* <Form.Item
+                <Form.Item
                   className="FormItem"
                   label="Archivos DNI y Cert. estudios"
                   name="RUTA_DOCUMENTO"
@@ -345,7 +358,7 @@ const InscripcionOdinarioPage = () => {
                     ref={fileInputDocRef}
                     onChange={handleFileDocChange}
                   />
-                </Form.Item> */}
+                </Form.Item>
               </div>
             </div>
           </div>
@@ -404,7 +417,7 @@ const InscripcionOdinarioPage = () => {
                       </Form.Item>
                       <Form.Item
                         className="FormItem"
-                        label="PROVINCIA"
+                        label="Provincia"
                         name="PROVINCIA"
                         rules={[{ required: true }]}
                       >
@@ -417,7 +430,7 @@ const InscripcionOdinarioPage = () => {
                       </Form.Item>
                       <Form.Item
                         className="FormItem"
-                        label="DISTRITO"
+                        label="Distrito"
                         name="DISTRITO"
                         rules={[{ required: true }]}
                       >

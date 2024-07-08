@@ -93,12 +93,12 @@ const HomeDashEstudinte = () => {
           </ul>
         </div>
         <div className="containerMain">
-          {/* <div className="containerMainImage"> */}
+          <div className="containerMainImage">
           <img
-            src={process.env.PUBLIC_URL + '/wallpaper_panel.png'}
+            src={process.env.PUBLIC_URL + '/wallpaper_ordinario_i_2025.png'}
             alt="Banner"
           />
-          {/* </div> */}
+          </div>
         </div>
       </div>
       <div className="containerEstodosProcesos">

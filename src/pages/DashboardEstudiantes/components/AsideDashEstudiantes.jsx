@@ -139,12 +139,12 @@ const AsideDashboardEstudiantes = () => {
                 <i className="icon ri-flask-fill"></i>
               Test psicologico
             </NavLink>
-            <NavLink
+            {/* <NavLink
               to="/dashboard-estudiantes/pagos"
               activeclassname="active">
               <i className="icon ri-bank-card-fill"></i> 
               Pagos
-            </NavLink>
+            </NavLink> */}
           </li>
           <li>
             <a  onClick={cerrarSesion}>

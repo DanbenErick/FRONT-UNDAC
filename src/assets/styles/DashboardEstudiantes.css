@@ -162,7 +162,9 @@
   grid-template-columns: 350px calc(100% - 350px);
   gap: 10px;
   font-size: 14px;
-  
+  max-width: 100%;
+  width: 100%;
+  /* background: #000; */
 }
 .gridHomePageDashboardEstudiante h4 {
   padding: 10px;
@@ -298,7 +300,9 @@
     left: 0;
   }
   .gridHomePageDashboardEstudiante {
-    grid-template-columns: 1fr;
+    /* display: none; */
+    grid-template-columns: 100%;
+    width: 100%;
   }
 
 
@@ -308,6 +312,7 @@
     width: 95vw !important;
   }
   .mainContainerEstudiantes {
+    min-height: 100vh;
     padding: 40px 5px !important;
   }
 
