@@ -75,9 +75,9 @@ const LoginEstudiantePage = () => {
               </Button>
 
               <p>
-                ¿No tienes cuenta? Registrarse
-                <div><Link to="/inscripcion">(Soy Postulante)</Link></div>
-                <div><Link to="/inscripcion-cordinador">(Soy Coordinador)</Link></div>
+                ¿No tienes cuenta?  
+                <Link to="/inscripcion"> Registrarse</Link>
+                {/* <div><Link to="/inscripcion-cordinador">(Soy Coordinador)</Link></div> */}
               </p>
             </Form.Item>
           </Form>

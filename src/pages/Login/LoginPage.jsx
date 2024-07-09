@@ -31,7 +31,7 @@ const LoginPage = () => {
                 alt=""
               />
             </div>
-            <h1>Ingresar</h1>
+            <h1>DIRECCION</h1>
             <Form.Item
               label="Usuario o DNI"
               name="USUARIO"
@@ -60,8 +60,8 @@ const LoginPage = () => {
               </Button>
 
               <p>
-                ¿No tienes cuenta? <Link to="/register">Registrarse</Link><br></br>
-                <Link to="/login-estudiante" style={{ textAlign: 'center', fontWeight: 'bold' }}>Soy estudiante</Link>
+                {/* ¿No tienes cuenta? <Link to="/">Registrarse</Link><br></br> */}
+                ¿No tienes cuenta?<Link to="/inscripcion" style={{ textAlign: 'center', fontWeight: 'bold' }}>Registrarse</Link>
               </p>
             </Form.Item>
           </Form>

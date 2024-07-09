@@ -272,7 +272,7 @@ const InscripcionOdinarioPage = () => {
               <div className="gridFormFormularioInscripcion">
                 <Form.Item
                   className="FormItem"
-                  label="Modalidad"
+                  label="Proceso"
                   name="PROCESO"
                   rules={[{ required: true }]}
                 >
