@@ -47,6 +47,7 @@ import InscripcionesCerradasPage from './pages/InscripcionesCerradasPage/Inscrip
 import { obtenerTodosLosProcesosActivosForm } from './api/apiInpputs';
 import ReportePage from './pages/Reporte/ReportePage';
 import RegistrarPostulanteCordinadorPage from './pages/InscripcionEstudiante/RegistrarPostulanteCordinadorPage';
+import PagosCordinadorPage from './pages/PagosCordinador/PagosCordinador';
 
 const App = () => {
   const [stateinscripciones, setStateInscripciones] = React.useState(true)
@@ -180,6 +181,7 @@ const App = () => {
               <Route path='/informe-general' Component={InformeChartGeneralPage } />
               <Route path='/reporte-cordinador' Component={ReporteCordinadorPage } />
               <Route path='/reporte-director' Component={ReporteDirectorPage } />
+              <Route path='/pagos-cordinador' Component={PagosCordinadorPage } />
               <Route path='/reporte' Component={ReportePage} />
 
               <Route path="*" element={<NotFound />} />

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { SaveFilled, UploadOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Select, DatePicker, Radio, message, Alert, AutoComplete, Switch } from 'antd';
+import { Button, Form, Input, Select, DatePicker, Radio, message, Alert, AutoComplete, Switch, Modal, Image } from 'antd';
 import { subirFotoEstudianteService, subirDocumentacionEstudianteService, inscribirEstudianteService, verificarInscripcionEstudianteService, verificarDatosComplementariosEstudiante } from '../../../api/inscripcionDashEstudianteService';
 import { buscarAulaPorTurnoForm, obtenerCarrerasCodigoForm, obtenerDepartamentosForm, obtenerDiscapacidadesForm, obtenerDistritosForm, obtenerProcesoActivoForm, obtenerProvinciasForm, obtenerRazasEtnicasForm, obtenerSedesForm } from '../../../api/apiInpputs';
 import moment from 'moment';
@@ -30,6 +30,8 @@ const InscripcionOdinarioPage = () => {
   const [optionsDepartamento, setOptionsDepartamento] = useState();
   const [optionsProvincia, setOptionsProvincia] = useState();
   const [optionsDistrito, setOptionsDistrito] = useState();
+
+  const [statusModalFoto, setStatusModalFoto] = useState(false)
 
   const fileInputDocRef = useRef(null);
   const fileInputImgRef = useRef(null);
@@ -190,8 +192,12 @@ const InscripcionOdinarioPage = () => {
   const changeSedeCarrera = async(e) => {
     const selectCarreraChange = selectCarreras.filter(carrera => carrera.value === e)
     setDisabledCarreraPorSede(false)
-    if(selectCarreraChange[0].value === '133001' || selectCarreraChange[0].value === '117001' || selectCarreraChange[0].value === '134001' || selectCarreraChange[0].value === '118001' || selectCarreraChange[0].value == '120001') {
+    if(selectCarreraChange[0].value === '133001' || selectCarreraChange[0].value === '117001' || selectCarreraChange[0].value === '134001' || selectCarreraChange[0].value === '118001') {
       formDatosComplementariosEstudiante.setFieldValue('SEDE_EXAM', 'CERRO DE PASCO')
+      setDisabledCarreraPorSede(true)
+    }
+    if(selectCarreraChange[0].value == '120001') {
+      formDatosComplementariosEstudiante.setFieldValue('SEDE_EXAM', 'TARMA')
       setDisabledCarreraPorSede(true)
     }
     // console.log(selectCarreraChange)
@@ -208,10 +214,11 @@ const InscripcionOdinarioPage = () => {
     <>
       {loading ? <SpinnerComponent /> : ''}
       <Switch checkedChildren="+18" unCheckedChildren="-18" onChange={onChangeSwitchMayorEdad} />
-      <b>  Mayor de edad</b>
+      <b>   Soy mayor de edad</b>
       <h1>
-        <i className="ri-draft-fill"></i>Datos Complementarios
+        <i className="ri-draft-fill"></i>INSCRIPCION
       </h1>
+      <p><i style={{fontWeight: 'bold', textDecoration: 'underline'}}> Completa los datos para llevar a cabo tu correcta inscripcion a un proceso</i></p>
       <Form
         layout="vertical"
         form={formDatosComplementariosEstudiante}
@@ -272,7 +279,7 @@ const InscripcionOdinarioPage = () => {
               <div className="gridFormFormularioInscripcion">
                 <Form.Item
                   className="FormItem"
-                  label="Proceso"
+                  label="Tipo de Proceso"
                   name="PROCESO"
                   rules={[{ required: true }]}
                 >
@@ -326,7 +333,7 @@ const InscripcionOdinarioPage = () => {
                 </Form.Item>
                 <Form.Item
                   className="FormItem"
-                  label="Sede de Examen"
+                  label="Sede - Filial de Examen"
                   name="SEDE_EXAM"
                   rules={[{ required: true }]}
                 >
@@ -338,7 +345,7 @@ const InscripcionOdinarioPage = () => {
                 </Form.Item>
                 
                 
-                <Form.Item className="FormItem" label="Foto" name="RUTA_FOTO" rules={[{ required: true }]}>
+                <Form.Item className="FormItem" label="Fotografia del Postulante(Actualizado)" name="RUTA_FOTO" rules={[{ required: true }]}>
                   <input
                     type="file"
                     accept=".png, .jpg, .jpeg"
@@ -348,7 +355,7 @@ const InscripcionOdinarioPage = () => {
                 </Form.Item>
                 <Form.Item
                   className="FormItem"
-                  label="Archivos DNI y Cert. estudios"
+                  label="DNI y Cert. estudios (PDF)"
                   name="RUTA_DOCUMENTO"
                   rules={[{ required: true }]}
                 >
@@ -359,6 +366,7 @@ const InscripcionOdinarioPage = () => {
                     onChange={handleFileDocChange}
                   />
                 </Form.Item>
+                <Button onClick={() => setStatusModalFoto(true)}>Ver Fotografia de Ejemplo</Button>
               </div>
             </div>
           </div>
@@ -396,7 +404,7 @@ const InscripcionOdinarioPage = () => {
                       </Form.Item>
                       <Form.Item
                         className="FormItem"
-                        label="Fecha de Nacimiento"
+                        label="Fecha de Nacimiento Ejem. 2006-04-30 "
                         name="FECHA_NACIMIENTO"
                         rules={[{ required: true }]}
                       >
@@ -515,6 +523,12 @@ const InscripcionOdinarioPage = () => {
         </div>
       </Form>
       <Button type="primary" block icon={<SaveFilled />} style={{ marginTop: '10px' }} onClick={formDatosComplementariosEstudiante.submit}>Inscribir estudiante</Button>
+
+
+      <Modal title="Modelo de Fotografia (Actualizada)"  open={statusModalFoto} onOk={() => setStatusModalFoto(false)} onCancel={() => setStatusModalFoto(false)}>
+        <Image src={process.env.PUBLIC_URL + '/fotografia_modelo_postulante.jpg'}  />
+      </Modal>
+
     </>
   );
 };

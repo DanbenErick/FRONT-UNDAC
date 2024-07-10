@@ -28,8 +28,8 @@ const ReporteDirectorPage = () => {
       if(resp.status === 200 && resp.data.length) {
         setStatusModal(true)
         setDataEstudiante(resp.data[0])
-        // setFoto(`${process.env.REACT_APP_API_URL}/${dataEstudiante.DNI}/${dataEstudiante.DNI}.jpeg`)
-        setFoto(`http://143.198.105.92:3500/${dataEstudiante.DNI}/${dataEstudiante.DNI}.jpeg`)
+        setFoto(`${process.env.REACT_APP_API_URL}/${dataEstudiante.DNI}/${dataEstudiante.DNI}.jpeg`)
+        // setFoto(`http://143.198.105.92:3500/${dataEstudiante.DNI}/${dataEstudiante.DNI}.jpeg`)
         // setFoto(`http://143.198.105.92:3500/60010047/60010047.jpeg`)
         console.log(resp.data)
       }else {

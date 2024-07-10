@@ -48,7 +48,7 @@ const HomeDashEstudinte = () => {
       <h1>Bienvenido {localStorage.getItem('nombre')}</h1>
       <div className="gridHomePageDashboardEstudiante">
         <div className="containerEnlaces">
-          <h4>Contenido</h4>
+          <h4>Contenido (Informacion Relevante)</h4>
           <ul>
             <li>
               <a href="https://www.facebook.com/admisionundac/" rel="noopener noreferrer" target="_blank">
@@ -139,14 +139,14 @@ const HomeDashEstudinte = () => {
                               <i className={element.inscrito ? "ri-check-line" : 'ri-close-line'} style={{ fontWeight: 'bold', color: element.inscrito ? 'green' : 'red' }}></i>Foto
                             </li>
                             <li style={{ borderLeft: element.pago ? 'solid 2px green' : 'solid 2px red' }}>
-                              <i className={element.pago ? "ri-check-line" : 'ri-close-line'} style={{ fontWeight: 'bold', color: element.pago ? 'green' : 'red' }}></i>Voucher de pago
+                              <i className={element.pago ? "ri-check-line" : 'ri-close-line'} style={{ fontWeight: 'bold', color: element.pago ? 'green' : 'red' }}></i>Voucher de pago (Confirmado)
                             </li>
                             <li style={{ borderLeft: element.inscrito ? 'solid 2px green' : 'solid 2px red' }}>
                               <i className={element.inscrito ? "ri-check-line" : 'ri-close-line'} style={{ fontWeight: 'bold', color: element.inscrito ? 'green' : 'red' }}></i>Documentacion (DNI, CERT. EST.)
                             </li>
-                            <li style={{ borderLeft: element.test_psicologico ? 'solid 2px green' : 'solid 2px red' }}>
+                            {/* <li style={{ borderLeft: element.test_psicologico ? 'solid 2px green' : 'solid 2px red' }}>
                               <i className={element.test_psicologico ? "ri-check-line" : 'ri-close-line'} style={{ fontWeight: 'bold', color: element.test_psicologico ? 'green' : 'red' }}></i>Test psicologico
-                            </li>
+                            </li> */}
                             </ul>
                             {element.carnet
                             ?
