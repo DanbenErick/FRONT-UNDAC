@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Select, Input, Tooltip, Image, message, Modal, Table } from 'antd';
+import { Button, Form, Select, Input, Tooltip, Image, message, Modal, Table, Tag } from 'antd';
 
 import '../ReporteCordinador/ReporteCordinadorPage.css'
 
@@ -24,7 +24,13 @@ const PagosCordinadorPage = () => {
   }, [])
   const validarPago = async(pago) => {
     const DNI_CORDINADOR = formReporte.getFieldValue('DNI_CORDINADOR')
-    validarPagoCordinadorService({ID_PAGO:pago, DNI_CORDINADOR})
+    const resp = await validarPagoCordinadorService({ID_PAGO:pago, DNI_CORDINADOR})
+    if(resp.data.ok) {
+      await obtenerListaDePagos(formReporte.getFieldsValue())
+      message.success(resp.data.message)
+    }else {
+      message.error(resp.data.message)
+    }
   }
   const obtenerListaDePagos = async (params) => {
     setStatusModal(true)
@@ -54,12 +60,23 @@ const PagosCordinadorPage = () => {
       key: 'MONTO',
     },
     {
+      title: 'Estado',
+      dataIndex: 'ESTADO',
+      key: 'ESTADOS',
+      render: (data) => {
+        return data === 1 ? <Tag color="green">CONFIRMADO</Tag> : <Tag color="red">FALTA CONFIRMAR</Tag>
+      } 
+    },
+    {
       title: 'ACCION',
       dataIndex: 'ACCION',
       key: 'ACCION',
       render: (data, data2) => {
-          
-          return (<Button onClick={() => validarPago(data2.ID)} icon={<CheckOutlined />}></Button>)
+          if(data2.ESTADO !== 1) {
+            return (<Button onClick={() => validarPago(data2.ID)} icon={<CheckOutlined />}></Button>)
+          }else {
+            return ''
+          }
           
       }
     },
@@ -87,9 +104,9 @@ const PagosCordinadorPage = () => {
           
         </Form>
       </div>
-      <Modal title="Direccion de Admision"  open={statusModal} size={'large'} onOk={() => setStatusModal(false)} onCancel={() => setStatusModal(false)}>
+      <Modal centered width={1000} title="Direccion de Admision" open={statusModal} onOk={() => setStatusModal(false)} onCancel={() => setStatusModal(false)}>
         <div className="containerModalPagosCordinador">
-          <Table columns={columns} dataSource={dataTable}  pageSize={1000} />
+          <Table columns={columns} dataSource={dataTable} pageSize={1000} />
         </div>
       </Modal>
     </div>
