@@ -28,6 +28,7 @@ const PagosCordinadorPage = () => {
     if(resp.data.ok) {
       await obtenerListaDePagos(formReporte.getFieldsValue())
       message.success(resp.data.message)
+      setStatusModal(false)
     }else {
       message.error(resp.data.message)
     }
@@ -92,11 +93,11 @@ const PagosCordinadorPage = () => {
           form={formReporte}
           // initialValues={initialValues}
         >
-          <h1>Pagos Cordinador</h1>
-          <Form.Item label="DNI del Cordinador" name="DNI_CORDINADOR" rules={[{ required: true }]}>
+          <h1>Pagos Coordinador</h1>
+          <Form.Item label="DNI del Coordinador" name="DNI_CORDINADOR" rules={[{ required: true }]}>
             <Input addonBefore={<UnlockOutlined />} />
           </Form.Item>
-          <Form.Item label="DNI del Cordinador" name="DNI_POSTULANTE" rules={[{ required: true }]}>
+          <Form.Item label="DNI del Postulante" name="DNI_POSTULANTE" rules={[{ required: true }]}>
             <Input addonBefore={<ScheduleOutlined />} />
           </Form.Item>
           

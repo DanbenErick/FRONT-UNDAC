@@ -111,6 +111,7 @@ const InscripcionOdinarioPage = () => {
     setLoading(false);
   };
   const guardarDatosComplementarios = async (params) => {
+    setLoading(true);
     params.DNI = localStorage.getItem('dni');
     params.RUTA_FOTO = params.DNI + '.jpg';
     // params.LUGAR_NACIMIENTO = '010101';
@@ -134,6 +135,7 @@ const InscripcionOdinarioPage = () => {
       setVerificarRegistroEstudiante(true )
       return;
     }
+    setLoading(false)
   };
   const buscarDistrito = async (params) => {
     const resp = await obtenerDistritosForm({ PROVINCIA: params });
@@ -223,6 +225,7 @@ const InscripcionOdinarioPage = () => {
         layout="vertical"
         form={formDatosComplementariosEstudiante}
         onFinish={guardarDatosComplementarios}
+        
       >
         <div className="gridInscripcionEstudianteDashboard">
           {
@@ -288,6 +291,7 @@ const InscripcionOdinarioPage = () => {
                     placeholder="Selecciona un proceso"
                     options={selectProcesos}
                     filterOption={filterOption}
+                    // defaultValue={34}
                   />
                 </Form.Item>
                 <Form.Item
@@ -404,11 +408,11 @@ const InscripcionOdinarioPage = () => {
                       </Form.Item>
                       <Form.Item
                         className="FormItem"
-                        label="Fecha de Nacimiento Ejem. 2006-04-30 "
+                        label="Fecha de Nacimiento Ejem. 31-12-2006"
                         name="FECHA_NACIMIENTO"
                         rules={[{ required: true }]}
                       >
-                        <DatePicker style={{ width: '100%' }} />
+                        <DatePicker style={{ width: '100%' }} format={'DD-MM-YYYY'} />
                       </Form.Item>
                       <Form.Item
                         className="FormItem"
@@ -461,6 +465,7 @@ const InscripcionOdinarioPage = () => {
                         <Select
                           showSearch
                           placeholder="Si o No"
+                          // defaultValue={0}
                           onChange={changeEventDiscapacidad}
                           options={[
                             {

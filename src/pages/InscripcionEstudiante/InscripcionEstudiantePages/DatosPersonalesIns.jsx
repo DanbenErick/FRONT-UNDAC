@@ -69,7 +69,7 @@ const DatosPersonalIncripcion = (props) => {
       return Promise.reject('DNI inválido');
     }
     if (value.length !== 0 && value.length !== 8) {
-      return Promise.reject('El DNI debe tener 8 dígitos');
+      return Promise.reject('El DNI debe tener 8 dígitos numericos');
     }
     return Promise.resolve();
   };
@@ -84,13 +84,13 @@ const DatosPersonalIncripcion = (props) => {
           <Input maxLength="8" placeholder="Ingresa tu numero de DNI" style={{ width: '100%' }} onChange={buscarDNI} />
         </Form.Item>
         <Form.Item label="Apellidos Paterno" name="AP_PATERNO" rules={[{ required: true }]}>
-          <Input placeholder="Tu apellido paterno" />
+          <Input placeholder="Tu apellido paterno" style={{ textTransform: 'uppercase' }} />
         </Form.Item>
         <Form.Item label="Apellidos Materno" name="AP_MATERNO" rules={[{ required: true }]}>
-          <Input placeholder="Tu apellido materno" />
+          <Input placeholder="Tu apellido materno" style={{ textTransform: 'uppercase' }} />
         </Form.Item>
         <Form.Item label="Nombres" name="NOMBRES" rules={[{ required: true }]}>
-          <Input placeholder="Tu nombre" />
+          <Input placeholder="Tu nombre" style={{ textTransform: 'uppercase' }} />
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit">Siguiente</Button>

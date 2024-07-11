@@ -31,6 +31,23 @@ const ConfirmacionIns = (props) => {
     navigate('/dashboard-estudiantes/home');
   };
   const anteriorPage = () => props.setCurrent(props.current - 1);
+  const validatePassword = (rule, value) => {
+    // console.log(value.length)
+    // if ( value.length !== 0 && !/^\d+$/.test(value)) {
+    //   return Promise.reject('DNI inválido');
+    // }
+    if (value.length !== 0 && value.length !== 5) {
+      return Promise.reject('La contraseña debe tener 5 caracteres como minimo');
+    }
+    return Promise.resolve();
+  };
+  const validatePassword2 = (rule, value) => {
+    // console.log("Texto", value, formConfirmacion.getFieldValue('PASSWORD'))
+    if (value !== formConfirmacion.getFieldValue('PASSWORD')) {
+      return Promise.reject('Las contraseñas no coinciden');
+    }
+    return Promise.resolve();
+  };
   return (
     <>
       <Form
@@ -38,11 +55,11 @@ const ConfirmacionIns = (props) => {
         form={formConfirmacion}
         onFinish={guardarConfirmacion}
       >
-        <Form.Item label="Contraseña" name="PASSWORD" rules={[{ required: true }]}>
-          <Input.Password placeholder="Ingresa tu contraseña" />
+        <Form.Item label="Contraseña" name="PASSWORD" rules={[{ required: true }, { validator: validatePassword }]}>
+          <Input.Password placeholder="Ingresa tu contraseña" minLength={5} />
         </Form.Item>
-        <Form.Item label="Repite Contraseña" name="PASSWORD_2" rules={[{ required: true }]} >
-          <Input.Password placeholder="Repite tu contraseña" />
+        <Form.Item label="Repite Contraseña" name="PASSWORD_2" rules={[{ required: true }, { validator: validatePassword2 }]}>
+          <Input.Password placeholder="Repite tu contraseña"  minLength={5} />
         </Form.Item>
         <Button onClick={anteriorPage}>Anterior</Button>
         <Button type="primary" htmlType="submit">

@@ -1,4 +1,4 @@
-import { Button, DatePicker, Form, Input, Select, Table, message } from 'antd'
+import { Button, DatePicker, Form, Image, Input, Modal, Select, Table, Tag, message } from 'antd'
 import React, { useEffect, useState } from 'react'
 import dayjs from 'dayjs';
 import { comprobarVoucherPorFechaService, obtenerMisPagosService, registrarPagoService } from '../../../api/pagosDashEstudiService'
@@ -17,13 +17,16 @@ const columnsTable = [
   { title: 'DNI', dataIndex: 'DNI', key: 'DNI' },
   { title: 'Fecha de Pago', dataIndex: 'FECHA_PAGO', key: 'FECHA_PAGO', render: data => dayjs(data).format('DD/MM/YYYY') },
   { title: 'Pago', dataIndex: 'MONTO', key: 'FECHA_PAGO', render: data => `S/. ${data}.00` },
-  { title: 'Confirmado', dataIndex: 'ESTADO', key: 'ESTADO', render: data => data === 1 ? 'Confirmado': 'Por confirmar' },
-]
+  { title: 'Confirmado', dataIndex: 'ESTADO', key: 'ESTADO', render: data => data === 1 ? <Tag color="green">CONFIRMADO</Tag>: <Tag color="red">FALTA CONFIRMAR</Tag> },
+] 
 
 const PagosEstudiantePage = () => {
   const [dataTable, setDataTable] = useState()
   const [formPago] = Form.useForm()
   const [selectProcesos, setSelectProcesos] = useState([]);
+
+  const [statusModalFoto, setStatusModalFoto] = useState(false)
+
   const comprobarPago = async(params) => {
     const fecha = formatDateUtil(new Date(params.FECHA_PAGO))
     const data_send = {
@@ -58,6 +61,21 @@ const PagosEstudiantePage = () => {
     getInputs()
     refreshTable({ DNI: localStorage.getItem('dni') })
   }, [])
+
+  const validateMonto = (rule, value) => {
+    console.log(parseInt(value), value)
+    if(value.length !== 0 && !/^\d+$/.test(value)) {
+      return Promise.reject('Monto inválido');
+    }
+    if(value.length !== 0 && value.length !== 3) {
+      return Promise.reject('El monto debe tener 3 dígitos como maximo');
+    }
+    if(parseInt(value) > 351) {
+      return Promise.reject('El monto no debe ser mayor a 351');
+    }
+    return Promise.resolve();
+  }
+
   return (
     <>
     <Form layout='vertical' form={formPago} onFinish={comprobarPago}>
@@ -96,7 +114,7 @@ const PagosEstudiantePage = () => {
               name="FECHA_PAGO"
               rules={[{ required: true }]}
             >
-              <DatePicker style={{ width: '100%' }} />
+              <DatePicker style={{ width: '100%' }} format={'DD-MM-YYYY'} />
             </Form.Item>
             <Form.Item
               className="FormItem"
@@ -118,13 +136,14 @@ const PagosEstudiantePage = () => {
               className="FormItem"
               label="Monto"
               name="MONTO"
-              rules={[{ required: true }]}
+              rules={[{ required: true }, { validator: validateMonto }]}
             >
               <Input maxLength={3} />
             </Form.Item>
           </div>
             <Form.Item>
-              <Button htmlType='submit'>Registrar Pago</Button>
+              <Button htmlType='submit' type="primary">Registrar Pago</Button> | 
+              <Button onClick={() => setStatusModalFoto(true)}>Ejemplar de Voucher</Button>
             </Form.Item>
         </div>
         
@@ -141,8 +160,10 @@ const PagosEstudiantePage = () => {
           <Table columns={columnsTable} dataSource={dataTable} scroll={{ x: 800  }} pagination={false} />
       </div>
     </div>
-    
   </div>
+  <Modal title="Modelo de Fotografia (Actualizada)"  open={statusModalFoto} onOk={() => setStatusModalFoto(false)} onCancel={() => setStatusModalFoto(false)}>
+    <Image src={process.env.PUBLIC_URL + '/ejemplo_voucher.png'} />
+  </Modal>
   </>
   )
 }
