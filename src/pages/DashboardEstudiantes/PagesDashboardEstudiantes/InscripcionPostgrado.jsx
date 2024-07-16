@@ -462,7 +462,7 @@ const InscripcionPostgrado = () => {
           }
         </div>
       </Form>
-      <Button type="primary" block icon={<SaveFilled />} style={{ marginTop: '10px' }} onClick={formDatosComplementariosEstudiante.submit}>Inscribir estudiante</Button>
+      <Button type="primary" block icon={<SaveFilled />} style={{ marginTop: '10px' }} onClick={formDatosComplementariosEstudiante.submit}>Inscribir Postulante</Button>
     </>
   );
 };

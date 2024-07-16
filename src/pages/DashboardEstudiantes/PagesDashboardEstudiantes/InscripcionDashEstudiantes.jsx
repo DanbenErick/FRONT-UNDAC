@@ -545,7 +545,7 @@ const InscripcionDashboardEstudiante = () => {
           }
         </div>
       </Form>
-      <Button type="primary" block icon={<SaveFilled />} style={{ marginTop: '10px' }} onClick={formDatosComplementariosEstudiante.submit}>Guardar</Button>
+      <Button type="primary" block icon={<SaveFilled />} style={{ marginTop: '10px' }} onClick={formDatosComplementariosEstudiante.submit}>Inscribir Postulante</Button>
     </>
   );
 };

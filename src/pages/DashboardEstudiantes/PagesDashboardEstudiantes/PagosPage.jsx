@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import dayjs from 'dayjs';
 import { comprobarVoucherPorFechaService, obtenerMisPagosService, registrarPagoService } from '../../../api/pagosDashEstudiService'
 import { obtenerModalidadesForm, obtenerProcesoActivoForm, obtenerTodosLosProcesosActivosForm } from '../../../api/apiInpputs';
+import { validarRequisitosParaInscripcionService } from '../../../api/inscripcionDashEstudianteService';
 
 const formatDateUtil = (date) => {
   date = new Date(date)
@@ -11,14 +12,7 @@ const formatDateUtil = (date) => {
   const dd = String(date.getDate()).padStart(2, '0');
   return `${yyyy}-${mm}-${dd}`;
 }
-const columnsTable = [
-  { title: 'Proceso', dataIndex: 'NOMBRE_PROCESO', key: 'NOMBRE_PROCESO' },
-  { title: 'Codigo', dataIndex: 'CODIGO', key: 'CODIGO' },
-  { title: 'DNI', dataIndex: 'DNI', key: 'DNI' },
-  { title: 'Fecha de Pago', dataIndex: 'FECHA_PAGO', key: 'FECHA_PAGO', render: data => dayjs(data).format('DD/MM/YYYY') },
-  { title: 'Pago', dataIndex: 'MONTO', key: 'FECHA_PAGO', render: data => `S/. ${data}.00` },
-  { title: 'Confirmado', dataIndex: 'ESTADO', key: 'ESTADO', render: data => data === 1 ? <Tag color="green">CONFIRMADO</Tag>: <Tag color="red">FALTA CONFIRMAR</Tag> },
-] 
+
 
 const PagosEstudiantePage = () => {
   const [dataTable, setDataTable] = useState()
@@ -55,6 +49,14 @@ const PagosEstudiantePage = () => {
   const refreshTable = async(params) => {
     const resp = await obtenerMisPagosService(params)
     setDataTable(resp.data)
+    // for(let i = 0; i < resp.data.length; i++) {
+    //   console.log(resp.data[i].ID_PROCESO, resp.data[i].DNI)
+    //   const {data} = await validarRequisitosParaInscripcionService({ DNI: resp.data[i].DNI, TIPO_PROCESO: 'O' , PROCESO: resp.data[i].ID_PROCESO})
+    // }
+
+    
+    // resp.data.forEach(element => {
+    // });
   }
   const filterOption = (input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
   useEffect(() => {
@@ -75,6 +77,17 @@ const PagosEstudiantePage = () => {
     }
     return Promise.resolve();
   }
+
+
+  const columnsTable = [
+    { title: 'Proceso', dataIndex: 'NOMBRE_PROCESO', key: 'NOMBRE_PROCESO' },
+    { title: 'Codigo', dataIndex: 'CODIGO', key: 'CODIGO' },
+    { title: 'DNI', dataIndex: 'DNI', key: 'DNI' },
+    { title: 'Fecha de Pago', dataIndex: 'FECHA_PAGO', key: 'FECHA_PAGO', render: data => dayjs(data).format('DD/MM/YYYY') },
+    { title: 'Pago', dataIndex: 'MONTO', key: 'FECHA_PAGO', render: data => `S/. ${data}.00` },
+    { title: 'Confirmado', dataIndex: 'ESTADO', key: 'ESTADO', render: data => data === 1 ? <Tag color="green">CONFIRMADO</Tag>: <Tag color="red">FALTA CONFIRMAR</Tag> },
+  ]
+
 
   return (
     <>
@@ -159,6 +172,7 @@ const PagosEstudiantePage = () => {
       <div className="">
           <Table columns={columnsTable} dataSource={dataTable} scroll={{ x: 800  }} pagination={false} />
       </div>
+      
     </div>
   </div>
   <Modal title="Modelo de Fotografia (Actualizada)"  open={statusModalFoto} onOk={() => setStatusModalFoto(false)} onCancel={() => setStatusModalFoto(false)}>

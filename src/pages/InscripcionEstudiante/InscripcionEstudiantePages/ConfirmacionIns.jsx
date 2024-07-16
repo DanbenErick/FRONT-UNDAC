@@ -36,7 +36,8 @@ const ConfirmacionIns = (props) => {
     // if ( value.length !== 0 && !/^\d+$/.test(value)) {
     //   return Promise.reject('DNI inválido');
     // }
-    if (value.length !== 0 && value.length !== 5) {
+    console.log(value.length)
+    if (value.length < 5) {
       return Promise.reject('La contraseña debe tener 5 caracteres como minimo');
     }
     return Promise.resolve();

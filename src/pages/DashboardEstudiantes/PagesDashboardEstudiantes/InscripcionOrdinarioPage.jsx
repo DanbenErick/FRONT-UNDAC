@@ -194,7 +194,8 @@ const InscripcionOdinarioPage = () => {
   const changeSedeCarrera = async(e) => {
     const selectCarreraChange = selectCarreras.filter(carrera => carrera.value === e)
     setDisabledCarreraPorSede(false)
-    if(selectCarreraChange[0].value === '133001' || selectCarreraChange[0].value === '117001' || selectCarreraChange[0].value === '134001' || selectCarreraChange[0].value === '118001') {
+    const validValuesPasco = ['133001', '117001', '134001', '118001', '132001', '138001', '135001'];
+    if(validValuesPasco.includes(selectCarreraChange[0].value)) {
       formDatosComplementariosEstudiante.setFieldValue('SEDE_EXAM', 'CERRO DE PASCO')
       setDisabledCarreraPorSede(true)
     }
@@ -215,12 +216,13 @@ const InscripcionOdinarioPage = () => {
   ) : (
     <>
       {loading ? <SpinnerComponent /> : ''}
-      <Switch checkedChildren="+18" unCheckedChildren="-18" onChange={onChangeSwitchMayorEdad} />
-      <b>   Soy mayor de edad</b>
+      
       <h1>
         <i className="ri-draft-fill"></i>INSCRIPCION
       </h1>
       <p><i style={{fontWeight: 'bold', textDecoration: 'underline'}}> Completa los datos para llevar a cabo tu correcta inscripcion a un proceso</i></p>
+      <Switch checkedChildren="+18" unCheckedChildren="-18" onChange={onChangeSwitchMayorEdad} />
+      <b>   Soy mayor de edad</b>
       <Form
         layout="vertical"
         form={formDatosComplementariosEstudiante}
@@ -527,7 +529,7 @@ const InscripcionOdinarioPage = () => {
           }
         </div>
       </Form>
-      <Button type="primary" block icon={<SaveFilled />} style={{ marginTop: '10px' }} onClick={formDatosComplementariosEstudiante.submit}>Inscribir estudiante</Button>
+      <Button type="primary" block icon={<SaveFilled />} style={{ marginTop: '10px' }} onClick={formDatosComplementariosEstudiante.submit}>Inscribir Postulante</Button>
 
 
       <Modal title="Modelo de Fotografia (Actualizada)"  open={statusModalFoto} onOk={() => setStatusModalFoto(false)} onCancel={() => setStatusModalFoto(false)}>
