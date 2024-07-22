@@ -21,9 +21,6 @@ const consultarDatosEstudiantePorDNI = async(params) => {
 }
 const registrarEstudianteService = async (params) => {
   try {
-    params.AP_PATERNO = params.AP_PATERNO.toUpperCase()
-    params.AP_MATERNO = params.AP_MATERNO.toUpperCase()
-    params.AP_NOMBRES = params.AP_NOMBRES.toUpperCase()
     const resp = await axios.post(getRuta('registrar-estudiante'), params);
     return resp;
   } catch (error) {
