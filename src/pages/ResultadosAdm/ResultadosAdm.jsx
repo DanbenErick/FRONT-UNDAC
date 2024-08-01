@@ -253,7 +253,7 @@ const ResultadosAdmPage = () => {
           <Card type="inner" title="Panel de Publicacion">
           {/* Botones de Ordinario, Posgrado */}
           {
-            (tipoProcesoSeleccionado === 'O' || tipoProcesoSeleccionado === 'V')
+            (tipoProcesoSeleccionado === 'O' || tipoProcesoSeleccionado === 'V' || tipoProcesoSeleccionado === 'P')
             ?
               <Button type="primary" block disabled={stateProceso} onClick={obtenerPDFResultados}>Publicar Resultado</Button>
             : ''

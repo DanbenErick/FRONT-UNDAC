@@ -48,6 +48,7 @@ import { obtenerTodosLosProcesosActivosForm } from './api/apiInpputs';
 import ReportePage from './pages/Reporte/ReportePage';
 import RegistrarPostulanteCordinadorPage from './pages/InscripcionEstudiante/RegistrarPostulanteCordinadorPage';
 import PagosCordinadorPage from './pages/PagosCordinador/PagosCordinador';
+import ConsultarEstudianteResumenPage from './pages/ConsultarEstudianteResumenPage/ConsultarEstudianteResumenPage';
 
 const App = () => {
   const [stateinscripciones, setStateInscripciones] = React.useState(true)
@@ -167,6 +168,8 @@ const App = () => {
               <Route path='/generar-pdf/:uuid?' Component={HojaEstudianteIngresoPage} />
               <Route path='/generar-padron-daras' Component={PadronEstudianteAulaPDF} />
               <Route path='/resultados2' Component={Resultados2Page} />
+              <Route path='/consultar-estudiante-resumen' Component={ConsultarEstudianteResumenPage} />
+
 
               <Route path='/res-PRIMER' Component={ResultadoPrimerSegundoPuestoPage} />
               <Route path='/res-TITULOS' Component={ResultadoTITULOSYGRADUADOSPage} />

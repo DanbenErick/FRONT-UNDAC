@@ -9,7 +9,7 @@ import { useLocation } from 'react-router-dom';
 import { obtenerProcesosForm } from '../api/apiInpputs';
 
 
-const contenido = 'https://front-undac.vercel.app/consultar-estudiante-resumen/'+ localStorage.getItem('uuid');
+
 Font.register({ family: 'Roboto Condensed', src: 'https://fonts.gstatic.com/s/robotocondensed/v27/ieVo2ZhZI2eCN5jzbjEETS9weq8-_d6T_POl0fRJeyVVpcBO5Xw.woff2' });
 Font.register({ family: 'Lato', src: LatoRegular });
 Font.register({ family: 'Lato-Bold', src: LatoBold });
@@ -96,6 +96,8 @@ const styles = StyleSheet.create({
     const [imagenProceso, setImagenProceso] = useState('')
     const queryParams = new URLSearchParams(location.search);
     const obtenerDatosEstudiante = async(params) => {
+      
+      
       const respProcesos = await obtenerProcesosForm();
       const procesoSeleccionado = respProcesos.data.filter(proceso => proceso.value == queryParams.get('proceso'));
       setImagenProceso(procesoSeleccionado[0].IMAGEN_PROCESO)
@@ -105,7 +107,7 @@ const styles = StyleSheet.create({
       
       console.log(resp.data[0])
       setDataStudent(resp.data[0])
-      
+      const contenido = `https://front-undac.vercel.app/consultar-estudiante-resumen?ap_pat=${resp.data[0].AP_PATERNO}&ap_mat=${resp.data[0].AP_MATERNO}&nombre=${resp.data[0].NOMBRES}&programa=${resp.data[0].ESCUELA_COMPLETA}&area=${resp.data[0].AREA}&sede_examen=${resp.data[0].SEDE_EXAMEN}&codigo_estudiante=${resp.data[0].DNI}` 
       qrcode.toDataURL(contenido)
         .then(dataURL => setQrDataURL(dataURL))
         .catch(err => console.error(err));
@@ -124,7 +126,7 @@ const styles = StyleSheet.create({
         <Document>
           <Page size="A4" style={styles.page}>
             <View style={styles.section}>
-            <Image src={imagenProceso} style={styles.imagenFondo} />
+              {parseInt(queryParams.get('f')) === 0 ? '' : <Image src={imagenProceso} style={styles.imagenFondo} />}
             <Image src={`${process.env.REACT_APP_API_URL}/${dataStudent.DNI}/${dataStudent.DNI}.jpeg`}  style={styles.fotoPerfil} />
             
               <View style={styles.containerText}>
